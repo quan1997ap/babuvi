@@ -1,0 +1,214 @@
+<button class="close-dialog" mat-dialog-close [disabled]="loading">X</button>
+<h2 class="pt-1 pb-1" mat-dialog-title><span class="fa fa-rocket"></span> Xác nhận yêu cầu giao hàng</h2>
+<mat-dialog-content class="mat-typography">
+    <div *ngFor="let message of messages" class="message float-message shadow alert {{message.messageClass}}"
+         role="alert">{{message.detail}}</div>
+
+    <div class="position-relative">
+        <table mat-table [dataSource]="dataSource" class="w-100 merchandise-table">
+
+            <ng-container matColumnDef="position">
+                <th class="text-center pr-1 pl-1" mat-header-cell *matHeaderCellDef>#
+                <td class="text-center pr-1 pl-1" mat-cell *matCellDef="let i = index">
+                    {{ this.paginator.pageIndex == 0 ? i + 1 : i + 1 + this.paginator.pageIndex * this.paginator.pageSize}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="merchandiseId">
+                <th class="merchandise-id" mat-header-cell *matHeaderCellDef>
+                    <span class="">Mã kiện hàng</span>
+                </th>
+                <td class="merchandise-id" mat-cell *matCellDef="let element">
+                    <div class=" c-text-blue">
+                        {{element.merchandiseCode}}
+                        <span *ngIf="element.paymentStatus" class="payment-status"
+                              [ngClass]="{'not-payment': element.paymentStatus == 1}">
+                            ({{element.paymentStatusDisplay}})
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="orderId">
+                <th mat-header-cell *matHeaderCellDef> Mã đơn</th>
+                <td mat-cell
+                    *matCellDef="let element"><span class="link c-text-blue">{{element.orderCode}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="weight">
+                <th class="text-center" mat-header-cell *matHeaderCellDef> Cân nặng</th>
+                <td class="text-center" mat-cell
+                    *matCellDef="let element"> {{element.paymentWeight}} kg
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+        </table>
+        <div class="text-center mt-2 mb-2" *ngIf="dataSource.data.length === 0">Không có dữ liệu</div>
+        <mat-paginator [pageSize]="5" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <div class="missing-amount mt-2 mb-3">
+        (*) Tổng tiền chưa thanh toán: <span class="money">{{sumMissingAmount | currency: 'VND'}}</span>
+    </div>
+
+    <form #deliveryForm="ngForm"
+          (ngSubmit)="saveDelivery(deliveryForm)">
+        <div class="form-group">
+            <label for="shippingMethod">Hình thức nhận hàng</label>
+            <select class="form-control" id="shippingMethod" name="Type" ngModel
+                    [(ngModel)]="delivery.Type">
+                <option *ngFor="let item of shippingMethod" [ngValue]="item.value"
+                        data-status="">{{item.displayValue}}</option>
+            </select>
+            <div class="alert-no-bg" *ngIf="delivery.Type === '1'">
+                <small role="alert">(*) Nếu sản phẩm của quý khách có chứa pin, quý khách vui lòng không chọn hình
+                    thức chuyển phát nhanh (chuyển phát hỏa tốc/chuyển phát bằng máy bay) vì hàng hóa có pin se xbị giữ lại
+                    tại sân by và chuyển quay lại đi đường bộ. Trong trường hợp này quý khách có thể phải trả thêm phần phí phát sinh
+                    và hiện tại chúng tôi chưa hỗ trợ xử lý sợ cố liên quan này.</small>
+            </div>
+        </div>
+        <div *ngIf="delivery.Type === '5'" class="shipping-unit-info">
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label for="shippingUnitName">Tên nhà xe <span class="alert-no-bg">*</span></label>
+                    <input type="text" class="form-control" id="shippingUnitName"
+                           name="shippingUnitName"
+                           required #shippingUnitName="ngModel" ngModel placeholder="Tên nhà xe"
+                           [(ngModel)]="delivery.VehicleName">
+                    <div *ngIf="shippingUnitName.invalid && ((shippingUnitName.dirty || shippingUnitName.touched)|| deliveryForm.submitted)"
+                         class="alert-no-bg">
+                        <small *ngIf="shippingUnitName.errors.required" role="alert">Trường "Tên nhà xe"
+                            không
+                            được để trống</small>
+                    </div>
+                </div>
+                <div class="form-group col-sm">
+                    <label for="shippingUnitPhone">Số điện thoại <span
+                            class="alert-no-bg">*</span></label>
+                    <input type="text" class="form-control" id="shippingUnitPhone"
+                           name="shippingUnitPhone"
+                           placeholder="Số ĐT nhà xe"
+                           required #shippingUnitPhone="ngModel" ngModel
+                           [(ngModel)]="delivery.VehiclePhone">
+                    <div *ngIf="shippingUnitPhone.invalid && ((shippingUnitPhone.dirty || shippingUnitPhone.touched)|| deliveryForm.submitted)"
+                         class="alert-no-bg">
+                        <small *ngIf="shippingUnitPhone.errors.required" role="alert">Trường "Số điện
+                            thoại" không
+                            được để trống</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shippingUnitAddress">Địa chỉ <span class="alert-no-bg">*</span></label>
+                <input type="text" class="form-control" id="shippingUnitAddress" name="shippingUnitAddress"
+                       placeholder="Địa chỉ nhà xe"
+                       required #shippingUnitAddress="ngModel" ngModel
+                       [(ngModel)]="delivery.VehicleAddress">
+                <div *ngIf="shippingUnitAddress.invalid && ((shippingUnitAddress.dirty || shippingUnitAddress.touched)|| deliveryForm.submitted)"
+                     class="alert-no-bg">
+                    <small *ngIf="shippingUnitAddress.errors.required" role="alert">Trường "Địa chỉ" không
+                        được để trống</small>
+                </div>
+            </div>
+        </div>
+        <div class="receiver-info">
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label for="receiverName">Tên người liên hệ <span class="alert-no-bg">*</span></label>
+                    <input type="text" class="form-control" id="receiverName" name="receiverName"
+                           required #receiverName="ngModel" ngModel placeholder="Tên người liên hệ"
+                           [(ngModel)]="delivery.ContactName">
+                    <div *ngIf="receiverName.invalid && ((receiverName.dirty || receiverName.touched)|| deliveryForm.submitted)"
+                         class="alert-no-bg">
+                        <small *ngIf="receiverName.errors.required" role="alert">Trường "Tên người liên hệ" không được
+                            để trống</small>
+                    </div>
+                </div>
+                <div class="form-group col-sm">
+                    <label for="receiverPhone">Số điện thoại <span class="alert-no-bg">*</span></label>
+                    <input type="text" class="form-control" id="receiverPhone" name="receiverPhone"
+                           placeholder="Số ĐT người liên hệ"
+                           required #receiverPhone="ngModel" ngModel
+                           [(ngModel)]="delivery.ContactPhone">
+                    <div *ngIf="receiverPhone.invalid && ((receiverPhone.dirty || receiverPhone.touched)|| deliveryForm.submitted)"
+                         class="alert-no-bg">
+                        <small *ngIf="receiverPhone.errors.required" role="alert">Trường "Số điện thoại" không được để
+                            trống</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label for="receiverCountry">Quốc Gia<span class="alert-no-bg">*</span></label>
+                    <select class="form-control" id="receiverCountry" name="receiverCountry" ngModel required
+                            [(ngModel)]="delivery.Country" #receiverCountry="ngModel" (change)="loadProvince($event.target)">
+                        <option *ngFor="let item of area.countryList" [ngValue]="item.areaId"
+                                selected="selected">{{item.areaName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm">
+                    <label for="receiverProvince">Tỉnh/Thành phố <span class="alert-no-bg">*</span></label>
+                    <select class="form-control" id="receiverProvince" name="receiverProvince" ngModel required
+                            [(ngModel)]="delivery.City" #receiverProvince="ngModel" (change)="loadDistrict($event.target)">
+                        <option *ngFor="let item of area.provinceList" [ngValue]="item.areaId"
+                                selected="selected">{{item.areaName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label for="receiverDistrict">Quận/Huyện <span class="alert-no-bg">*</span></label>
+                    <select class="form-control" id="receiverDistrict" name="receiverDistrict" ngModel required
+                            [(ngModel)]="delivery.District" #receiverDistrict="ngModel" (change)="loadWard($event.target)">
+                        <option *ngFor="let item of area.districtList" [ngValue]="item.areaId"
+                                selected="selected">{{item.areaName}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm">
+                    <label for="receiverWards">Xã/Phường<span class="alert-no-bg">*</span></label>
+                    <select class="form-control" id="receiverWards" name="receiverWards" ngModel required
+                            [(ngModel)]="delivery.Ward" #receiverWards="ngModel">
+                        <option *ngFor="let item of area.wardList" [ngValue]="item.areaId" selected="selected">{{item.areaName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="receiverAddress">Địa chỉ, số nhà <span class="alert-no-bg">*</span></label>
+                <input type="text" class="form-control" id="receiverAddress" name="receiverAddress"
+                       placeholder="Địa chỉ nhận hàng"
+                       required #receiverAddress="ngModel" ngModel
+                       [(ngModel)]="delivery.Address">
+                <div *ngIf="receiverAddress.invalid && ((receiverAddress.dirty || receiverAddress.touched)|| deliveryForm.submitted)"
+                     class="alert-no-bg">
+                    <small *ngIf="receiverAddress.errors.required" role="alert">Trường "Địa chỉ, số nhà" không
+                        được để trống</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="note">Ghi chú</label>
+            <textarea id="note" name="note" class="form-control"
+                      rows="3"
+                      [(ngModel)]="delivery.Description"
+                      placeholder="Ví dụ: Chuyển hàng ngoài giờ hàng chính, số điện thoại, tên nhà xe, bến xe ..."></textarea>
+        </div>
+        <button #submitButton type="submit" class="d-none"></button>
+    </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="submitButton.click()" [disabled]="isDisable || loading" class="btn btn-info mr-2">
+        Yêu cầu giao
+    </button>
+    <button mat-button mat-dialog-close class="btn btn-secondary  mr-2">Hủy</button>
+</mat-dialog-actions>
+
+<div class="spinner-wrapper" [hidden]="!loading">
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+</div>

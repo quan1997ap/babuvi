@@ -1,0 +1,230 @@
+<div class="w100 fr-tag">
+   <table class="w100 tg" >
+      <tr>
+         <td colspan="3" class="w100 dp-inBlock fw-7 fs-15">Thông tin tài khoản</td>
+      </tr>
+      <tr>
+         <td class="w35" >
+            <div class="w80 pad-left20per">
+               <div class="w100 pad-left10per">
+                 <div style="width: 50px;" [ngClass]="clientProfile.avatarUrl ? '' : 'h50p bgd4'" class="bor-r50 bor">
+                    {{ clientProfile.avatarUrl ? clientProfile.avatarUrl : null }}
+                 </div>
+               </div>
+              <div class="w100 fw-5 fs-20">
+                 {{ clientProfile.username }}
+              </div>
+              <div class="w100 fs-12 corb2b2b2">
+                 Mã khách hàng: <span class="bg0CA35B corffffff pad-l10 pad-r10 pad-t5 pad-b5 bor-r5">{{ clientProfile.userCode }}</span>
+              </div>
+            </div>
+         </td>
+         <td class="w30">
+           <div class="w100 bor-top pad-t10 pad-b10" [ngClass]="clientProfile.phone ? '' : 'h35p'">
+              <span><i class="fa fa-phone info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.phone }}</span>
+           </div>
+           <div class="w100 bor-top pad-t10 pad-b10" [ngClass]="clientProfile.email ? '' : 'h35p'">
+              <span><i class="fa fa-envelope info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.email }}</span>
+           </div>
+           <div class="w100 bor-top bor-bottom pad-t10 pad-b10" [ngClass]="clientProfile.address ? '' : 'h35p'">
+              <span><i class="fa fa-map-marker info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.address }}</span>
+           </div>
+         </td>
+         <td class="w35 txt-vert-top">
+            <div class="w100 pad-left10per">
+              <div class="w100">
+                 Ghi chú
+              </div>
+              <div class="w100 corb2b2b2 ">
+                 Các thông tin quan trọng của quý khách hàng như: số điện thoại, Email, dùng để nhận thông báo.
+              </div>
+              <div class="w100 corb2b2b2 ">
+                 Để bảo mật tài khoản, quý khách nên đổi tài khoản 3 tháng 1 lần, mật khẩu nên sử dụng chữ số và viết hoa.
+              </div>
+            </div>
+         </td>
+      </tr>
+   </table>
+ </div>
+
+ 
+<div class="w100 fr-tag mar-t20">
+   <table class="w100 tg">
+      <tr>
+         <th colspan="5">
+            <span class=" fw-7 fs-15 pad-r15">Chọn ví</span>
+            <span class="select-account-bank">
+               <mat-form-field>
+                  <select matNativeControl required [(ngModel)]="walletId" (change)="changeWallet($event.target.value)">
+                     <option  *ngFor="let wallet of lstWalletByUserId" [value]="wallet.walletId">
+                        {{wallet.walletName}}
+                     </option>
+                   </select>
+               </mat-form-field>
+            </span>
+         </th>
+      </tr>
+      <tr>
+         <th colspan="5">
+            Thông tin số dư tài khoản
+         </th>
+      </tr>
+      <tr>
+         <td class="w20"></td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            <div>
+               Số dư tài khoản
+            </div>
+         </td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            Số dư đóng băng
+         </td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            Số dư khả dụng
+         </td>
+         <td class="w20"></td>
+      </tr>
+      <ng-container *ngIf="findWallet">
+         <tr>
+            <td class="w20"></td>
+            <td class="w20">
+               {{findWallet.totalAmount| currencyFormat}} đ
+            </td>
+            <td class="w20">
+               {{findWallet.blockedAmount| currencyFormat}} đ
+            </td>
+            <td class="w20">
+               {{findWallet.availableAmount| currencyFormat}} đ
+            </td>
+            <td class="w20"></td>
+         </tr>
+      </ng-container>
+   </table>
+</div>
+
+<div class="w100 fr-tag-v1 mar-t20 tg">
+   <table class="tg w100">
+      <tr>
+         <td colspan="3">THÔNG TIN VÍ GIAO DỊCH</td>
+      </tr>
+      <tr>
+         <td class="w33 pad-l2p">
+            <mat-form-field class="example-form-field w100">
+               <input matInput type="text" class="w100" placeholder="Mã giao dịch" [(ngModel)]="transactionCode" >
+            </mat-form-field>
+         </td>
+         <td class="w33">
+            <mat-form-field class="example-form-field w100">
+               <input matInput type="text" class="w100" placeholder="Nội dung" [(ngModel)]="productCode" >
+            </mat-form-field>
+         </td>
+         <td class="w34 pad-r2p">
+            <mat-form-field class="w100">
+               <select matNativeControl required (change)="changeType($event.target.value)">
+                  <label>Loại giao dịch</label>
+                  <option  *ngFor="let item of itemTransaction" [value]="item.value">
+                     {{item.displayValue}}
+                  </option>
+                </select>
+            </mat-form-field>
+         </td>
+      </tr>
+      <tr>
+         <th class="w33 pad-l2p" >
+            <!-- <form class="example-form"> -->
+               <mat-form-field appearance="fill" class="w100"  style="padding-right: 7px;">
+                  <mat-label>Từ ngày</mat-label>
+                  <input matInput [matDatepicker]="picker" (dateChange)="onSChange($event.value)" [ngModel]="startDate" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            <!-- </form> -->
+         </th>
+         <th class="w33" style="padding-right: 7px;" >
+            <!-- <form class="example-form"> -->
+               <mat-form-field appearance="fill" class="w100">
+                  <mat-label>Đến ngày</mat-label>
+                  <input matInput [matDatepicker]="picker1" (dateChange)="onEChange($event.value)" [ngModel]="endDate" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            <!-- </form> -->
+         </th>
+         <th class="w34 pad-r2p pad-b20">
+            <div class="w100 bor txtAlign-center bor-r3 bg3D89B6 corffffff pad-t10 pad-b10 cur-point" (click)="searchTransaction()">
+               <span ><i class="fa fa-search info"></i></span><span class="pad-l10">tìm kiếm</span>
+            </div>
+         </th>
+      </tr>
+   </table>
+</div>
+
+<div class="w100 fr-tag-v1 mar-t20 tg">
+   <table class="tg w100">
+      <tr>
+        <th class="tg-0lax txt-alignCen font-weiBold w15">
+            Mã giao dịch
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15">
+            Số tiền
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15">
+            Số dư sau giao dịch
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15">
+            Loại giao dịch
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w40">
+            Nội dung
+        </th>
+        <!-- <th class="tg-0lax txt-alignCen font-weiBold w15">
+            Trạng thái
+        </th> -->
+      </tr>
+   
+      <!-- content  -->
+      <ng-container *ngIf="lstTransaction && lstTransaction.length !== 0">
+         <tr  *ngFor="let item of lstTransaction">
+           <th class="tg-0lax txt-alignCen w15 ver-align-mid">
+              <div class="font-weiBold w100">
+               {{item.walletTransactionsCode}}
+              </div>
+              <div class="w100 corb2b2b2">
+               {{item.transactionsDate | date: 'hh:mm dd/MM/yyyy'}}
+              </div>
+           </th>
+           <th class="tg-0lax txt-alignCen corF44335 ver-align-mid w15">
+               {{item.balance | currencyFormat}}
+           </th>
+           <th class="tg-0lax txt-alignCen ver-align-mid w15">
+               {{item.amount | currencyFormat}}
+           </th>
+           <th class="tg-0lax txt-alignCen ver-align-mid w15">
+            <span class="bg3D89B6 corffffff bor1radius2 pad-left10 pad-right10 pad-t5 pad-b5">
+            {{item.walletTransactionsTypeName}}
+            </span>
+           </th>
+           <th class="tg-0lax corb2b2b2 ver-align-mid w40">
+            {{item.content}}
+           </th>
+           <!-- <th class="tg-0lax txt-alignCen ver-align-mid w15">
+              <span class="bg0CA35B corffffff pad-left10 pad-right10 pad-t5 pad-b5 bor1radius2">
+               {{item.statusDisplay}}
+              </span>
+           </th> -->
+         </tr>
+      </ng-container>
+      <ng-container *ngIf="!lstTransaction || (lstTransaction && lstTransaction.length === 0)">
+         <tr>
+            <td colspan="4" >Hiện không có giao dịch nào</td>
+         </tr>
+      </ng-container>
+    </table>
+    <mat-paginator showFirstLastButtons [length]="dataCount" [hidePageSize]="true" [pageSize]="15" (page)="pageEvent = getServerData($event)" [pageSizeOptions]="[pageSize]"></mat-paginator>
+</div>
+<!-- <div class="spinner-wrapper" [hidden]="!loading">
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+</div> -->
+
