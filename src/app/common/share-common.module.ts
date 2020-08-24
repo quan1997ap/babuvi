@@ -6,6 +6,7 @@ import {
 } from './pipe-format-money.component';
 import { NumberFormatPipe } from './number.pipe';
 import { InfiniteScrollDirective } from './InfiniteScrollDirective.directive';
+import { CurrencyFormatChina } from './pipe-china-money.component';
 
 @NgModule({
   imports: [
@@ -15,11 +16,13 @@ import { InfiniteScrollDirective } from './InfiniteScrollDirective.directive';
     CurrencyFormat,
     NumberFormatPipe,
     InfiniteScrollDirective,
+    CurrencyFormatChina,
   ],
   exports: [
     CurrencyFormat,
     NumberFormatPipe,
     InfiniteScrollDirective,
+    CurrencyFormatChina,
   ]
 })
 

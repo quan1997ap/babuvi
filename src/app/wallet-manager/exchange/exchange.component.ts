@@ -45,6 +45,7 @@ export class ExchangeComponent {
     private _wallet: WalletService,
     private _system: SystemService,
     private _commonServices: CommonService) {
+      this.pageIndex = 1;
     }
 
   ngOnInit() {
@@ -74,6 +75,26 @@ export class ExchangeComponent {
     });
   }
 
+  changeWallet(event: any) {
+    this._passData.loading(true);
+    this._commonServices.getWalletByUserId(this.account.userId).subscribe( res => {
+      if(res.result.success) {
+        this._passData.loading(false);
+        this.lstWalletByUserId = res['result'].data;
+        const data  = _.filter(this.lstWalletByUserId, o => String(o.walletId) === String(event));
+        if(data) {
+          this.findWallet = data[0];
+          this.itemSearch.WalletId = Number(this.findWallet.walletId);
+          this.getWalletTransaction(15, 1, this.itemSearch);
+        }
+      } else {
+        this._passData.loading(false);
+      }
+    }, err => {
+      this._passData.loading(false);
+    });
+  }
+
   getWalletByUserId(id: number, detect: boolean){
     var self = this;
     this._passData.loading(true);
@@ -90,7 +111,7 @@ export class ExchangeComponent {
           }
         });
         this.itemSearch.WalletId = self.walletId;
-        this.getWalletTransaction(15, 1, this.itemSearch);
+        this.getWalletTransaction(15, this.pageIndex, this.itemSearch);
       } else {
         this._passData.loading(false);
       }
@@ -104,9 +125,7 @@ export class ExchangeComponent {
       if(res.result.success) {
         const dataItem = res.result;
         this.lstTransaction = dataItem.data.lsData;
-        // page
         this.dataCount = dataItem.data.dataCount;
-        this.pageIndex = dataItem.data.pageIndex;
       } else {
 
       }
@@ -129,15 +148,6 @@ export class ExchangeComponent {
     this.searchData();
     this.detectPage(event);
     this.getWalletTransaction(15, this.pageIndex, this.itemSearch);
-  }
-
-  changeWallet(event: any) {
-    const data  = _.filter(this.lstWalletByUserId, function(o) { return String(o.walletId) === String(event) });
-    if(data) {
-      this.findWallet = data[0];
-      this.itemSearch.WalletId = Number(this.findWallet.walletId);
-      this.getWalletTransaction(15, 1, this.itemSearch);
-    }
   }
 
   searchData() {

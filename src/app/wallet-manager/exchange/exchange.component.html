@@ -88,13 +88,13 @@
          <tr>
             <td class="w20"></td>
             <td class="w20">
-               {{findWallet.totalAmount| currencyFormat}} đ
+               {{findWallet.totalAmount| currencyChina}}
             </td>
             <td class="w20">
-               {{findWallet.blockedAmount| currencyFormat}} đ
+               {{findWallet.blockedAmount| currencyChina}}
             </td>
             <td class="w20">
-               {{findWallet.availableAmount| currencyFormat}} đ
+               {{findWallet.availableAmount| currencyChina}}
             </td>
             <td class="w20"></td>
          </tr>
@@ -193,11 +193,11 @@
                {{item.transactionsDate | date: 'hh:mm dd/MM/yyyy'}}
               </div>
            </th>
-           <th class="tg-0lax txt-alignCen corF44335 ver-align-mid w15">
-               {{item.balance | currencyFormat}}
-           </th>
            <th class="tg-0lax txt-alignCen ver-align-mid w15">
-               {{item.amount | currencyFormat}}
+               {{item.amount | currencyFormat}} VNĐ
+           </th>
+           <th class="tg-0lax txt-alignCen corF44335 ver-align-mid w15">
+               {{item.balance | currencyFormat}} VNĐ
            </th>
            <th class="tg-0lax txt-alignCen ver-align-mid w15">
             <span class="bg3D89B6 corffffff bor1radius2 pad-left10 pad-right10 pad-t5 pad-b5">
