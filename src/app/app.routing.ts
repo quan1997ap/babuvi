@@ -75,6 +75,11 @@ export const AppRoutes: Routes = [{
         path: 'delivery',
         canActivate: [AuthGuard],
         loadChildren: './delivery/delivery.module#DeliveryModule'
+    },
+    {
+        path: 'task',
+        canActivate: [AuthGuard],
+        loadChildren: './task/task.module#TaskModule'
     }
 ]
 }, {

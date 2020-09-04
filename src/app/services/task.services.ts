@@ -1,0 +1,62 @@
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {HttpService} from './common/http.service';
+import {ApiApplication} from 'app/config/app.config';
+import {ApiService} from './common/api.service';
+
+@Injectable()
+export class TaskServices extends ApiService {
+    constructor(http: HttpService, _router: Router) {
+        super(ApiApplication.task.controller, http, _router);
+    }
+
+    getTaskList(page:number,perPage:number,param:any){
+        return this.post(this.apiBaseController + `searchMyTask?perPage=${perPage}&page=${page}`,param)
+    }
+
+    getTaskRefType(){
+        return this.get(ApiApplication.system.controller + "/getTaskReffType")
+    }
+    getTaskType(){
+        return this.get(ApiApplication.system.controller + "/getTaskType")
+    }
+    getTaskStatus(){
+        return this.get(ApiApplication.system.controller + "/getTaskStatus")
+    }
+
+    getTaskByCode(taskCode:any){
+        return this.get(this.apiBaseController + `task/getTaskByCode?taskCode=${taskCode}`)
+    }
+    addTaskChat(content){
+        return this.post(this.apiBaseController + `task/addTaskChat`,content)
+    }
+    deleteTaskChat(taskChatId){
+        return this.delete(this.apiBaseController + `deleteTaskChat?taskChatId=${taskChatId}`)
+    }
+    updateTaskChat(content){
+        return this.post(this.apiBaseController + `task/updateTaskChat`,content)
+    }
+
+    searchUser(name:string){
+        return this.get(ApiApplication.user.controller + `searchUser?textSearch=${name}`)
+    }
+
+    addTaskMember(data){
+        return this.post(this.apiBaseController + `task/addTaskMember`,data)
+    }
+    
+    updateTaskDescrip(data:any){
+        return this.post(this.apiBaseController + `task/updateTask`,data)
+    }
+
+    getAttachFileType(){      
+        return this.get(ApiApplication.system.controller + `getAttachFileType`)
+    }
+    addTaskAttachFile(data:any){
+        return this.post(this.apiBaseController + `task/addTaskAttachFile`,data)
+    }
+
+    deleteTaskAttachFile(fileid){
+        return this.delete(this.apiBaseController + `deleteAttachFile?attackFileId=${fileid}`)
+    }
+}

@@ -86,4 +86,23 @@ export class MerchandiseServices extends ApiService {
         const param = '?orderId=' + orderId;
         return this.get(this.apiBaseController + ApiApplication.merchandise.getLsMerchandiseInWhByOrderId + param);
     }
+
+    getDeliveryRequestType(){
+        return this.get(ApiApplication.system.controller + '/' + ApiApplication.system.getDeliveryRequestType);
+    }
+    getDeliveryRequestStatus(){
+        return this.get(ApiApplication.system.controller + '/getDeliveryRequestStatus');
+    }
+    searchListDeliveryRequest(page:any,perPage:any,datasearch:any){
+        return this.post(this.apiBaseController + `searchListDeliveryRequest/?page=${page}&perPage=${perPage}`,datasearch)
+    }
+    deleteLsDeliveryRequest(deleteIds:any){
+        return this.put(this.apiBaseController + "deleteLsDeliveryRequest/", deleteIds);
+    }
+
+    
+
+    addToCardBasic(data:any){
+        return this.post(`https:backend.babuvi.com/api/cart/AddToCartBasic`,data)
+    }
 }

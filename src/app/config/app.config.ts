@@ -1,6 +1,6 @@
 export const Module = "babuvi";
-//export const ApiBaseUrl = "https:backend.babuvi.com/api/";
-export const ApiBaseUrl = "http://localhost:5000/api/";
+export const ApiBaseUrl = "https:backend.babuvi.com/api/";
+//export const ApiBaseUrl = "http://localhost:5000/api/";
 export const APP_NAME = 'Babuvi';
 export const MessageType = {
     Default: 'default',
@@ -162,6 +162,9 @@ export const ApiApplication = {
         UpdateNoteCart: 'UpdateNoteCart/',
         UpdateQuanlity: 'UpdateQuantity/',
         updateDeliveryAddress: 'updateDeliveryAddress/'
+    },
+    task: {
+        controller: ApiBaseUrl + 'task/',
     },
     // Use for Merchandise Component
     merchandise: {
