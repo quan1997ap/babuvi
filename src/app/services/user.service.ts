@@ -21,5 +21,9 @@ export class UserService extends ApiService {
 
     GetUsersById(userId: number){
         return this.get(this.apiBaseController + ApiApplication.user.getUserById + '?userid=' + userId);
-        }
+    }
+
+    changePass(data:any){
+        return this.put(this.apiBaseController + ApiApplication.user.changePass,data);
+    }
 }

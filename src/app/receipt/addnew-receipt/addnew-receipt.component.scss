@@ -1,0 +1,237 @@
+:host ::ng-deep {
+    .ui-table .ui-table-tbody > tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+    .ui-table .ui-table-thead > tr > th {
+      color: white;
+      background-color: rgba(228, 89, 38, 0.945);
+    }
+    .ui-table .ui-sortable-column .ui-sortable-column-icon {
+      color: white;
+    }
+    .ui-dialog .ui-dialog-titlebar {
+      background-color: rgba(228, 89, 38, 0.945);
+      color: white;
+    }
+    .ui-widget:disabled {
+      opacity: 1;
+      border: none;
+      border-bottom: solid 1px gray;
+      border-radius: 0px;
+    }
+    .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+      color: white;
+      outline: none;
+    }
+    .ui-button{
+     border: 1px solid rgba(228, 89, 38, 0.945);
+  }
+  .ui-button.ui-button-text-icon-left .ui-button-text{
+     background-color: rgba(228, 89, 38, 0.945);
+     outline:none;
+  }
+ }
+ 
+ .listWallet {
+    margin: 2px 0 2px 0;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    color:black;
+ }
+ .listWallet:hover{
+    background-color: rgb(30, 101, 255);
+    color:white;
+ }
+ hr{
+    margin-top:4px;
+    margin-bottom:10px;
+ }
+ .headerTimVi{
+    display: flex;
+    justify-content: space-between;
+ }
+ .buttonTimvi{
+    outline:none;
+    border:1px solid rgb(167, 167, 167);
+    background-color:#f4f4f4;
+    color:gray;
+    border-radius:4px;
+ }
+ @media screen and (max-width: 768px) {
+    .tongthe{
+       padding:20px 30px 30px 30px;
+    }
+    .header{
+       font-weight: bold;
+       margin: 1%;
+       padding-top:10px;
+       border-top: solid 4px rgba(228, 89, 38, 0.945);
+    }
+    .motphantu{
+       display: inline-block;
+       width: 98%;
+       margin:1%;
+    }
+    .motphanhai{
+       display: inline-block;
+       width: 98%;
+       margin:1%;
+    }
+    .inputAdd{
+       width:100%;
+    }
+    .nameInput{
+       font-weight:bold;
+    }
+    .textarea{
+       width:98%;
+       margin:1%;
+    }
+    textarea{ //cái này là của primeNG, khác với class bên trên
+       width:100%;
+    }
+    .btn{
+       margin-top:20px;
+       text-align: right;
+       display: flex;
+       justify-content: flex-end;
+    }
+    .btnSave{
+       background-color: rgba(228, 89, 38, 0.945);
+       font-weight: bold;
+       color: white;
+       outline: none;
+       border: solid 1px #f4f4f4;
+       padding: 5px 15px 5px 15px;
+       border-radius: 5px;
+       width:100%;
+    }
+    .spinner {
+       position: fixed;
+       top: 30%;
+       left: 30%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+ }
+ @media screen and (min-width: 768px) and (max-width: 1025px) {
+    .tongthe{
+       padding:20px 30px 30px 30px;
+    }
+    .header{
+       font-weight: bold;
+       margin: 1%;
+       padding-top:10px;
+       border-top: solid 4px rgba(228, 89, 38, 0.945);
+    }
+    .motphantu{
+       display: inline-block;
+       width: 32%;
+       margin:0.33%;
+    }
+    .motphanhai{
+       display: inline-block;
+       width: 65%;
+       margin:0.33%;
+    }
+    .inputAdd{
+       width:100%;
+    }
+    .nameInput{
+       font-weight:bold;
+    }
+    .textarea{
+       width:98%;
+       margin:1%;
+    }
+    textarea{ //cái này là của primeNG, khác với class bên trên
+       width:100%;
+    }
+    .btn{
+       margin-top:20px;
+       text-align: right;
+       display: flex;
+       justify-content: flex-end;
+    }
+    .btnSave{
+       background-color: rgba(228, 89, 38, 0.945);
+       font-weight: bold;
+       color: white;
+       outline: none;
+       border: solid 1px #f4f4f4;
+       padding: 5px 15px 5px 15px;
+       border-radius: 5px;
+       width:33%;
+    }
+    .spinner {
+       position: fixed;
+       top: 30%;
+       left: 30%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+ }
+ @media screen and (min-width: 1025px) {
+    .tongthe{
+       padding:20px 30px 30px 30px;
+    }
+    .header{
+       font-weight: bold;
+       margin: 1%;
+       padding-top:10px;
+       border-top: solid 4px rgba(228, 89, 38, 0.945);
+    }
+    .motphantu{
+       display: inline-block;
+       width: 23%;
+       margin:1%;
+    }
+    .motphanhai{
+       display: inline-block;
+       width: 48%;
+       margin:1%;
+    }
+    .inputAdd{
+       width:100%;
+    }
+    .nameInput{
+       font-weight:bold;
+    }
+    .textarea{
+       width:98%;
+       margin:1%;
+    }
+    textarea{ //cái này là của primeNG, khác với class bên trên
+       width:100%;
+    }
+    .btn{
+       margin-top:20px;
+       text-align: right;
+       display: flex;
+       justify-content: flex-end;
+    }
+    .btnSave{
+       background-color: rgba(228, 89, 38, 0.945);
+       font-weight: bold;
+       color: white;
+       outline: none;
+       border: solid 1px #f4f4f4;
+       padding: 5px 15px 5px 15px;
+       border-radius: 5px;
+       width:23%;
+    }
+    .spinner {
+       position: fixed;
+       top: 30%;
+       left: 30%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+ }

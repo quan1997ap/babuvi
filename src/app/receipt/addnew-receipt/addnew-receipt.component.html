@@ -1,0 +1,109 @@
+<div class="tongthe">
+    <div class="header">TẠO MỚI BIÊN LAI</div>
+    <div>
+       <form #formThemBienLai="ngForm">
+          <div class="motphantu">
+             <div class="nameInput">Ngày tạo</div>
+              <p-calendar name="ReceiptDate" ngModel [style]="{'width':'100%'}" dateFormat="dd/mm/yy"
+                 [inputStyle]="{'width':'100%'}" [showButtonBar]="true" required></p-calendar>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Mã biên lai</div>
+             <input class="inputAdd" pInputText  name="mabienlai" ngModel readonly>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Số biên lai</div>
+             <input class="inputAdd" pInputText  name="sobienlai" ngModel readonly>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Kiểu biên lai</div>
+             <!-- <input class="inputAdd" pInputText> -->
+             <p-dropdown [options]="dropdownKieuBienLai" class="inputAdd" ngModel name="ReceiptType" placeholder="--Chọn kiểu biên lai--"
+                [itemSize]="27" [filter]="false" [style]="{'width':'100%'}" required></p-dropdown>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Ví nguồn</div>
+             <input class="inputAdd" pInputText name="WalletSource" [(ngModel)]="pickedWallet1.label" 
+             (click)="showViNguon(searchViNguon,$event)" readonly required>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Ví đích</div>
+             <input class="inputAdd" pInputText name="WalletDestination" [(ngModel)]="pickedWallet2.label" 
+             (click)="showViDich(searchViDich,$event)" readonly required>
+          </div>
+          <div class="motphanhai">
+             <div class="nameInput">Lý do</div>
+             <!-- <input class="inputAdd" pInputText> -->
+             <p-dropdown [options]="dropdownLydo" class="inputAdd" ngModel name="Reasion" placeholder="--Chọn lý do--"
+                [itemSize]="27" [filter]="false" [style]="{'width':'100%'}" required></p-dropdown>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Số tiền</div>
+             <input class="inputAdd" pInputText  name="Amount" ngModel required>
+          </div>
+          <div class="motphantu">
+             <div class="nameInput">Phương thức thanh toán</div>
+             <!-- <input class="inputAdd" pInputText> -->
+             <p-dropdown [options]="dropdownPttt" class="inputAdd" ngModel name="PaymentType" placeholder="--Chọn phương thức--"
+                [itemSize]="27" [filter]="false" [style]="{'width':'100%'}" required></p-dropdown>
+          </div>
+          <div class="motphanhai">
+             <div class="nameInput">Số tham chiếu</div>
+             <input class="inputAdd" pInputText  name="PaymentId" ngModel placeholder="Mã chuyển khoản..." required>
+          </div>
+          <div class="textarea">
+             <div class="nameInput">Ghi chú</div>
+             <textarea pInputTextarea autoResize="autoResize" name="Description" ngModel></textarea>
+          </div>
+       </form>
+       <div class="btn">
+          <button class="btnSave" (click)="saveFormBL(formThemBienLai)">Lưu</button>
+       </div>
+    </div>
+  </div>
+  
+   <!-- panel search ví nguồn -->
+   <p-overlayPanel #searchViNguon [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'">
+     <div>
+        <div class="headerTimVi">
+           <b>Tìm ví nguồn</b>  
+           <button class="buttonTimvi" (click)="ClearWallet(1)">Xóa</button>
+        </div>
+       <hr>
+       <div><input pInputText type="text" placeholder="Nhập mã ví" [(ngModel)]="nameWallet"
+           (keyup)="keyUpFindHandle($event,1)" id="namewallet"></div>
+       <br>
+       <h6><b>DANH SÁCH</b></h6>
+       <p *ngIf="listWallet.length == 0?true:false"><i>{{msg1}}</i></p>
+       <div style="max-height:25vh; overflow-y:scroll;">
+         <div *ngFor="let wallet of listWallet" class="listWallet" (click)="pickedWallet1=wallet;searchViNguon.hide()">
+           <span>{{wallet.label}}</span>
+         </div>
+       </div>
+     </div>
+   </p-overlayPanel>
+   <p-overlayPanel #searchViDich [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'">
+     <div>
+        <div class="headerTimVi">
+           <b>Tìm ví đích</b>  
+           <button class="buttonTimvi" (click)="ClearWallet(2)">Xóa</button>
+        </div>
+       <hr>
+       <div><input pInputText type="text" placeholder="Tìm người xử lí" [(ngModel)]="nameWallet2"
+           (keyup)="keyUpFindHandle($event,2)" id="namewallet2"></div>
+       <br>
+       <h6><b>DANH SÁCH</b></h6>
+       <p *ngIf="listWallet2.length == 0?true:false"><i>{{msg2}}</i></p>
+       <div style="max-height:25vh; overflow-y:scroll;">
+         <div *ngFor="let wallet of listWallet2" class="listWallet" (click)="pickedWallet2=wallet;searchViDich.hide()">
+           <span>{{wallet.label}}</span>
+         </div>
+       </div>
+     </div>
+   </p-overlayPanel>
+  
+  <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="thembienlai" appendTo="body"></p-confirmDialog>
+  <p-toast key="thembienlai"></p-toast>
+  <div class="spinner" *ngIf="loading">
+     <p-progressSpinner></p-progressSpinner>
+  </div>

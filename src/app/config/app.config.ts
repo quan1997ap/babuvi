@@ -127,6 +127,9 @@ export const ApiApplication = {
         controller: ApiBaseUrl + 'Extension/',
         exchangerate: 'exchangerate'
     },
+    receipt: {
+        controller: ApiBaseUrl + 'Receipt',
+    },
     receiptTopup: {
         controller: ApiBaseUrl + 'Receipt/lsReceiptTopup/',
         page: 'page',
@@ -202,7 +205,9 @@ export const ApiApplication = {
         getWarehouseVN: 'getWarehouseVN/',
         getPaymentType: 'getPaymentType/',
         getPaymentStatus: 'getPaymentStatus/',
-        getWalletTransactionsType: '/getWalletTransactionsType/'
+        getWalletTransactionsType: '/getWalletTransactionsType/',
+        getReceiptType: 'getReceiptType',
+        getReasion: 'getReasion',
     },
     order: {
         controller: ApiBaseUrl + 'order',
@@ -234,7 +239,8 @@ export const ApiApplication = {
         getListStorekeeperInWarehouse: 'getliststorekeeperinwarehouse',
         regUserCustomer: 'regUserCustomer/',
         refreshToken: "/refreshToken",
-        getUserById: 'getUserById'
+        getUserById: 'getUserById',
+        changePass: "changePass"
     },
     wallet: {
         controller: ApiBaseUrl + "wallet/",

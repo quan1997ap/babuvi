@@ -14,19 +14,23 @@ export class WalletService extends ApiService {
     }
 
     getWalletTransaction(perPage: number, page: number, search: searchTransactionModel) {
-        return this.post(ApiApplication.wallet.controller + ApiApplication.wallet.searchWalletTransaction
+        return this.post(this.apiBaseController + ApiApplication.wallet.searchWalletTransaction
         + "?" + ApiApplication.lstUserItem.perPage + "=" + perPage
         + "&" + ApiApplication.lstUserItem.page + "=" + page, search);
     }
 
     GetListWalletByUser(userId: number){
-        return this.get(ApiApplication.wallet.controller + ApiApplication.wallet.getWalletByUserId + '?userid=' + userId);
+        return this.get(this.apiBaseController + ApiApplication.wallet.getWalletByUserId + '?userid=' + userId);
     }
     GetTopupCodeByUser(userId: number) {
-        return this.get(ApiApplication.wallet.controller + ApiApplication.wallet.getTopupCode + '?userid=' + userId);
+        return this.get(this.apiBaseController + ApiApplication.wallet.getTopupCode + '?userid=' + userId);
     }
 
     SaveTopup(data: Topup) {
         return this.post(this.apiBaseController + ApiApplication.wallet.Topup, data);
+    }
+
+    searchWallet(idwallet:string){
+        return this.get(this.apiBaseController + `searchWallet?searchText=${idwallet}`)
     }
 }

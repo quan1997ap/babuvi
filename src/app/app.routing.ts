@@ -80,6 +80,11 @@ export const AppRoutes: Routes = [{
         path: 'task',
         canActivate: [AuthGuard],
         loadChildren: './task/task.module#TaskModule'
+    },
+    {
+        path: 'receipt',
+        canActivate: [AuthGuard],
+        loadChildren: './receipt/receipt.module#ReceiptModule'
     }
 ]
 }, {

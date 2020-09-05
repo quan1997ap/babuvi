@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserListComponent } from './user-list/userlist.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 export const UsersRoutes: Routes = [{
   path: '',
@@ -15,5 +16,9 @@ export const UsersRoutes: Routes = [{
   }, {
     path: 'userlist',
     component: UserListComponent
-  }]
+  },{
+    path: 'changePassword',
+    component: ChangePasswordComponent
+  }
+  ]
 }];

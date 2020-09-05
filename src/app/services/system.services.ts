@@ -10,16 +10,25 @@ export class SystemService extends ApiService {
     constructor(http: HttpService, _router: Router ) { 
         super(ApiApplication.system.controller, http, _router);
     }
-    GetPaymentType() {
-        return this.get(ApiApplication.system.controller + "/" + ApiApplication.system.getPaymentType);
-    }
 
     GetPaymentStatus() {
-        return this.get(ApiApplication.system.controller + "/" + ApiApplication.system.getPaymentStatus);
+        return this.get(this.apiBaseController + ApiApplication.system.getPaymentStatus);
     }
 
     getType() {
-        return this.get(ApiApplication.system.controller + ApiApplication.system.getWalletTransactionsType);
+        return this.get(this.apiBaseController + ApiApplication.system.getWalletTransactionsType);
+    }
+
+    GetReceiptType(){
+        return this.get(this.apiBaseController + ApiApplication.system.getReceiptType)
+    }
+
+    GetReasion(){
+        return this.get(this.apiBaseController + ApiApplication.system.getReasion)
+    }
+
+    GetPaymentType(){
+        return this.get(this.apiBaseController + ApiApplication.system.getPaymentType)
     }
 }
 
