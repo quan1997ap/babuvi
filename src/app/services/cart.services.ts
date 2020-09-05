@@ -106,4 +106,7 @@ export class CartServices extends ApiService {
         return this.put(ApiApplication.cart.controller + ApiApplication.cart.UpdateQuanlity, item);
     }
     
+    addToCardBasic(data:any){
+        return this.post(this.apiBaseController + ApiApplication.cart.AddToCartBasic,data)
+    }
 }

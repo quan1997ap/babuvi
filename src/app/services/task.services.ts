@@ -24,17 +24,21 @@ export class TaskServices extends ApiService {
         return this.get(ApiApplication.system.controller + "/getTaskStatus")
     }
 
+    removeTaskMember(data){
+        return this.put(this.apiBaseController +  `removeTaskMember`,data)
+    }
+
     getTaskByCode(taskCode:any){
-        return this.get(this.apiBaseController + `task/getTaskByCode?taskCode=${taskCode}`)
+        return this.get(this.apiBaseController + `getTaskByCode?taskCode=${taskCode}`)
     }
     addTaskChat(content){
-        return this.post(this.apiBaseController + `task/addTaskChat`,content)
+        return this.post(this.apiBaseController + `addTaskChat`,content)
     }
     deleteTaskChat(taskChatId){
         return this.delete(this.apiBaseController + `deleteTaskChat?taskChatId=${taskChatId}`)
     }
     updateTaskChat(content){
-        return this.post(this.apiBaseController + `task/updateTaskChat`,content)
+        return this.post(this.apiBaseController + `updateTaskChat`,content)
     }
 
     searchUser(name:string){
@@ -42,18 +46,18 @@ export class TaskServices extends ApiService {
     }
 
     addTaskMember(data){
-        return this.post(this.apiBaseController + `task/addTaskMember`,data)
+        return this.post(this.apiBaseController + `addTaskMember`,data)
     }
     
     updateTaskDescrip(data:any){
-        return this.post(this.apiBaseController + `task/updateTask`,data)
+        return this.post(this.apiBaseController + `updateTask`,data)
     }
 
     getAttachFileType(){      
         return this.get(ApiApplication.system.controller + `getAttachFileType`)
     }
     addTaskAttachFile(data:any){
-        return this.post(this.apiBaseController + `task/addTaskAttachFile`,data)
+        return this.post(this.apiBaseController + `addTaskAttachFile`,data)
     }
 
     deleteTaskAttachFile(fileid){

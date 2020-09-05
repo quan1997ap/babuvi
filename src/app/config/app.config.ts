@@ -161,10 +161,15 @@ export const ApiApplication = {
         UpdateNoteItem: 'UpdateNoteItem/',
         UpdateNoteCart: 'UpdateNoteCart/',
         UpdateQuanlity: 'UpdateQuantity/',
-        updateDeliveryAddress: 'updateDeliveryAddress/'
+        updateDeliveryAddress: 'updateDeliveryAddress/',
+        AddToCartBasic: 'AddToCartBasic',
     },
     task: {
         controller: ApiBaseUrl + 'task/',
+    },
+    fileManager: {
+        controller: ApiBaseUrl + 'fileManager/',
+        upLoadImageOneDrive: 'upLoadImageOneDrive',
     },
     // Use for Merchandise Component
     merchandise: {

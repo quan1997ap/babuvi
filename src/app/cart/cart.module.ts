@@ -22,20 +22,31 @@ import {
   MatProgressSpinnerModule} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CartRoutes } from './cart.routing';
-import { Part1Component } from './part1/part1.component';
-import { Part2Component } from './part2/part2.component';
-import { Part3Component } from './part3/part3.component';
-import { CartServices } from 'app/services/cart.services';
-import { ItemsCartService } from 'app/services/items-cart.service';
-import { OrderService } from 'app/services/order.service';
 import { NotifierOptions, NotifierModule } from 'angular-notifier';
-import { CurrencyFormat } from '../common/pipe-format-money.component';
 import { MessageService } from 'primeng/api';
 import { ShareCommonModule } from '../common/share-common.module';
 import {
   MessagesModule
 } from 'primeng/primeng';
 import { CommonViewModule } from 'app/common-view/common-view.module';
+//Component
+import { Part1Component } from './part1/part1.component';
+import { Part2Component } from './part2/part2.component';
+import { Part3Component } from './part3/part3.component';
+import { CartManualComponent } from './cart-manual/cart-manual.component';
+//Services
+import { CartServices } from 'app/services/cart.services';
+import { ItemsCartService } from 'app/services/items-cart.service';
+import { OrderService } from 'app/services/order.service';
+//Prime Services
+import { ConfirmationService } from 'primeng/api';
+
+//Prime module
+import { TableModule } from 'primeng/table';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -106,17 +117,24 @@ const customNotifierOptions: NotifierOptions = {
     ShareCommonModule,
     MessagesModule,
     CommonViewModule,
+    TableModule,
+    OverlayPanelModule,
+    ToastModule,
+    ConfirmDialogModule,
+    ProgressSpinnerModule
    ],
   declarations: [
     Part1Component,
     Part2Component,
-    Part3Component
+    Part3Component,
+    CartManualComponent
   ],
   providers: [
     CartServices,
     ItemsCartService,
     OrderService,
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 })
 

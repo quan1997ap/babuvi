@@ -1,0 +1,846 @@
+html {
+    background-color: #f4f4f4;
+ }
+ .sm-th-table {
+    background-color: #f4f4f4;
+ }
+ .lsDetailcss {
+    border-collapse: collapse;
+    width: 100%;
+    td,
+    th {
+       border: 1px solid rgb(201, 201, 201);
+       padding: 2px;
+    }
+ }
+ .classBold {
+    font-weight: bold;
+ }
+ .classOrange {
+    color: rgba(228, 89, 38, 0.945);
+ }
+ .classBlue {
+    color: rgb(24, 24, 255);
+ }
+ .statusDisplayStyle {
+    font-weight: bold;
+    background-color: rgb(1, 167, 70);
+    color: white;
+    padding: 2px 4px 2px 4px;
+    border-radius: 3px;
+ }
+ .paginator {
+    outline: none;
+    border: none;
+    color: black;
+    padding: 3px 10px 3px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 15x;
+ }
+ .pageActive {
+    outline: none;
+    border: none;
+    color: white;
+    padding: 3px 10px 3px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    background-color: rgba(228, 89, 38, 0.945);
+    font-size: 15x;
+ }
+ :host ::ng-deep {
+    .ui-table .ui-table-tbody > tr:nth-child(even) {
+       background-color: #ffffff;
+    }
+    .ui-table .ui-table-thead > tr > th {
+       color: white;
+       background-color: rgba(228, 89, 38, 0.945);
+    }
+    .ui-table .ui-sortable-column .ui-sortable-column-icon {
+       color: white;
+    }
+    .ui-dialog .ui-dialog-titlebar {
+       background-color: rgba(228, 89, 38, 0.945);
+       color: white;
+    }
+    .ui-widget:disabled {
+       opacity: 1;
+       border: none;
+       border-bottom: solid 1px gray;
+       border-radius: 0px;
+    }
+    .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+       color: white;
+       outline: none;
+    }
+    .ui-dropdown-label {
+       padding-right: 0 !important;
+       width: 100%;
+       text-align: center;
+    }
+    .ui-dropdown-panel {
+       background-color: rgba(255, 255, 255, 0.98) !important;
+    }
+    .ui-button {
+       border: 1px solid rgba(228, 89, 38, 0.945);
+    }
+    .ui-button.ui-button-text-icon-left .ui-button-text {
+       background-color: rgba(228, 89, 38, 0.945) !important;
+       outline: none;
+    }
+    .ui-button.ui-state-default.ui-button-secondary {
+       background-color: white;
+       border: 1px solid gray;
+    }
+ }
+ ::ng-deep body .ui-datepicker .ui-datepicker-header {
+    .ui-datepicker-prev {
+       display: none;
+    }
+    .ui-datepicker-next {
+       display: none;
+    }
+ }
+ ::ng-deep body .ui-datepicker .ui-timepicker {
+    padding: 0px;
+ }
+ 
+ .classBtn {
+    color: #333333;
+    border: 1px solid gray;
+    background-color: white;
+    outline: none;
+    cursor: default;
+    font-size: 14px;
+    padding: 0.429em 1em 0.429em 1em;
+    border-radius: 5px;
+ }
+ .classBtnHover:hover {
+    color: #333333;
+    border: 1px solid #c8c8c8;
+    background-color: #c8c8c8;
+    outline: none;
+    cursor: default;
+    font-size: 14px;
+    padding: 0.429em 1em 0.429em 1em;
+    border-radius: 5px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    transition-property: background-color;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: ease, ease;
+    transition-delay: 0s, 0s;
+ }
+ 
+ .dueTextCSS{
+    padding: 4px 6px 4px 6px;
+    font-weight: bold;
+    color:white;
+    border-radius:3px;
+    background-color:rgb(206, 0, 0);
+ }
+ @media screen and (max-width: 740px) {
+    .spinner {
+       position: fixed;
+       top: 30%;
+       left: 30%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+ 
+    :host ::ng-deep .textarea {
+       width: 98%;
+       margin: 1%;
+    }
+ 
+    .cot1 {
+       display: inline-block;
+       width: 100%;
+       .khuvucNXL {
+          margin-bottom: 10px;
+          .iconUser {
+             cursor: pointer;
+             font-weight: bold;
+          }
+       }
+       .khuvucMota {
+          width: 100%;
+          background-color: #fdfdfd;
+          max-height: 25vh;
+          padding: 10px;
+          border-radius: 4px;
+          textarea {
+             border: none;
+             width: 100% !important;
+             outline: none;
+          }
+       }
+       .khuvucTraodoi {
+          margin-top: 8px;
+          background-color: #fdfdfd;
+          width: 100%;
+          height: 46vh;
+          overflow: hidden;
+          border-radius: 4px;
+          padding: 4px;
+          border: solid 1px rgb(170, 170, 170);
+          .goTinNhan {
+             margin-bottom: 10px;
+             background-color: rgb(211, 211, 211);
+             padding: 2px;
+             border-radius: 4px;
+             .btnGui {
+                border: 1px solid #e7e7e7;
+                border-radius: 4px;
+                padding: 4px 10px 4px 10px;
+                margin: 3px;
+                display: inline-block;
+                box-shadow: 0px 0px 4px 1px #e9e9e9;
+                background-color: rgba(228, 89, 38, 0.945);
+                color: white;
+                width: 15%;
+             }
+          }
+          .iconAc {
+             display: inline-block;
+             width: 10%;
+             height: auto;
+             vertical-align: top;
+             .icon {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+                padding: auto;
+                margin-right: 5px;
+                vertical-align: middle;
+                text-align: center;
+                border-radius: 50%;
+                background-color: gray;
+                font-weight: bold;
+                color: white;
+             }
+          }
+          .msgAc {
+             display: inline-block;
+             width: 90%;
+          }
+          .tnusername {
+             margin-bottom: 5px;
+             font-size: 14px;
+          }
+          .tncontent {
+             border: 1px solid #919191;
+             border-radius: 4px;
+             padding: 4px 10px 4px 10px;
+             margin: 3px;
+             display: inline-block;
+             box-shadow: 0px 0px 4px 1px #888888;
+             background-color: #f4f4f4;
+          }
+          .btnEdit {
+             margin-right: 10px;
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .btnDelete {
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .deleteCh {
+             width: 20vw;
+          }
+       }
+    }
+    .cot2 {
+       display: inline-block;
+       width: 100%;
+       vertical-align: top;
+       .khuvucThaoTac {
+          width: 100%;
+          .nutphiaTren {
+             width: 100%;
+             margin-bottom: 20px;
+             button {
+                width: 100%;
+                margin: 2px;
+             }
+             :ng-deep .ui-dropdown-panel {
+                width: 100%;
+                margin: 2px;
+             }
+          }
+          .divLuu {
+             margin-bottom: 20px;
+             .btnLuu {
+                width: 40%;
+                outline: none;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                background-color: rgba(228, 89, 38, 0.945);
+                padding: 3px 0 3px 0;
+             }
+          }
+          .headerDinhkem {
+             padding: 4px;
+             background-color: #d1d1d1;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .fileDinhkem {
+             padding: 2px 2px 2px 10px;
+             height: 35vh;
+             overflow-y: scroll;
+             border: 1px solid #d1d1d1;
+             .everyLink {
+                font-size: 13px;
+ 
+                color: black;
+                padding: 3px;
+                margin: 5px;
+                background-color: #e4e4e4;
+                a:link,
+                a:visited,
+                a:hover,
+                a:active {
+                   color: black;
+                   font-weight: bold;
+                }
+             }
+          }
+       }
+    }
+    :host ::ng-deep.ui-overlaypanel-content {
+       width: 20vw;
+    }
+    textarea {
+       width: 95% !important;
+    }
+    .iconUser {
+       width: 25px;
+       height: 25px;
+       background-color: rgb(173, 173, 173);
+       border-radius: 50%;
+       display: inline-block;
+       padding: auto;
+       margin-right: 5px;
+       vertical-align: middle;
+       text-align: center;
+       font-weight: bold;
+    }
+    .listUser {
+       margin: 4px 0 4px 0;
+       padding: 2px;
+       border-radius: 4px;
+       cursor: pointer;
+    }
+    .listUser:hover {
+       background-color: #e2e2e2;
+    }
+    .specialColor {
+       color: yellowgreen;
+    }
+    .colorInherit {
+       color: white;
+    }
+    ::ng-deep body .ui-datepicker table td {
+       padding: 0;
+    }
+    ::ng-deep body .ui-datepicker table td > a {
+       padding: 2px;
+    }
+    .hideInMB{
+       display:none;
+    }
+ }
+ @media screen and (min-width: 740px) and (max-width: 820px) {
+    .spinner {
+       position: fixed;
+       top: 35%;
+       left: 40%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+    :host ::ng-deep .textarea {
+       width: 98%;
+       margin: 1%;
+    }
+ 
+    .cot1 {
+       display: inline-block;
+       width: 70%;
+       padding-right: 15px;
+       .khuvucNXL {
+          margin-bottom: 10px;
+          .iconUser {
+             cursor: pointer;
+             font-weight: bold;
+          }
+       }
+       .khuvucMota {
+          width: 100%;
+          background-color: #fdfdfd;
+          max-height: 25vh;
+          padding: 10px;
+          border-radius: 4px;
+          textarea {
+             border: none;
+             width: 100% !important;
+             outline: none;
+          }
+       }
+       .khuvucTraodoi {
+          margin-top: 8px;
+          background-color: #fdfdfd;
+          width: 100%;
+          height: 46vh;
+          overflow: hidden;
+          border-radius: 4px;
+          padding: 4px;
+          border: solid 1px rgb(170, 170, 170);
+          .goTinNhan {
+             margin-bottom: 10px;
+             background-color: rgb(211, 211, 211);
+             padding: 2px;
+             border-radius: 4px;
+             .btnGui {
+                border: 1px solid #e7e7e7;
+                border-radius: 4px;
+                padding: 4px 10px 4px 10px;
+                margin: 3px;
+                display: inline-block;
+                box-shadow: 0px 0px 4px 1px #e9e9e9;
+                background-color: rgba(228, 89, 38, 0.945);
+                color: white;
+                width: 15%;
+             }
+          }
+          .iconAc {
+             display: inline-block;
+             width: 10%;
+             height: auto;
+             vertical-align: top;
+             .icon {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+                padding: auto;
+                margin-right: 5px;
+                vertical-align: middle;
+                text-align: center;
+                border-radius: 50%;
+                background-color: gray;
+                font-weight: bold;
+                color: white;
+             }
+          }
+          .msgAc {
+             display: inline-block;
+             width: 90%;
+          }
+          .tnusername {
+             margin-bottom: 5px;
+             font-size: 14px;
+          }
+          .tncontent {
+             border: 1px solid #919191;
+             border-radius: 4px;
+             padding: 4px 10px 4px 10px;
+             margin: 3px;
+             display: inline-block;
+             box-shadow: 0px 0px 4px 1px #888888;
+             background-color: #f4f4f4;
+          }
+          .btnEdit {
+             margin-right: 10px;
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .btnDelete {
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .deleteCh {
+             width: 20vw;
+          }
+       }
+    }
+    .cot2 {
+       display: inline-block;
+       width: 30%;
+       vertical-align: top;
+       .khuvucThaoTac {
+          width: 100%;
+          .nutphiaTren {
+             width: 100%;
+             margin-bottom: 20px;
+             button {
+                width: 100%;
+                margin: 2px;
+             }
+             :ng-deep .ui-dropdown-panel {
+                width: 100%;
+                margin: 2px;
+             }
+          }
+          .divLuu {
+             margin-bottom: 20px;
+             .btnLuu {
+                width: 40%;
+                outline: none;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                background-color: rgba(228, 89, 38, 0.945);
+                padding: 3px 0 3px 0;
+             }
+          }
+          .headerDinhkem {
+             padding: 4px;
+             background-color: #d1d1d1;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .fileDinhkem {
+             padding: 2px 2px 2px 10px;
+             height: 35vh;
+             overflow-y: scroll;
+             border: 1px solid #d1d1d1;
+             .everyLink {
+                font-size: 13px;
+ 
+                color: black;
+                padding: 3px;
+                margin: 5px;
+                background-color: #e4e4e4;
+                a:link,
+                a:visited,
+                a:hover,
+                a:active {
+                   color: black;
+                   font-weight: bold;
+                }
+             }
+          }
+       }
+    }
+    :host ::ng-deep.ui-overlaypanel-content {
+       width: 20vw;
+    }
+    textarea {
+       width: 95% !important;
+    }
+    .iconUser {
+       width: 25px;
+       height: 25px;
+       background-color: rgb(173, 173, 173);
+       border-radius: 50%;
+       display: inline-block;
+       padding: auto;
+       margin-right: 5px;
+       vertical-align: middle;
+       text-align: center;
+       font-weight: bold;
+    }
+    .listUser {
+       margin: 4px 0 4px 0;
+       padding: 2px;
+       border-radius: 4px;
+       cursor: pointer;
+    }
+    .listUser:hover {
+       background-color: #e2e2e2;
+    }
+    .specialColor {
+       color: yellowgreen;
+    }
+    .colorInherit {
+       color: white;
+    }
+    ::ng-deep body .ui-datepicker table td {
+       padding: 0;
+    }
+    ::ng-deep body .ui-datepicker table td > a {
+       padding: 2px;
+    }
+    .hideInIpad{
+       display:none;
+    }
+ }
+ @media screen and (min-width: 820px) {
+    :host ::ng-deep .textarea {
+       width: 98%;
+       margin: 1%;
+    }
+ 
+    .spinner {
+       position: fixed;
+       top: 35%;
+       left: 45%;
+       text-align: center;
+       background-color: rgba(10, 10, 10, 0.87);
+       padding: 15px;
+       border-radius: 10px;
+    }
+ 
+    .cot1 {
+       display: inline-block;
+       width: 50%;
+       padding-right: 15px;
+       .khuvucNXL {
+          margin-bottom: 10px;
+          .iconUser {
+             cursor: pointer;
+             font-weight: bold;
+          }
+       }
+       .khuvucMota {
+          width: 100%;
+          background-color: #fdfdfd;
+          max-height: 25vh;
+          padding: 10px;
+          border-radius: 4px;
+          textarea {
+             border: none;
+             width: 100% !important;
+             outline: none;
+          }
+       }
+       .khuvucTraodoi {
+          margin-top: 8px;
+          background-color: #fdfdfd;
+          width: 100%;
+          height: 46vh;
+          overflow: hidden;
+          border-radius: 4px;
+          padding: 4px;
+          border: solid 1px rgb(170, 170, 170);
+          .goTinNhan {
+             margin-bottom: 10px;
+             background-color: rgb(211, 211, 211);
+             padding: 2px;
+             border-radius: 4px;
+             .btnGui {
+                border: 1px solid #e7e7e7;
+                border-radius: 4px;
+                padding: 4px 10px 4px 10px;
+                margin: 3px;
+                display: inline-block;
+                box-shadow: 0px 0px 4px 1px #e9e9e9;
+                background-color: rgba(228, 89, 38, 0.945);
+                color: white;
+                width: 15%;
+             }
+          }
+          .iconAc {
+             display: inline-block;
+             width: 10%;
+             height: auto;
+             vertical-align: top;
+             .icon {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+                padding: auto;
+                margin-right: 5px;
+                vertical-align: middle;
+                text-align: center;
+                border-radius: 50%;
+                background-color: gray;
+                font-weight: bold;
+                color: white;
+             }
+          }
+          .msgAc {
+             display: inline-block;
+             width: 90%;
+          }
+          .tnusername {
+             margin-bottom: 5px;
+             font-size: 14px;
+          }
+          .tncontent {
+             border: 1px solid #919191;
+             border-radius: 4px;
+             padding: 4px 10px 4px 10px;
+             margin: 3px;
+             display: inline-block;
+             box-shadow: 0px 0px 4px 1px #888888;
+             background-color: #f4f4f4;
+          }
+          .btnEdit {
+             margin-right: 10px;
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .btnDelete {
+             font-size: 12px;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .deleteCh {
+             width: 20vw;
+          }
+       }
+    }
+    .cot2 {
+       display: inline-block;
+       width: 50%;
+       vertical-align: top;
+       .khuvucThaoTac {
+          width: 65%;
+          .nutphiaTren {
+             width: 100%;
+             height: 28vh;
+             margin-bottom: 20px;
+             button {
+                width: 100%;
+                margin: 2px;
+             }
+             :ng-deep .ui-dropdown-panel {
+                width: 100%;
+                margin: 2px;
+             }
+          }
+          .divLuu {
+             margin-bottom: 20px;
+             .btnLuu {
+                width: 40%;
+                outline: none;
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                background-color: rgba(228, 89, 38, 0.945);
+                padding: 3px 0 3px 0;
+             }
+          }
+          .headerDinhkem {
+             padding: 4px;
+             background-color: #d1d1d1;
+             cursor: pointer;
+             :hover {
+                color: orangered;
+             }
+          }
+          .fileDinhkem {
+             padding: 2px 2px 2px 10px;
+             height: 35vh;
+             overflow-y: scroll;
+             border: 1px solid #d1d1d1;
+             .everyLink {
+                font-size: 13px;
+ 
+                color: black;
+                padding: 3px;
+                margin: 5px;
+                background-color: #e4e4e4;
+                a:link,
+                a:visited,
+                a:hover,
+                a:active {
+                   color: black;
+                   font-weight: bold;
+                }
+             }
+          }
+       }
+    }
+    :host ::ng-deep.ui-overlaypanel-content {
+       width: 20vw;
+    }
+    textarea {
+       width: 95% !important;
+    }
+    .iconUser {
+       width: 25px;
+       height: 25px;
+       background-color: rgb(173, 173, 173);
+       border-radius: 50%;
+       display: inline-block;
+       padding: auto;
+       margin-right: 5px;
+       vertical-align: middle;
+       text-align: center;
+       font-weight: bold;
+    }
+    .listUser {
+       margin: 4px 0 4px 0;
+       padding: 2px;
+       border-radius: 4px;
+       cursor: pointer;
+    }
+    .listUser:hover {
+       background-color: #e2e2e2;
+    }
+    .specialColor {
+       color: yellowgreen;
+    }
+    .colorInherit {
+       color: white;
+    }
+    ::ng-deep body .ui-datepicker table td {
+       padding: 0;
+    }
+    ::ng-deep body .ui-datepicker table td > a {
+       padding: 2px;
+    }
+    .hideInPC{
+       display:none;
+    }
+ }
+ 
+ .avartarList {
+    display: inline-block;
+    width: 35px;
+    height: auto;
+    vertical-align: middle;
+    .avartarIcon {
+       width: 30px;
+       height: 30px;
+       display: inline-block;
+       padding: auto;
+       margin-right: 5px;
+       vertical-align: middle;
+       text-align: center;
+       border-radius: 50%;
+       background-color: gray;
+       font-weight: bold;
+       color: white;
+       display: table-cell;
+    }
+ }
+ .msgAc {
+    display: inline-block;
+    width: calc(100% - 35px);
+ }
+ .btn {
+    padding: 3px 15px 3px 15px;
+ }
+ 

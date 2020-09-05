@@ -9,5 +9,5 @@ export const ShipManagerRoutes: Routes = [
   }, {
     path: 'detail-orders',
     component: OrderDetailComponent
-  }
+  },
 ];

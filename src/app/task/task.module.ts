@@ -20,8 +20,6 @@ import {
   MatProgressSpinnerModule,
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ListTaskComponent } from './list-task/list-task.component';
-import { TaskServices } from 'app/services/task.services';
 import { ShareCommonModule } from '../common/share-common.module';
 import { TaskRoutes } from './task.routing';
 import {
@@ -29,6 +27,11 @@ import {
 } from 'primeng/primeng';
 import { MessageService } from 'primeng/api';
 import { CommonViewModule } from 'app/common-view/common-view.module';
+//componet
+import { ListTaskComponent } from './list-task/list-task.component';
+import { TaskDetailComponent } from './task-detail/task-detail.component';
+//services
+import { TaskServices } from 'app/services/task.services';
 //Prime module
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
@@ -39,6 +42,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmationService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
@@ -73,10 +77,12 @@ import { ConfirmationService } from 'primeng/api';
     ProgressSpinnerModule,
     ConfirmDialogModule,
     ToastModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    TooltipModule
    ],
   declarations: [
-    ListTaskComponent
+    ListTaskComponent,
+    TaskDetailComponent
   ],
   providers: [
     MessageService,

@@ -45,6 +45,21 @@ export class ApiService {
             });
     }
 
+    postNoConvert(apiUrl: string = '', condition?: any) {
+        const requestoptions = new RequestOptions({
+            method: RequestMethod.Post,
+            url: apiUrl,
+            headers: this.getJsonHeaders(),
+            body: condition
+        });
+        
+        return this.http.request(new Request(requestoptions)).map(
+            (res: Response) => {
+                return this.forwardData(res);
+            }).catch(error => {
+                return this.forwardError(error);
+            });
+    }
     /**
       * Funtion get: Get data by parameter
       * @param apiUrl

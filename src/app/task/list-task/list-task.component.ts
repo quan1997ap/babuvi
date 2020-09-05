@@ -265,13 +265,14 @@ export class ListTaskComponent implements OnInit {
   };
 
   goToTaskDetail(taskId){
-    this.router.navigate(['ship-manager/task-detail'],{queryParams:{id:taskId}})
+    this.router.navigate(['task/task-detail'],{queryParams:{id:taskId}})
   }
 
   goToOrder(refId,refType){
     switch(refType){
       case "1":
-        this.router.navigate([`/ship-manager/detail-orders?orderId=${refId}`]);
+        //this.router.navigate([`/ship-manager/detail-orders?orderId=${refId}`]);
+        this.router.navigate(['ship-manager/detail-orders'],{queryParams:{orderId:refId}})
         break;
       case "2":
         alert("Chưa làm chi tiết kiện hàng")
