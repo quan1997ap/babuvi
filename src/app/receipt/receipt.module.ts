@@ -13,7 +13,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import { ReceiptRoutes } from './receipt.routing';
 //component
 import {AddNewReceiptComponent} from './addnew-receipt/addnew-receipt.component';
-
+import {ListReceiptComponent} from './list-receipt/list-receipt.component';
 //primeng service
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -24,10 +24,13 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
     declarations: [
         AddNewReceiptComponent,
+        ListReceiptComponent
     ],
     imports: [
         CommonModule,
@@ -44,7 +47,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         OverlayPanelModule,
         ConfirmDialogModule,
         ToastModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+        TableModule,
+        CheckboxModule
     ],
     providers: [
         ConfirmationService,

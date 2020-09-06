@@ -15,5 +15,6 @@ export const OrderRoutes: Routes = [
         }, {
             path: 'order-buy-edit',
             component: OrderBuyEditComponent
-        }]
+        }
+    ]
     }];

@@ -9,7 +9,13 @@ export class ReceiptService extends ApiService {
     constructor(http: HttpService, _router: Router ) {
         super(ApiApplication.receipt.controller, http, _router);
     }
+
     addReceipt(data:any){
         return this.post(this.apiBaseController + `addReceipt`,data)
     }
+
+    searchReceipt(page:number, perPage:number,data:any){
+        return this.post(this.apiBaseController + `searchReceipt/?page=${page}&perPage=${perPage}`,data)
+    }
+
 }

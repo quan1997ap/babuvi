@@ -238,4 +238,8 @@ export class OrderDetailComponent implements OnInit, AfterViewInit {
             }
         });
     }
+
+    complaint() {
+        this.router.navigate(['complaint/complaint-order', this.orderId, this.orderDetailRO.orderData.orderCode ]);
+      }
 }

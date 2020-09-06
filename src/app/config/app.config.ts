@@ -1,6 +1,6 @@
 export const Module = "babuvi";
-export const ApiBaseUrl = "https:backend.babuvi.com/api/";
-//export const ApiBaseUrl = "http://localhost:5000/api/";
+//export const ApiBaseUrl = "https:backend.babuvi.com/api/";
+export const ApiBaseUrl = "http://localhost:5000/api/";
 export const APP_NAME = 'Babuvi';
 export const MessageType = {
     Default: 'default',
@@ -124,7 +124,7 @@ export const ApiApplication = {
     clientAppCode: 'exo-r9045HKopew8mnGj',
     //api/Extension/
     Extension: {
-        controller: ApiBaseUrl + 'Extension/',
+        controller: ApiBaseUrl + 'Extension',
         exchangerate: 'exchangerate'
     },
     receipt: {
@@ -141,12 +141,12 @@ export const ApiApplication = {
         chat: ApiBaseUrl + 'Order/addNewChat'
     },
     shipManager: {
-        controller: ApiBaseUrl + 'order/',
+        controller: ApiBaseUrl + 'order',
         allOrder: 'allorder/',
         cancelOrder: 'customerCancelOrder'
     },
     cart: {
-        controller: ApiBaseUrl + 'cart/',
+        controller: ApiBaseUrl + 'cart',
         getCountry: ApiBaseUrl + 'System/GetCountry/',
         getAreaOther: ApiBaseUrl + 'System/getAreaByParent/',
         lstAllServicesOption: 'getLsServiceOrder/', 
@@ -168,11 +168,14 @@ export const ApiApplication = {
         AddToCartBasic: 'AddToCartBasic',
     },
     task: {
-        controller: ApiBaseUrl + 'task/',
+        controller: ApiBaseUrl + 'task',
     },
     fileManager: {
-        controller: ApiBaseUrl + 'fileManager/',
+        controller: ApiBaseUrl + 'fileManager',
         upLoadImageOneDrive: 'upLoadImageOneDrive',
+    },
+    compplain: {
+        controller: ApiBaseUrl + 'complain',
     },
     // Use for Merchandise Component
     merchandise: {
@@ -208,6 +211,9 @@ export const ApiApplication = {
         getWalletTransactionsType: '/getWalletTransactionsType/',
         getReceiptType: 'getReceiptType',
         getReasion: 'getReasion',
+        getReceiptStatus: 'getReceiptStatus',
+        getComplainStatus: 'getComplainStatus',
+        getComplainType: 'getComplainType'
     },
     order: {
         controller: ApiBaseUrl + 'order',
@@ -243,7 +249,7 @@ export const ApiApplication = {
         changePass: "changePass"
     },
     wallet: {
-        controller: ApiBaseUrl + "wallet/",
+        controller: ApiBaseUrl + "wallet",
         //load số tiền trong ví
         getWalletInforById: "getWalletInforById/",
         //Hàm load danh sách giao dịch

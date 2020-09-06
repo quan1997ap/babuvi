@@ -100,9 +100,7 @@ export class MerchandiseServices extends ApiService {
         return this.put(this.apiBaseController + "deleteLsDeliveryRequest/", deleteIds);
     }
 
-    
-
-    addToCardBasic(data:any){
-        return this.post(`https:backend.babuvi.com/api/cart/AddToCartBasic`,data)
+    searchMerchandise(page:number,perPage:number,data){
+        return this.post(this.apiBaseController + `searchMerchandise?perPage=${perPage}&page=${page}`,data)
     }
 }

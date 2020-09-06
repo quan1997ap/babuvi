@@ -85,6 +85,11 @@ export const AppRoutes: Routes = [{
         path: 'receipt',
         canActivate: [AuthGuard],
         loadChildren: './receipt/receipt.module#ReceiptModule'
+    },
+    {
+        path: 'complaint',
+        canActivate: [AuthGuard],
+        loadChildren: './complaint/complaint.module#ComplaintModule'
     }
 ]
 }, {

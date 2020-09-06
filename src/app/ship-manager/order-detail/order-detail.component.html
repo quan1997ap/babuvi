@@ -9,7 +9,7 @@
     <button mat-raised-button color="warn" (click)="requestDelivery()">Vận Chuyển</button>
   </span>
   <span class="top-feature">
-    <button mat-raised-button color="warn">Khiếu Nại</button>
+    <button mat-raised-button color="warn" (click)="complaint()">Khiếu Nại</button>
   </span>
   <span class="top-feature">
     <button mat-raised-button color="warn" (click)="cancel()">Hủy</button>
@@ -324,7 +324,7 @@
               <div class="content-inline w80" *ngIf="detectWidthLayoutSm">¥{{item.totalOrderOriginalPrice | number}}</div>
             </div>
             <div class="col-sm-2 mb-2 text-sm-center">
-              <button class="button-orange" mat-raised-button style="height: 38px">
+              <button class="button-orange" mat-raised-button style="height: 38px" (click)="complaint()">
                 <i style="margin-right: 5px;" class="fa fa-frown-o"></i>
                 Khiếu nại
               </button>

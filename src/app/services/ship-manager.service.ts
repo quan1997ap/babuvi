@@ -11,7 +11,7 @@ export class ShipManagerService extends ApiService {
     }
     
     getAllOrders(userId: number, page: number) {
-        return this.get(ApiApplication.shipManager.controller 
+        return this.get(ApiApplication.shipManager.controller
             + ApiApplication.shipManager.allOrder + '?'
             + ApiApplication.userId + '= '+userId + '&'
             + ApiApplication.perPage +'= ' + 10 + '&'
