@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<div class="order-complaint">
+<div class="order-complaint"  *ngIf="loadDataSuccess !== undefined && loadDataSuccess === true">
     <div class="form-container" *ngIf="updateSuccess === false">
         <div class="form-title"> Khiếu nại đơn hàng</div>
         <div class="p-grid no-padding no-margin">
@@ -113,7 +113,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div style="min-height: 100vh;" *ngIf="updateSuccess === true">
@@ -125,4 +124,11 @@
             <span (click)="clearSuccessMessage()" class="next"> Tiếp tục </span>
         </div>
     </div>
+</div>
+
+<div *ngIf="loadDataSuccess !== undefined && loadDataSuccess === false">
+    <span class="loadDataErr">
+        Có lỗi xảy ra trong quá trình load dữ liệu
+        <p class="refresh-btn" (click)="refresh()"> Thử lại </p>
+    </span>
 </div>

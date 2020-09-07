@@ -73,4 +73,17 @@ export class ComplaintServices extends ApiService {
         };
         return this.put(this.apiBaseController +  `cancelLsComplain`, params);
     }
+
+    getCompainByOrderId(orderId) {
+        return this.get(this.apiBaseController + `getCompainByOrderId/${orderId}`).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
 }

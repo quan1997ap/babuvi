@@ -17,7 +17,7 @@ import { CommonViewModule } from 'app/common-view/common-view.module';
 import { MessagesUtilsService } from './../services/messages-utils.service';
 import { ComplaintServices } from 'app/services/complaint.services';
 import { SystemService } from 'app/services/system.services';
-import { OrderDetailService } from 'app/services/order-detail.service';
+import { OrderService } from 'app/services/order.service';
 //component
 import {ComplaintOrderComponent} from '../complaint/complaint-order/complaint-order.component';
 import {ListComplaintComponent} from '../complaint/list-complaint/list-complaint.component';
@@ -60,7 +60,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     ComplaintServices,
     SystemService,
     ConfirmationService,
-    OrderDetailService
+    OrderService
   ]
 })
 

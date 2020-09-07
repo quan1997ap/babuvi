@@ -5,6 +5,8 @@ import { HttpService } from './common/http.service';
 import { ApiApplication } from 'app/config/app.config';
 import {OrderBuy} from '../model/body/order-buy.model';
 import {RequestModel} from '../model/request.model';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class OrderService extends ApiService {
@@ -15,6 +17,19 @@ export class OrderService extends ApiService {
     getOrderViewModelById(id: number) {
         const param = '?orderId=' + id;
         return this.get(this.apiBaseController + ApiApplication.order.getOrderViewModelById + param);
+    }
+
+    getOrderDetailById(orderId) {
+        return this.get(this.apiBaseController + 'getOrderDetailViewModel?orderid=' + orderId).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
     }
 
     payListOrder(data: RequestModel) {

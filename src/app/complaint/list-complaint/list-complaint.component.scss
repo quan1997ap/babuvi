@@ -14,7 +14,7 @@ input[type="text"] {
   padding-left: 10px;
   border-radius: 5px;
   min-height: 36px;
-  width: 90%;
+  width: 95%;
   &:focus {
     outline: none !important;
   }
@@ -141,7 +141,7 @@ input[type="text"] {
 }
 .filter {
   .filter-control {
-    padding: 10px 15px !important;
+    padding: 10px 0 10px 15px !important;
   }
 }
 

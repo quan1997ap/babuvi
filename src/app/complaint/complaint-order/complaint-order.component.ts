@@ -15,7 +15,7 @@ import { Validators, FormControl, FormGroup, FormBuilder } from '@angular/forms'
 import { PassDataService } from 'app/services/pass-data.services';
 import { ComplaintServices } from 'app/services/complaint.services';
 import { SystemService } from 'app/services/system.services';
-import { OrderDetailService } from 'app/services/order-detail.service';
+import { OrderService } from 'app/services/order.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessagesUtilsService } from '../../services/messages-utils.service';
 
@@ -53,6 +53,8 @@ export class ComplaintOrderComponent implements OnInit {
   complaintList: any = [];
 
   orderDetailPage = undefined; // form read only
+  loadDataSuccess = undefined;
+
   constructor(
     public messagesUtilsService: MessagesUtilsService,
     private confirmationService: ConfirmationService,
@@ -64,7 +66,7 @@ export class ComplaintOrderComponent implements OnInit {
     private location: Location,
     private complaintServices: ComplaintServices,
     private systemService: SystemService,
-    private orderDetailService: OrderDetailService,
+    private orderService: OrderService,
     ) {
   }
 
@@ -82,7 +84,6 @@ export class ComplaintOrderComponent implements OnInit {
     this.activeRoute.params.subscribe(params => {
       this.currentComplain.complainId = params.complainId;
       let detailComplaint;
-      console.log(this.currentComplain.complainId)
       if (this.currentComplain.complainId) {
         this.complaintServices.getCompainById(this.currentComplain.complainId).subscribe(resCompaint => {
           // mapping value for form detail
@@ -116,8 +117,8 @@ export class ComplaintOrderComponent implements OnInit {
       // as of RxJS 6.5+ we can use a dictionary of sources
       this.systemService.getComplainTypes(),
       this.systemService.getComplainStatus(),
-      this.orderDetailService.getOrderDetail(orderId),
-      this.complaintServices.getComplaints(1, 1000, { OrderCode: this.currentOrder.orderCode })
+      this.orderService.getOrderDetailById(orderId),
+      this.complaintServices.getCompainByOrderId(this.currentOrder.orderId)
     ).subscribe(res => {
       if (res) {
         if (res[0] && res[0].length > 0) {
@@ -131,9 +132,11 @@ export class ComplaintOrderComponent implements OnInit {
         if (res[2] && res[2].length > 0) {
           this.itemsOfCurrentOrder = res[2];
           this.itemsOfCurrentOrderOptions = res[2].map((item: any) => ({ label: item, value: item.orderDetailId }));
+          console.log(this.itemsOfCurrentOrder);
+          console.log(this.itemsOfCurrentOrderOptions);
         }
-        if (res[3].result.success && res[3].result.data && res[3].result.data.lsData && res[3].result.data.lsData.length > 0) {
-          this.complaintList = res[3].result.data.lsData;
+        if (res[3] && res[3].length > 0) {
+          this.complaintList = res[3];
         }
         if (detailComplaint) {
           this.orderComplaintForm.patchValue(detailComplaint);
@@ -144,8 +147,10 @@ export class ComplaintOrderComponent implements OnInit {
         }
       }
       this._passData.loading(false);
+      this.loadDataSuccess = true;
     }, error => {
       this._passData.loading(false);
+      this.loadDataSuccess = false;
     });
   }
 
@@ -261,5 +266,9 @@ export class ComplaintOrderComponent implements OnInit {
       () => {},
       'Bạn muốn hủy khiếu nại này không?'
     )
+  }
+
+  refresh() {
+    window.location.reload();
   }
 }

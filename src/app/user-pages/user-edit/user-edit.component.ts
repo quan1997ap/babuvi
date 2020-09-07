@@ -85,9 +85,10 @@ export class UserEditComponent implements OnInit {
     this.editUserCustomerForm = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required, Validators.pattern('^[^!@#$%^&*(),.?":{}|<>]*$')]),
       lastName: new FormControl('', [Validators.required, Validators.pattern('^[^!@#$%^&*(),.?":{}|<>]*$')]),
-      username: new FormControl('', [Validators.pattern('^[^!@#$%^&*(),.?":{}|<>]*$')]),
-      password: new FormControl('', [Validators.required, Validators.pattern('^[^!@#$%^&*(),.?":{}|<>]*$')]),
-      rePassword: new FormControl('', [Validators.required, Validators.pattern('^[^!@#$%^&*(),.?":{}|<>]*$')]),
+      username: new FormControl('', [Validators.pattern('^[^!@#$%^&*(),?":{}|<>]*$')]),
+      // note regex password https://helpex.vn/question/regex-cho-mat-khau-phai-chua-it-nhat-tam-ky-tu-it-nhat-mot-so-va-ca-chu-thuong-va-chu-hoa-va-ky-tu-dac-biet-5cb71aeeae03f62598de3864
+      password: new FormControl('', [Validators.required, Validators.pattern(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{4,1000}$`)]),
+      rePassword: new FormControl('', [Validators.required, Validators.pattern(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{4,1000}$`)]),
       phone: new FormControl('', [Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')]),
       email: new FormControl('', [Validators.required, Validators.pattern('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}')]),
       address: new FormControl('', [Validators.required]),
@@ -427,6 +428,37 @@ export class UserEditComponent implements OnInit {
         this.msgs.push({ severity: 'error', summary: 'Lỗi', detail: 'Tên đăng nhập không được chứa kí tự đặc biệt !@#$%^&*(),.?":{}|<>' });
       }
     }
+    else if (
+        ['_', '.'].includes(this.editUserCustomerForm.value.username[0]) ||
+        ['_', '.'].includes(this.editUserCustomerForm.value.username[this.editUserCustomerForm.value.username.length - 1])
+      ) {
+        this.msgs.push(
+          { severity: 'error', summary: 'Lỗi', detail: 'Dấu gạch dưới và dấu chấm không được ở cuối hoặc đầu tên người dùng' }
+        );
+      }
+      else if (
+        this.editUserCustomerForm.value.username.includes('_.')
+      ) {
+        this.msgs.push(
+          { severity: 'error', summary: 'Lỗi', detail: 'Dấu gạch dưới và dấu chấm không được ở cạnh nhau' }
+        );
+      }
+      else if (
+        this.editUserCustomerForm.value.username.split('.').length > 2 ||
+        this.editUserCustomerForm.value.username.split('_').length > 2
+      ) {
+        this.msgs.push(
+          { severity: 'error', summary: 'Lỗi', detail: 'Không thể sử dụng dấu gạch dưới hoặc dấu chấm nhiều lần trong một hàng' }
+        )
+      }
+      else if (
+        this.editUserCustomerForm.value.username.length < 8 ||
+        this.editUserCustomerForm.value.username.length > 20
+      ) {
+        this.msgs.push(
+          { severity: 'error', summary: 'Lỗi', detail: 'Tên người dùng phải từ 8 đến 20 ký tự' }
+        )
+      }
     else if (phoneControl.error && phoneControl.error === true) {
       if (phoneControl.type === 'pattern') {
         this.msgs.push({ severity: 'error', summary: 'Lỗi', detail: 'Số điện thoại phải là số' });
@@ -445,12 +477,22 @@ export class UserEditComponent implements OnInit {
       this.msgs.push({ severity: 'error', summary: '', detail: '2 Mật khẩu không giống nhau' });
     }
     else if (passwordControl.error || rePasswordControl.error) {
-      if (passwordControl.type === 'pattern' || rePasswordControl.type === 'pattern') {
-        this.msgs.push({ severity: 'error', summary: 'Lỗi', detail: 'Mật khẩu không được nhập ký tự đặc biệt' });
-      } else if (passwordControl.type === 'required') {
-        this.msgs.push({ severity: 'error', summary: '', detail: 'Bạn phải nhập đủ mật khẩu' });
+        if (passwordControl.type === 'pattern' || rePasswordControl.type === 'pattern') {
+          this.msgs.push({ severity: 'error', summary: 'Lỗi', detail: `Nhập mật khẩu thỏa mãn các điều kiện bên dưới` });
+          this.msgs.push({ severity: 'error', summary: '', detail: `Ít nhất một chữ cái viết hoa` });
+          this.msgs.push({ severity: 'error', summary: '', detail: `Ít nhất một chữ thường` });
+          this.msgs.push({ severity: 'error', summary: '', detail: `Ít nhất một chữ số` });
+          this.msgs.push({ severity: 'error', summary: '', detail: `Có nhiều hơn 4 ký tự` });
+          this.msgs.push({ severity: 'error', summary: '', detail: `Ít nhất một biểu tượng đặc biệt` });
+        } else if (passwordControl.type === 'required') {
+          this.msgs.push({ severity: 'error', summary: '', detail: 'Bạn phải nhập đủ mật khẩu' });
+        }
       }
-    }
+      else if (
+        this.editUserCustomerForm.value.username.includes(' ')
+      ) {
+        this.msgs.push( { severity: 'error', summary: 'Lỗi', detail: 'Mật khẩu Không được chứa dấu cách' });
+      }
     else if (addressControl.error && addressControl.error === true) {
       this.msgs.push({ severity: 'error', summary: '', detail: 'Bạn phải nhập địa chỉ' });
     }

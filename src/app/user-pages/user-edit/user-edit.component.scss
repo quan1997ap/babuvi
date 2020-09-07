@@ -1,4 +1,10 @@
 .ms-user-customer {
+    .ui-messages ul{
+      display: flex;
+      flex-direction: column;
+      justify-content: left;
+      align-items: flex-start;
+    }
     .h100 {
       height: 100% !important;
     }

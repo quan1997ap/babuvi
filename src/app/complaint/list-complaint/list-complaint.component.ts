@@ -36,6 +36,7 @@ export class ListComplaintComponent implements OnInit, AfterViewInit {
   pageIndex: number = 1;
   currentDate = new Date();
   mobileVersion = false;
+  checkedAll = false;
   constructor(
     public messagesUtilsService: MessagesUtilsService,
     public messageService: MessageService,
@@ -162,4 +163,11 @@ export class ListComplaintComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl(`complaint/complaint-order/${lastId}`);
   }
 
+  checkAllComplaints(checked) {
+    if (checked) {
+      this.complaintIdSelecteds = this.complaintList.map(complaint => complaint.complainId);
+    } else {
+      this.complaintIdSelecteds = [];
+    }
+  }
 }

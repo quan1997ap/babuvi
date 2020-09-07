@@ -31,7 +31,7 @@
                 <input type="text" placeholder="Mã khiếu nại" pInputText [(ngModel)]="filterConditions.ComplainCode" />
             </div>
             <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
-                <input type="text" placeholder="Mã đơn hàng" pInputText [(ngModel)]="filterConditions.OrderCode" />
+                <input type="text" placeholder="Mã đợn hàng" pInputText [(ngModel)]="filterConditions.OrderCode" />
             </div>
             <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
                 <input type="text" placeholder="Mã sản phẩm" pInputText [(ngModel)]="filterConditions.ItemCode" />
@@ -39,7 +39,7 @@
             <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
                 <div class="calendar">
                     <p-calendar [yearNavigator]="true" yearRange="2000:2030"
-                        [style]="{'width':'100%', 'display': 'flex'}" [inputStyle]="{'width':'90%'}"
+                        [style]="{'width':'100%', 'display': 'flex'}" [inputStyle]="{'width':'95%'}"
                         placeholder="Từ ngày" dateFormat="dd/mm/yy" showButtonBar="true"
                         [(ngModel)]="filterConditions.StartDate" [showIcon]="false" inputId="icon">
                     </p-calendar>
@@ -50,7 +50,7 @@
                     <p-calendar dateFormat="dd/mm/yy" showButtonBar="true"
                         [minDate]="filterConditions.StartDate ? filterConditions.StartDate: currentDate "
                         [yearNavigator]="true" yearRange="2000:2030" [style]="{'width':'100%',  'display': 'flex'}"
-                        [inputStyle]="{'width':'90%'}" placeholder="Đến ngày" [(ngModel)]="filterConditions.EndDate"
+                        [inputStyle]="{'width':'95%'}" placeholder="Đến ngày" [(ngModel)]="filterConditions.EndDate"
                         [showIcon]="false" inputId="icon">
                     </p-calendar>
                 </div>
@@ -73,7 +73,10 @@
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 50px;"> &nbsp; </th>
+                    <th style="width: 50px;">
+                        <p-checkbox  binary="true" inputId="binary" (onChange)="checkAllComplaints($event)"
+                            [(ngModel)]="checkedAll"></p-checkbox>
+                    </th>
                     <th style="width: 150px;">Mã KN</th>
                     <th style="width: 150px;">Mã đơn</th>
                     <th style="width: 120px;">Mã sản phẩm</th>
