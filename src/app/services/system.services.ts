@@ -66,5 +66,72 @@ export class SystemService extends ApiService {
             return throwError(error);
         }));
     }
+
+    getListSex() {
+        return this.get(this.apiBaseController + ApiApplication.system.getListSex).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
+    getListLevel() {
+        return this.get(this.apiBaseController + ApiApplication.system.getListLevel).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
+    getAllCountry() {
+        return this.get(this.apiBaseController + ApiApplication.system.getCountry).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
+    getAreaByParent(parentId) {
+        return this.get(this.apiBaseController + 'getAreaByParent?parentId=' + parentId).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
+    getWarehouseVN() {
+        // kho nhận hàng
+        return this.get(this.apiBaseController + 'getWarehouseVN').pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
 }
 

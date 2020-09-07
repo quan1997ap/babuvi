@@ -130,6 +130,10 @@ export const ApiApplication = {
     receipt: {
         controller: ApiBaseUrl + 'Receipt',
     },
+    right: {
+        controller: ApiBaseUrl + 'Right',
+        getListRight: 'getListRight',
+    },
     receiptTopup: {
         controller: ApiBaseUrl + 'Receipt/lsReceiptTopup/',
         page: 'page',
@@ -213,7 +217,10 @@ export const ApiApplication = {
         getReasion: 'getReasion',
         getReceiptStatus: 'getReceiptStatus',
         getComplainStatus: 'getComplainStatus',
-        getComplainType: 'getComplainType'
+        getComplainType: 'getComplainType',
+        getListSex: 'getListSex',
+        getCountry: 'getCountry',
+        getListLevel: 'getListLevel'
     },
     order: {
         controller: ApiBaseUrl + 'order',
@@ -244,9 +251,13 @@ export const ApiApplication = {
         controller: ApiBaseUrl + 'user',
         getListStorekeeperInWarehouse: 'getliststorekeeperinwarehouse',
         regUserCustomer: 'regUserCustomer/',
-        refreshToken: "/refreshToken",
+        addOrUpdateUserCustomer: 'addOrUpdateUserCustomer',
+        refreshToken: '/refreshToken',
         getUserById: 'getUserById',
-        changePass: "changePass"
+        changePass: 'changePass',
+        getInfoUser: 'getInfoUser',
+        getInfoUserById: 'getInfoUserById',
+        getListUserStaff: 'getListUserStaff',
     },
     wallet: {
         controller: ApiBaseUrl + "wallet",

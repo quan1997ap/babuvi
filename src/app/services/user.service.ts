@@ -15,6 +15,10 @@ export class UserService extends ApiService {
         return this.get(ApiApplication.system.controller + "/" + ApiApplication.system.getWarehouseVN);
     }
 
+    addOrUpdateUserCustomer(customerInfor: User) {
+        return this.put(this.apiBaseController + ApiApplication.user.addOrUpdateUserCustomer, customerInfor);
+    }
+
     AddNewCustommer(data: User) {
         return this.post(this.apiBaseController + ApiApplication.user.regUserCustomer, data);
     }
@@ -25,5 +29,16 @@ export class UserService extends ApiService {
 
     changePass(data:any){
         return this.put(this.apiBaseController + ApiApplication.user.changePass,data);
+    }
+
+    getInfoUser() {
+        return this.get(this.apiBaseController + ApiApplication.user.getInfoUser);
+    }
+
+    getInfoUserById(userId: number) {
+        return this.get(this.apiBaseController + ApiApplication.user.getInfoUserById + '?userid=' + userId);
+    }
+    getListUserStaff() {
+        return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff);
     }
 }

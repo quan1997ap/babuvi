@@ -1,22 +1,4 @@
-.ms-user-profile {
-    .loadDataErr {
-      color: #333;
-      display: block;
-      margin: 10% auto;
-      font-size: 20px;
-      width: fit-content;
-    }
-  
-    .refresh-btn {
-      border-radius: 3px;
-      padding: 5px 10px;
-      width: 100px;
-      margin: 15px auto;
-      background: #f0622f;
-      color: #fff;
-      text-align: center;
-    }
-    
+.ms-user-customer {
     .h100 {
       height: 100% !important;
     }
@@ -42,6 +24,23 @@
     }
     .required {
       color: #f05922;
+    }
+    .loadDataErr {
+      color: #333;
+      display: block;
+      margin: 10% auto;
+      font-size: 20px;
+      width: fit-content;
+    }
+  
+    .refresh-btn {
+      border-radius: 3px;
+      padding: 5px 10px;
+      width: 100px;
+      margin: 15px auto;
+      background: #f0622f;
+      color: #fff;
+      text-align: center;
     }
   
     .user-infor {
@@ -119,7 +118,7 @@
     }
   
     .form-container {
-      border-left: 20px solid #f0f2f7;
+      border-left: 0px solid #f0f2f7;
       background: #fff;
       min-height: 100vh;
       .tab-title {
@@ -146,6 +145,8 @@
         padding-right: 20px;
         padding-top: 20px;
         padding-bottom: 40px;
+        max-width: 930px;
+  
         .form-row {
           display: flex;
           flex-direction: row;
@@ -154,6 +155,11 @@
           align-items: center;
           p-dropdown {
             flex: 1;
+          }
+          .form-control-sex {
+            p-dropdown {
+              flex: 0;
+            }
           }
           .title {
             width: 210px;
@@ -176,24 +182,18 @@
             flex: 1 !important;
             width: auto;
           }
-          .change-password {
-            color: #4d7ba6;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            margin-left: 10px;
-            &:hover {
-              color: #1e5990;
-            }
-          }
           &.birthdate-sex {
             display: flex;
             justify-content: space-between;
-            p-dropdown {
-              min-width: 300px;
-            }
-            p-calendar {
-              min-width: 300px;
+            .form-control-birthdate,
+            .form-control-sex {
+              display: flex;
+              p-dropdown {
+                min-width: 300px;
+              }
+              p-calendar {
+                min-width: 300px;
+              }
             }
           }
         }
@@ -207,59 +207,52 @@
       }
     }
   }
-  
   @media (max-width: 769px) {
-    .ms-user-profile .form-container .edit-profile-form .form-row {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
+    .ms-usercustomer .form-container .edit-profile-form .form-row .title {
+      width: 120px !important;
     }
-    .ms-user-profile .form-container .edit-profile-form .form-row .title {
-      width: 100%;
-      text-align: left;
-      margin-bottom: 10px;
-    }
-    .ms-user-profile .form-container .edit-profile-form .form-row {
-      input[type="text"],
-      input[type="tel"] {
-        width: 100%;
-      }
-      p-dropdown {
-        width: 100%;
-      }
-    }
-    .form-control-birthdate,
-    .form-control-sex {
-      margin-bottom: 0px;
-      width: 100%;
-      p-dropdown {
-        width: 100%;
-      }
-      p-calendar {
-        width: 100%;
-        .ui-calendar {
-          width: 100%;
-          display: flex !important;
-        }
-      }
-      .dr-sex {
-        width: 100%;
-      }
-    }
-    .change-pass {
-      flex-direction: row !important;
-    }
-    .ms-user-profile .form-container .edit-profile-form .form-row .first-name {
-      margin-bottom: 10px;
-    }
-  }
-  @media (max-width: 870px) {
     .form-control-birthdate {
       margin-bottom: 20px;
     }
+    .ms-user-customer
+      .form-container
+      .edit-profile-form
+      .form-row
+      .form-control-sex
+      p-dropdown {
+      width: 100%;
+    }
+  }
+  @media (max-width: 870px) {
+    .form-control-birthdate,
+    .form-control-sex {
+      margin-bottom: 20px;
+      width: 100%;
+      .dr-sex {
+        flex: 1;
+      }
+    }
     .form-container {
       border-left: 0 !important;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .ms-user-customer .form-container .edit-profile-form .form-row .title {
+      width: 100% !important;
+      display: block;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    .ms-user-customer .form-container .edit-profile-form .form-row.birthdate-sex {
+      height: auto !important;
+    }
+    .form-row.birthdate-sex{
+      margin-bottom: 0 !important;
+      .form-control-birthdate, .form-control-sex{
+        display: flex;
+        flex-direction: column;
+      }
     }
   }
   
@@ -267,57 +260,29 @@
     .form-container {
       border-left: 0 !important;
     }
+    .ms-user-customer .form-container .edit-profile-form .form-row.birthdate-sex {
+      height: 110px;
+      margin-bottom: 10px;
+    }
   }
   
   @media only screen and (min-width: 992px) and (max-width: 1280px) {
-    .ms-user-profile .form-container .edit-profile-form .form-row.birthdate-sex {
-      height: 120px;
-      .form-control-birthdate,
-      .form-control-sex {
-        align-items: center;
-        display: flex;
-        width: 100%;
-        p-dropdown,
-        p-calendar {
-          flex: 1;
-        }
-      }
+    .ms-user-customer .form-container .edit-profile-form .form-row.birthdate-sex {
+      height: 50px;
     }
-    .ms-user-profile .form-container .edit-profile-form .form-row .title {
+    .ms-user-customer .form-container .edit-profile-form .form-row .title {
       width: 140px !important;
     }
   }
   
   @media only screen and (min-width: 1281px) and (max-width: 1500px) {
-    .ms-user-profile .form-container .edit-profile-form .form-row.birthdate-sex {
-      height: 120px;
-      .form-control-birthdate,
-      .form-control-sex {
-        display: flex;
-        align-items: center;
-        flex-direction: row !important;
-        .ms-user-profile
-          .form-container
-          .edit-profile-form
-          .form-row
-          .title.sex-title {
-          width: 210px !important;
-        }
-        p-dropdown,
-        p-calendar {
-          flex: 1;
-        }
-      }
+    .ms-user-customer .form-container .edit-profile-form .form-row.birthdate-sex {
+      height: 50px;
     }
   }
   @media only screen and (min-width: 1500px) {
     .form-row .title.sex-title {
       width: 210px;
-    }
-    .form-control-sex {
-      display: flex;
-      align-items: center;
-      flex-direction: row !important;
     }
   }
   
