@@ -21,13 +21,19 @@
           </div>
           <div class="chiaDoiPage">
             <span class="tenInput">Mật khẩu</span>
-            <div><input class="babuvi_signup_text" type="password" placeholder="Mật khẩu ít nhất 6 kí tự"
-                name="password" ngModel required pattern="(?=.*\d)(?=.*[a-z]).{6,}" /></div>
+            <div  style="position: relative">
+              <input class="babuvi_signup_text" type="{{newpw}}" placeholder="Mật khẩu ít nhất 6 kí tự"
+                name="password" ngModel required pattern="(?=.*\d)(?=.*[a-z]).{6,}" />
+              <i class="fa fa-eye-slash babuvi_show_pw" (click)="changeType(0)"></i>
+            </div>
           </div>
           <div class="chiaDoiPage">
             <span class="tenInput">Nhập lại mật khẩu</span>
-            <div><input class="babuvi_signup_text" type="password" placeholder="Nhập lại mật khẩu" name="repassword"
-                ngModel required /><br></div>
+            <div style="position: relative">
+              <input class="babuvi_signup_text" type="{{renewpw}}" placeholder="Nhập lại mật khẩu" name="repassword"
+                ngModel required />
+              <i class="fa fa-eye-slash babuvi_show_pw" (click)="changeType(1)"></i><br>
+            </div>
           </div>
           <div class="chiaDoiPage">
             <span class="tenInput">Email</span>

@@ -5,6 +5,9 @@ import { ApiApplication, paging } from 'app/config/app.config';
 import { ApiService } from './common/api.service';
 import { User } from '../model/user.model';
 
+// rxjs
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 @Injectable()
 export class UserService extends ApiService {
 
@@ -31,6 +34,10 @@ export class UserService extends ApiService {
         return this.put(this.apiBaseController + ApiApplication.user.changePass,data);
     }
 
+    searchUser(name:string){
+        return this.get(this.apiBaseController + `searchUser?textSearch=${name}`)
+    }
+
     getInfoUser() {
         return this.get(this.apiBaseController + ApiApplication.user.getInfoUser);
     }
@@ -38,7 +45,21 @@ export class UserService extends ApiService {
     getInfoUserById(userId: number) {
         return this.get(this.apiBaseController + ApiApplication.user.getInfoUserById + '?userid=' + userId);
     }
+
     getListUserStaff() {
         return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff);
+    }
+
+    getUserStaffs() {
+        return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff).pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
     }
 }

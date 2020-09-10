@@ -17,17 +17,17 @@ import { MessageService } from 'primeng/api';
 import { forkJoin, Observable } from 'rxjs';
 
 // Model
-import { User } from './../../model/user.model';
-import { lstCountry } from './../../model/country.model';
-import { Warehouse } from './../../model/warehouse.model';
-import { usersetting } from './../../config/app.config';
+import { User } from '../../model/user.model';
+import { lstCountry } from '../../model/country.model';
+import { Warehouse } from '../../model/warehouse.model';
+import { usersetting } from '../../config/app.config';
 
 // libs
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'ms-user-edit',
+  selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss'],
   encapsulation: ViewEncapsulation.None
@@ -132,7 +132,7 @@ export class UserEditComponent implements OnInit {
       this.systemService.getListSex(),
       this.rightService.getListRight(),
       this.systemService.getListLevel(),
-      this.userService.getListUserStaff(),
+      this.userService.getUserStaffs(),
       this.systemService.getWarehouseVN(),
       this.getAddressComboboxs()
     ).subscribe(res => {
@@ -148,7 +148,9 @@ export class UserEditComponent implements OnInit {
         if (res[2] && res[2].length > 0) {
           this.listLevel = res[2];
           this.listLevelOptions = res[2].map((item: any) => ({ label: item.displayValue, value: item.code.toString() }));
+          console.log(this.listLevelOptions);
         }
+        console.log(res[3]);
         if (res[3] && res[3].length > 0) {
           this.userStaffs = res[3];
           this.userStaffOptions = res[3].map((item: any) => ({ label: item.username, value: item.userId }));
@@ -491,7 +493,7 @@ export class UserEditComponent implements OnInit {
       else if (
         this.editUserCustomerForm.value.username.includes(' ')
       ) {
-        this.msgs.push( { severity: 'error', summary: 'Lỗi', detail: 'Mật khẩu Không được chứa dấu cách' });
+        this.msgs.push( { severity: 'error', summary: 'Lỗi', detail: 'Tên đăng nhập Không được chứa dấu cách' });
       }
     else if (addressControl.error && addressControl.error === true) {
       this.msgs.push({ severity: 'error', summary: '', detail: 'Bạn phải nhập địa chỉ' });
@@ -548,7 +550,7 @@ export class UserEditComponent implements OnInit {
             } else {
               setTimeout(() => {
                 this._location.back();
-                this.router.navigateByUrl('/user-pages/userlist');
+                this.router.navigateByUrl('/user/userlist');
               }, 300);
             }
           } else if (resaddOrUpdateUserCustomer && resaddOrUpdateUserCustomer.result && resaddOrUpdateUserCustomer.result && resaddOrUpdateUserCustomer.result.message) {

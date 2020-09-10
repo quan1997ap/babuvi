@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, UrlSerializer } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   MatIconModule,
@@ -36,6 +36,7 @@ import { MessageService } from 'primeng/api';
 import {DeliveryModule} from "../delivery/delivery.module";
 import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-dialog.component';
 import { CommonViewModule } from 'app/common-view/common-view.module';
+import { CustomUrlSerializer } from './custom-url-serializer';
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { CommonViewModule } from 'app/common-view/common-view.module';
   providers: [
     ShipManagerService,
     OrderDetailService,
-    MessageService
+    MessageService,
+    { provide: UrlSerializer, useClass: CustomUrlSerializer },
   ],
     entryComponents: [PaymentOrdersComponent]
 })

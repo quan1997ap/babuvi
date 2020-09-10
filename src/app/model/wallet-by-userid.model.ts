@@ -8,6 +8,7 @@ export class WalletByUserId{
     blockedAmount: string = "";
     currencyId: number = 0;
     symbolsDisplay: string = "";
+    symbolsLocation: string = "";
     isDefault: number = null;
     isAdmin: string = "";
 }

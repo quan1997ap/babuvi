@@ -3,8 +3,6 @@ import { Part1Component } from './part1/part1.component';
 import { Part2Component } from './part2/part2.component';
 import { Part3Component } from './part3/part3.component';
 import { CartManualComponent } from './cart-manual/cart-manual.component';
-// import { OrdersComponent } from './orders/orders.component';
-// import { OrderDetailComponent } from './order-detail/order-detail.component';
 
 export const CartRoutes: Routes = [
   {

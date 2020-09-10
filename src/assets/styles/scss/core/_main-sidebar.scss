@@ -54,16 +54,16 @@
             transition-property: max-height;
         }
         .sub-menu a {
-            @include padding-left(64px);
+            @include padding-left(25px);
         }
         .sub-menu .sub-menu a {
-            @include padding-left(64px + 16px);
+            @include padding-left(25px + 16px);
         }
         .sub-menu .sub-menu .sub-menu a {
-            @include padding-left(64px + 32px);
+            @include padding-left(25px + 32px);
         }
         .sub-menu .sub-menu .sub-menu .sub-menu a {
-            @include padding-left(64px + 48px);
+            @include padding-left(25px + 48px);
         }
         .navigation {
             mat-icon:not(.menu-caret) {

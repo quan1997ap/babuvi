@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { MenuItems, Menu, ChildrenItems } from '../../shared/menu-items/menu-items';
 import { HorizontalMenuItems } from '../../shared/menu-items/horizontal-menu-items';
 import { Subscription } from 'rxjs';
@@ -24,7 +24,8 @@ import { LocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
-  templateUrl: './admin-layout.component.html'
+  templateUrl: './admin-layout.component.html',
+  styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -61,6 +62,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     private cdref: ChangeDetectorRef,
     private _commonServices: CommonService,
     private router: Router, 
+    private route: ActivatedRoute,
     private _dataParse: DataParse,
     public menuItems: MenuItems, 
     public horizontalMenuItems : HorizontalMenuItems, 
@@ -173,13 +175,17 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate(['/cart/pharse1']);
   }
   
+  public moveToTopup() {
+    this.router.navigate(['/wallet-manager/client-topup']);
+  }
+
   filterMenu(lstMenu: MenuFromServer[]){
     this.lstMenuRoot = _.filter(lstMenu, function(o) { return o.parentId == 0 });
     for (let entry of this.lstMenuRoot) {
       const r2 = _.filter(lstMenu, function(o) { return o.parentId == entry.controlId })
       this._subMenu = [];
       for (let child of r2) {
-        this._subMenu.push({state: child.pathFile, name: child.name})
+        this._subMenu.push({state: child.pathFile, name: child.name, icon: child.icon== null?"label_important":child.icon})
       }
       
       if(this._subMenu.length === 0){
@@ -188,7 +194,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
           name: entry.name,
           link: true,
           type: "link",
-          icon: "explore"
+          icon: entry.icon == null?"explore":entry.icon,
         }
         this._menu.push(child);
       } else {
@@ -197,11 +203,22 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
           name: entry.name,
           link: false,
           type: 'sub',
-          icon: 'explore',
+          icon: entry.icon == null?"explore":entry.icon,
           children: this._subMenu
         }
         this._menu.push(child);
       }
+    };console.log(this._menu)
+  }
+
+  goToExternalUrl(url){
+    if (url == null){ return false;}
+    if (url.indexOf("http") == 0){
+      window.open(url, "_blank");
+    } else if('/'+url == this.router.url){
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigate(['./'], { relativeTo: this.route });
     }
   }
 

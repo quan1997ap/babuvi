@@ -44,9 +44,9 @@ export const AppRoutes: Routes = [{
         canActivate: [AuthGuard],
         loadChildren: './custom-pages/pages.module#PagesDemoModule'
     }, {
-        path: 'user-pages',
+        path: 'user',
         canActivate: [AuthGuard],
-        loadChildren: './user-pages/users.module#UsersModule'
+        loadChildren: './user/users.module#UsersModule'
     }, {
         path: 'ecommerce',
         canActivate: [AuthGuard],

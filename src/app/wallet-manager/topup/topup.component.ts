@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+/*import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { WalletService } from 'app/services/wallet.services';
 import { SystemService } from 'app/services/system.services';
 import { Wallet } from 'app/model/wallet.model';
@@ -103,12 +103,7 @@ export class TopupComponent implements OnInit {
     onClickSave() {
         this.saveTopUp();
     }
-
-    /**
-     * Show message
-     * @param messageClass = bootstrap alert class
-     * @param detail
-     */
+    
     showMessage(messageClass: string, detail: string): void {
         this.messages = [];
         this.messages.push({messageClass: messageClass, detail});
@@ -116,4 +111,4 @@ export class TopupComponent implements OnInit {
             this.messages = [];
         }, 3000);
     }
-}
+}*/

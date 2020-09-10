@@ -81,6 +81,6 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   return() {
-    this.router.navigate(["/user-pages"])
+    this.router.navigate(["/user"])
   }
 }

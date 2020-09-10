@@ -1,21 +1,30 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TaskServices } from '../../services/task.services';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import * as $ from 'jquery';
+//service
+import { TaskServices } from '../../services/task.services';
+import { SystemService } from '../../services/system.services';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-task-detail',
   templateUrl: './task-detail.component.html',
   styleUrls: ['./task-detail.component.scss'],
-  providers: [TaskServices]
+  providers: [
+    TaskServices,
+    SystemService,
+    UserService
+  ]
 })
 export class TaskDetailComponent implements OnInit {
 
   constructor(
     private taskServices: TaskServices,
-    private MessageService: MessageService,
+    private systemService: SystemService,
+    private messageService: MessageService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService
   ) { }
@@ -52,7 +61,7 @@ export class TaskDetailComponent implements OnInit {
           this.taskStatus.push({ label: element.displayValue, value: element.value })
         }); console.log(this.taskStatus)
       } else {
-        this.MessageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
       }
     })
 
@@ -76,14 +85,14 @@ export class TaskDetailComponent implements OnInit {
         }, 500);
 
         this.loading = false;
-        this.MessageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Tải dữ liệu thành công!" });
+        this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Tải dữ liệu thành công!" });
       } else {
         this.loading = false
-        this.MessageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
       }
     });
 
-    this.taskServices.getAttachFileType().toPromise().then(data => {
+    this.systemService.getAttachFileType().toPromise().then(data => {
       if (data.result.success) {
         let fileType: any = [];
         fileType = data;
@@ -92,7 +101,7 @@ export class TaskDetailComponent implements OnInit {
         });
         console.log(this.attachFileType)
       } else {
-        this.MessageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
       }
     });
 
@@ -140,10 +149,10 @@ export class TaskDetailComponent implements OnInit {
           data => {
             if (data.result.success) {
               this.data.lsMember.splice(this.data.lsMember.findIndex(e => e.UserId == userId), 1);
-              this.MessageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: `Đã gỡ bỏ ${username}!` });
+              this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: `Đã gỡ bỏ ${username}!` });
               this.loading = false;
             } else {
-              this.MessageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+              this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
               this.loading = false;
             }
           }
@@ -203,11 +212,11 @@ export class TaskDetailComponent implements OnInit {
         }).toPromise().then((data) => {
           if(data.result.success){
             this.oldStatus = this.currentStatus;
-            this.MessageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
+            this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
             this.loading = false;
           } else {
             this.loading = false;
-            this.MessageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });  
+            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });  
           }  
         }
         )
@@ -244,7 +253,7 @@ export class TaskDetailComponent implements OnInit {
     if (e.keyCode == 13) {
       this.loading = true;
       console.log(this.nameHandler)
-      this.taskServices.searchUser(this.nameHandler).toPromise().then(data => {
+      this.userService.searchUser(this.nameHandler).toPromise().then(data => {
         this.listSearchUser = data;
         console.log(data)
         this.loading = false;

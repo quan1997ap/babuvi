@@ -26,6 +26,10 @@ export class WalletService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.wallet.getTopupCode + '?userid=' + userId);
     }
 
+    getInfoWallet(walletId: number) {
+        return this.get(this.apiBaseController + ApiApplication.wallet.getWalletInforById + walletId);
+    }
+
     SaveTopup(data: Topup) {
         return this.post(this.apiBaseController + ApiApplication.wallet.Topup, data);
     }

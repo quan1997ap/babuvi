@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { User } from 'app/model/user.model';
-import { UserService } from './../../services/user.service';
-import { PassDataService } from './../../services/pass-data.services';
+import { UserService } from '../../services/user.service';
+import { PassDataService } from '../../services/pass-data.services';
 import { Component, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -25,8 +25,10 @@ export class UserListComponent implements OnInit {
     this._passData.loading(true);
     this.userService.getListUserStaff().subscribe(
       resUsers => {
+        console.log(resUsers.message );
         if (resUsers.message == "successful") {
           this.userList = resUsers.result.data;
+          console.log(this.userList);
           this._passData.loading(false);
         }
       },
@@ -37,7 +39,7 @@ export class UserListComponent implements OnInit {
   }
 
   toAddForm() {
-    this.router.navigate(['/user-pages/add-user' ]);
+    this.router.navigate(['/user/add-user' ]);
   }
 
 

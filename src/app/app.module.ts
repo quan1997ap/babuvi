@@ -1,6 +1,7 @@
+import { MessagesUtilsService } from './services/messages-utils.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+import { RouterModule, UrlSerializer } from '@angular/router';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
@@ -45,6 +46,9 @@ import { LoginService } from './services/login.service';
 import { DataParse } from './common-func/data-parse';
 import { CheckAuthToken } from './services/common/checkAuthToken.services';
 import { AuthChildGuard } from './services/common/AuthChildGuard';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { CustomUrlSerializer } from './ship-manager/custom-url-serializer';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
@@ -94,9 +98,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FlexLayoutModule,
     PerfectScrollbarModule,
     HttpModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    ConfirmDialogModule,
   ],
   providers: [
+    ConfirmationService,
+    MessagesUtilsService,
     TranslateService,
     DataParse,
     CommonService,
@@ -114,7 +121,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LstClientService,
     PassDataService,
     LoginService,
-    HttpService
+    HttpService,
   ],
   entryComponents: [ ],
   bootstrap: [AppComponent]

@@ -208,11 +208,11 @@ export const ApiApplication = {
         getAllArea: 'getallarea',
         GetCountry: 'getcountry',
         getAreaByParent: 'getareabyparent',
-        getVerticalMenu: '/getVerticalMenu',
+        getVerticalMenu: 'getVerticalMenu',
         getWarehouseVN: 'getWarehouseVN/',
         getPaymentType: 'getPaymentType/',
         getPaymentStatus: 'getPaymentStatus/',
-        getWalletTransactionsType: '/getWalletTransactionsType/',
+        getWalletTransactionsType: 'getWalletTransactionsType/',
         getReceiptType: 'getReceiptType',
         getReasion: 'getReasion',
         getReceiptStatus: 'getReceiptStatus',
@@ -220,7 +220,8 @@ export const ApiApplication = {
         getComplainType: 'getComplainType',
         getListSex: 'getListSex',
         getCountry: 'getCountry',
-        getListLevel: 'getListLevel'
+        getListLevel: 'getListLevel',
+        getAttachFileType: 'getAttachFileType'
     },
     order: {
         controller: ApiBaseUrl + 'order',

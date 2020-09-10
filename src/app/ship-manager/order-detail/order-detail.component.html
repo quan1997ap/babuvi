@@ -134,7 +134,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <table mat-table class="table-history" [dataSource]="dataSourceMer">
+          <table mat-table class="table-history table-scroll" [dataSource]="dataSourceMer">
             <ng-container matColumnDef="merchandiseCode">
               <th mat-header-cell *matHeaderCellDef> Mã kiện </th>
               <td mat-cell *matCellDef="let merchandise"> {{merchandise.merchandiseCode}}</td>
@@ -203,7 +203,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <table mat-table class="table-history" [dataSource]="dataSourceRec">
+          <table mat-table class="table-history table-scroll" [dataSource]="dataSourceRec">
             <ng-container matColumnDef="receiptDate">
               <th mat-header-cell *matHeaderCellDef> Thời gian </th>
               <td mat-cell *matCellDef="let merchandise"> {{merchandise.receiptDate  | date:'HH:mm dd/MM/yyyy '}}</td>
@@ -241,7 +241,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <table mat-table class="table-history" [dataSource]="dataSourceCom">
+          <table mat-table class="table-history table-scroll" [dataSource]="dataSourceCom">
             <ng-container matColumnDef="complainContent">
               <th mat-header-cell *matHeaderCellDef> Nội dung </th>
               <td mat-cell *matCellDef="let complain"> {{complain.complainContent}}</td>

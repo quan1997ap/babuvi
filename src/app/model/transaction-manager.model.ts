@@ -15,6 +15,5 @@ export class TransactionManager{
     symbolsDisplay: string = "";
     symbolsLocation: string = "";
     exchangeRate: string = "";
-
     public TransactionManager(){};
 }

@@ -33,16 +33,11 @@ export class CommonService extends ApiService {
                         + ApiApplication.lstUserItem.actionParam2 + '=' + path);
     }
 
-    getInfoWallet(walletId: number) {
-        return this.get(ApiApplication.wallet.controller + ApiApplication.wallet.getWalletInforById + walletId);
-    }
 
     getRating() {
         return this.get(ApiApplication.Extension.controller + ApiApplication.Extension.exchangerate);
     }
 
-    getInfoRating(userId: number) {
-        return this.get(ApiApplication.system.controller + ApiApplication.system.getVerticalMenu + '?userId=' + userId);
-    }
+
 
 }

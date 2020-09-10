@@ -10,7 +10,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { ExchangeRoutes } from './wallet-manager.routing';
 import { ExchangeComponent } from './exchange/exchange.component';
-import { TopupComponent } from './topup/topup.component';
+//import { TopupComponent } from './topup/topup.component';
 import { MatSelectModule,
         MatIconModule,
         MatFormFieldModule,
@@ -53,7 +53,7 @@ import { ShareCommonModule } from 'app/common/share-common.module';
   ],
   declarations: [
     ExchangeComponent,
-    TopupComponent,
+    //TopupComponent,
     ClientTopupComponent,
   ],
   providers: [

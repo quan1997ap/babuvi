@@ -13,6 +13,10 @@ export class SystemService extends ApiService {
         super(ApiApplication.system.controller, http, _router);
     }
 
+    getInfoRating(userId: number) {
+        return this.get(this.apiBaseController + ApiApplication.system.getVerticalMenu + '?userId=' + userId);
+    }
+
     GetPaymentStatus() {
         return this.get(this.apiBaseController + ApiApplication.system.getPaymentStatus);
     }
@@ -91,6 +95,10 @@ export class SystemService extends ApiService {
         }), catchError(error => {
             return throwError(error);
         }));
+    }
+
+    getAttachFileType(){
+        return this.get(this.apiBaseController + ApiApplication.system.getAttachFileType)
     }
 
     getAllCountry() {

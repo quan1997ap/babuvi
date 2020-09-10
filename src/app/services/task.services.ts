@@ -41,10 +41,6 @@ export class TaskServices extends ApiService {
         return this.post(this.apiBaseController + `updateTaskChat`,content)
     }
 
-    searchUser(name:string){
-        return this.get(ApiApplication.user.controller + `searchUser?textSearch=${name}`)
-    }
-
     addTaskMember(data){
         return this.post(this.apiBaseController + `addTaskMember`,data)
     }
@@ -53,9 +49,7 @@ export class TaskServices extends ApiService {
         return this.post(this.apiBaseController + `updateTask`,data)
     }
 
-    getAttachFileType(){      
-        return this.get(ApiApplication.system.controller + `getAttachFileType`)
-    }
+    
     addTaskAttachFile(data:any){
         return this.post(this.apiBaseController + `addTaskAttachFile`,data)
     }

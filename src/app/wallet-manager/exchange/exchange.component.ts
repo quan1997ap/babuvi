@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ClientProfile } from 'app/model/client-profile.model';
 import { WalletByUserId } from 'app/model/wallet-by-userid.model';
 import { TransactionManager } from 'app/model/transaction-manager.model';
@@ -39,6 +39,8 @@ export class ExchangeComponent {
   startDate: Date;
   endDate: Date;
   loading: boolean = true;
+  detectWidthLayout: boolean = true;
+  detectWidthLayoutSM: boolean = true;
 
   constructor(
     private _passData: PassDataService,
@@ -49,6 +51,16 @@ export class ExchangeComponent {
     }
 
   ngOnInit() {
+    if (window.innerWidth <= 576) {
+      this.detectWidthLayout = false
+    } else {
+      this.detectWidthLayout = true
+    }
+    if (window.innerWidth <= 630) {
+      this.detectWidthLayoutSM = false
+    } else {
+      this.detectWidthLayoutSM = true
+    }
     this.account = JSON.parse(localStorage.getItem("userData"));
     this.clientProfile = new ClientProfile();
     this.findWallet = new WalletByUserId();
@@ -61,6 +73,20 @@ export class ExchangeComponent {
     this.getAccountUser();
     this.getWalletByUserId(1, true);
     this.getType();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    if (window.innerWidth <= 576) {
+      this.detectWidthLayout = false;
+    } else {
+      this.detectWidthLayout = true;
+    }
+    if (window.innerWidth <= 630) {
+      this.detectWidthLayoutSM = false;
+    } else {
+      this.detectWidthLayoutSM = true;
+    }
   }
 
   getAccountUser(){
@@ -100,14 +126,17 @@ export class ExchangeComponent {
     this._passData.loading(true);
     self._commonServices.getWalletByUserId(this.account.userId).subscribe( res => {
       if(res.result.success) {
-        self.lstWalletByUserId = res['result'].data;
+        this.lstWalletByUserId = res['result'].data;
+        console.log(this.lstWalletByUserId);
         this.lstWalletByUserId.map(rs => {
           if (detect && Number(rs.isDefault) === id) {
-            self.walletId = rs.isDefault;
-            this.findWallet = rs;
+            self.walletId = rs.walletId;
+            self.findWallet = rs;
+            return true;
           } else if(!detect && rs.walletId === id) {
             self.walletId = rs.walletId;
-            this.findWallet = rs;
+            self.findWallet = rs;
+            return true;
           }
         });
         this.itemSearch.WalletId = self.walletId;

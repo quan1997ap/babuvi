@@ -38,6 +38,8 @@ import { CartManualComponent } from './cart-manual/cart-manual.component';
 import { CartServices } from 'app/services/cart.services';
 import { ItemsCartService } from 'app/services/items-cart.service';
 import { OrderService } from 'app/services/order.service';
+import { WalletService } from 'app/services/wallet.services';
+
 //Prime Services
 import { ConfirmationService } from 'primeng/api';
 
@@ -134,7 +136,8 @@ const customNotifierOptions: NotifierOptions = {
     ItemsCartService,
     OrderService,
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    WalletService
   ]
 })
 

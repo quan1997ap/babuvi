@@ -14,8 +14,8 @@ import { MessageService } from 'primeng/api';
 import { forkJoin, Observable } from 'rxjs';
 
 // model
-import { User } from './../../model/user.model';
-import { lstCountry } from './../../model/country.model';
+import { User } from '../../model/user.model';
+import { lstCountry } from '../../model/country.model';
 
 // libs
 import * as _ from 'lodash';

@@ -21,13 +21,15 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { SessionRoutes } from './session.routing';
 import { XHRBackend, RequestOptions, HttpModule } from '@angular/http';
 import { HttpService } from 'app/services/common/http.service';
-import { LoginService } from 'app/services/login.service';
-import { UserService } from 'app/services/user.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import {
   MessagesModule, CheckboxModule, CaptchaModule, DropdownModule
 } from 'primeng/primeng';
+//service
+import { LoginService } from 'app/services/login.service';
+import { UserService } from 'app/services/user.service';
+import { SystemService } from 'app/services/system.services';
 
 @NgModule({
   imports: [
@@ -64,7 +66,8 @@ import {
     HttpService,
     LoginService,
     MessageService,
-    UserService
+    UserService,
+    SystemService
   ],
 })
 

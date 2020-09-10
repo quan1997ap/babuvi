@@ -17,10 +17,12 @@
                             <p-messages [(value)]="msgs"(click)="clear()"></p-messages>
                             <div fxLayout="column" fxLayoutAlign="start stretch">
                                 <mat-form-field style="width: 100%">
-                                    <input matInput placeholder="Tên đăng nhập" type="text" name="username" required [(ngModel)]="username">
+                                    <input matInput placeholder="Tên đăng nhập" type="text" (keydown.enter)="login()"
+                                    name="username" required [(ngModel)]="username">
                                 </mat-form-field>
                                 <mat-form-field style="width: 100%" class="mb-1">
-                                    <input matInput placeholder="Mật khẩu" type="password" name="password" required [(ngModel)]="password">
+                                    <input matInput placeholder="Mật khẩu" type="password" (keydown.enter)="login()"
+                                    name="password" required [(ngModel)]="password">
                                 </mat-form-field>
 
                                 <div class="content-info" fxFlex.xs="100" fxFlex.sm="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100">

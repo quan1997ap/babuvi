@@ -85,6 +85,13 @@ mat-expansion-panel-header:hover {
   border-bottom-left-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
+/deep/.mat-expansion-panel-body {
+  overflow: auto;
+}
+
+.table-scroll {
+  min-width: 650px;
+}
 .material-icons {
   color: white;
   font-size: 28px;

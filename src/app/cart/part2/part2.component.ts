@@ -1,26 +1,28 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import * as $ from 'jquery';
-import { ItemsCartService } from 'app/services/items-cart.service';
 import { ItemsOnShop } from 'app/model/items-on-shop.model';
 import { Router } from '@angular/router';
-import { CartServices } from 'app/services/cart.services';
 import { NewAddress } from 'app/model/new-address.model';
 import { lstCountry } from 'app/model/country.model';
 import * as _ from 'lodash';
 import { lstAddress } from 'app/model/lstAddress.model';
-import { CommonService } from 'app/services/common.service';
 import { WalletByUserId } from 'app/model/wallet-by-userid.model';
 import { BookingProductModel } from 'app/model/booking-product.model';
 import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogModel } from 'app/model/confirm-dialog.model';
 import { MatDialog } from '@angular/material';
 import { EditAddressModel } from 'app/model/edit-address.model';
-import { PassDataService } from 'app/services/pass-data.services';
 import { InfoRating } from 'app/model/info-rating.model';
 import { lstAddressAll } from 'app/model/list-address-all.model';
 import {MessageService} from 'primeng/components/common/api';
 import {Message} from 'primeng/api';
 import { EditAddressDialogComponent } from 'app/common-view/edit-address/edit-address.component';
+//service
+import { CommonService } from 'app/services/common.service';
+import { CartServices } from 'app/services/cart.services';
+import { ItemsCartService } from 'app/services/items-cart.service';
+import { PassDataService } from 'app/services/pass-data.services';
+import { WalletService } from 'app/services/wallet.services';
 
 @Component({
   selector: 'app-part2',
@@ -72,6 +74,7 @@ export class Part2Component implements OnInit {
     private cdref: ChangeDetectorRef, 
     private router: Router, 
     private commonServices: CommonService,
+    private walletService: WalletService,
     private _cartServices: CartServices) { 
 
     this.userId = JSON.parse(localStorage.getItem("userData"))['userId'];
@@ -433,7 +436,7 @@ export class Part2Component implements OnInit {
   availablePrice: number = 0;
   getWalletInfo(walletId: number) {
     var _self = this;
-    _self.commonServices.getInfoWallet(walletId).subscribe(res => {
+    _self.walletService.getInfoWallet(walletId).subscribe(res => {
       if(res.result.success) {
         _self.walletItem = res.result.data;
         _self.availablePrice = Number(_self.walletItem.availableAmount);

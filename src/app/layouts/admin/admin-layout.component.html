@@ -5,9 +5,13 @@
    </div>
 </div>
 
-<div class="app search-i" [dir]="layoutDir" [ngClass]="[ menuLayout, selectedSidebarImage, selectedSidebarColor, selectedHeaderColor, collapsedClass]" [class.app-dark]="dark" [class.boxed]="boxed" [class.collapsed-sidebar]="collapseSidebar" [class.compact-sidebar]="compactSidebar" [class.bg-img-disable]="!sidebarBg">
+<div class="app search-i" [dir]="layoutDir"
+   [ngClass]="[ menuLayout, selectedSidebarImage, selectedSidebarColor, selectedHeaderColor, collapsedClass]"
+   [class.app-dark]="dark" [class.boxed]="boxed" [class.collapsed-sidebar]="collapseSidebar"
+   [class.compact-sidebar]="compactSidebar" [class.bg-img-disable]="!sidebarBg">
    <mat-sidenav-container class="app-inner">
-      <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()">
+      <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'"
+         [opened]="!isOver()" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()">
       <div class="opt-side relative ">
          <div class="sidebar-container ">
             <div class="branding text-center">
@@ -18,7 +22,8 @@
             <div class="main-nav">
                <mat-nav-list appAccordion class="navigation relative">
                   <mat-list-item appAccordionLink *ngFor="let menuitem of _menu">
-                     <a appAccordionToggle class="relative" mat-ripple [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
+                     <a appAccordionToggle class="relative" mat-ripple
+                     [routerLink]="menuitem.state == null?[]:menuitem.state" *ngIf="menuitem.type === 'link'">
                      <mat-icon>{{ menuitem.icon }}</mat-icon>
                      <span>{{ menuitem.name | translate }}</span>
                      <span fxFlex></span>
@@ -51,8 +56,12 @@
                         </div>
                         <div *ngIf="!menuitem.link">
                            <mat-list-item *ngFor="let childitem of menuitem.children" routerLinkActive="open">
-                              <a *ngIf="childitem.state" [routerLink]="['/', menuitem.state, childitem.state ]" class="relative" mat-ripple>{{ childitem.name | translate }}</a>
-                              <a *ngIf="!childitem.state" [routerLink]="['/', menuitem.state ]" class="relative" mat-ripple>{{ childitem.name | translate }}</a>
+                             <!-- Thẻ <a> bên dưới, check nếu pathFile là routerLink thì điều hướng như spa, 
+                                 nếu pathFile là Url web thì mở trang web trong tab mới -->
+                                 <a [routerLink]="childitem.state == null|| childitem.state.indexOf('http') == 0 ?[]:'/'+childitem.state" 
+                                 (click)="goToExternalUrl(childitem.state)"
+                                 class="relative" mat-ripple><mat-icon>{{ childitem.icon }}</mat-icon>{{ childitem.name | translate }}</a>
+                                 <!-- <a *ngIf="!childitem.state" [routerLink]="['/', menuitem.state ]" class="relative" mat-ripple>{{ childitem.name | translate }}</a> -->
                            </mat-list-item>
                         </div>
                      </mat-nav-list>
@@ -192,12 +201,36 @@
          <div [mat-menu-trigger-for]="user" mat-icon-button class="ml-xs cur-point">
             <mat-icon class="ver-align-mid">person</mat-icon> 
             <span class="txt-size15 cor5F6368">{{firstName}}</span>
+            <span>&nbsp;&nbsp;&nbsp;</span>
          </div>
          
          <mat-menu #user="matMenu" class="opt-menu" x-position="before">
+            <button mat-menu-item class="user-infor">
+               <div class="summary-info">
+                  <div class="avatar">
+                     <img *ngIf="currentUser && currentUser.avatarUrl" [src]="currentUser.avatarUrl" class="avatar-img">
+                     <img *ngIf="!currentUser || !currentUser.avatarUrl"
+                         src="http://nguyetanh.vn/wp-content/uploads/2015/10/default_avatar.png" class="avatar-img">
+
+                 </div>
+                  <span class="name">{{firstName}}</span>
+               </div>
+            </button>
+            <button mat-menu-item>
+               <div class="rating">
+                  <i class="rating-icon pi pi-money-bill"></i>
+                  <span>Số dư &nbsp;</span>
+                  <span class="rating-number"> {{balance}} </span>
+                  <span class="deposit-btn" (click)="moveToTopup()"> Nạp tiền </span>
+               </div>
+            </button>
+            <button mat-menu-item routerLink="/user/userprofile">
+               <mat-icon class="ver-align-mid">person</mat-icon>
+               Thông tin cá nhân
+            </button>
             <button mat-menu-item (click)="logout()">
                <mat-icon>exit_to_app</mat-icon>
-               Sign Out
+               Thoát
             </button>
          </mat-menu>
           </div>
@@ -229,6 +262,12 @@
          </nav>
       </div>
       <div class="body-container">
+         <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd [baseZIndex]="50000">
+            <p-footer>
+                <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="NO" (click)="cd.reject()"></button>
+                <button type="button" pButton icon="pi pi-check" label="YES" (click)="cd.accept()"></button>
+            </p-footer>
+        </p-confirmDialog>
          <router-outlet></router-outlet>
       </div>
       <!-- <mat-sidenav #end position="end" class="chat-panel" mode="over" opened="false">

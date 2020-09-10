@@ -221,6 +221,20 @@ export class RegisterComponent {
         this.captcha1 = false;
         this.notice('Vui lòng gõ mã captcha!');
     }
+
+    
+    newpw:string = 'password';
+    renewpw:string = 'password';
+    changeType(th){
+        switch(th){
+            case 0:
+                this.newpw = this.newpw == 'text'?'password':'text';
+                break;
+            case 1:
+                this.renewpw = this.renewpw == 'text'?'password':'text';
+                break;
+        }
+    }
     // Hết code của trường
 }
 
