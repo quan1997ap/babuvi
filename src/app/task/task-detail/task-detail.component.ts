@@ -193,8 +193,7 @@ export class TaskDetailComponent implements OnInit {
   }
 
   updateTaskStatus(e) {
-    let tus = this.taskStatus.find(e => e.value == this.currentStatus);console.log(tus)
-    console.log(e.originalEvent, e.value)
+    let tus = this.taskStatus.find(e => e.value == this.currentStatus);
     this.confirmationService.confirm({
       key: "chitietcv",
       header: "Xác nhận",
@@ -202,9 +201,8 @@ export class TaskDetailComponent implements OnInit {
       acceptLabel: "Có",
       rejectLabel: "Không",
       accept: () => {
-        console.log(this.currentStatus)
         this.loading = true;
-        this.taskServices.updateTaskDescrip({
+        this.taskServices.updateTaskStatus({
           TaskId: this.currentTaskId,
           Content: this.data.content,
           DueDate: this.data.dueDate,

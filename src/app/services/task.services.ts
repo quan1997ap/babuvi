@@ -49,6 +49,9 @@ export class TaskServices extends ApiService {
         return this.post(this.apiBaseController + `updateTask`,data)
     }
 
+    updateTaskStatus(data:any){
+        return this.post(this.apiBaseController + `updateTaskStatus`,data)
+    }
     
     addTaskAttachFile(data:any){
         return this.post(this.apiBaseController + `addTaskAttachFile`,data)

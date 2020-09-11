@@ -131,7 +131,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }, time);
   }
-  
+
   ngAfterViewInit() {
     this.loading = false;
     this.filterMenu(JSON.parse(localStorage.getItem("lMenu")));
