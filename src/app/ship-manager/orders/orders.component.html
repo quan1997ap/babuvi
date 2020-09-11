@@ -205,4 +205,4 @@
         </tbody>
     </ng-container>
 </table>
-<mat-paginator #paginator showFirstLastButtons [length]="dataCount" [hidePageSize]="true" [pageSize]="10" (page)="pageEvent($event)" [pageSizeOptions]="[pageSize]"></mat-paginator>
+<mat-paginator showFirstLastButtons [length]="dataCount" [hidePageSize]="true" [pageSize]="10" (page)="pageEvent = getServerData($event)" [pageSizeOptions]="[pageSize]"></mat-paginator>
