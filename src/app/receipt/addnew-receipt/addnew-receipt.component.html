@@ -24,12 +24,12 @@
           <div class="motphantu">
              <div class="nameInput">Ví nguồn</div>
              <input class="inputAdd" pInputText name="WalletSource" [(ngModel)]="pickedWallet1.label" 
-             (click)="showViNguon(searchViNguon,$event)" readonly required>
+             (click)="showViNguon(searchViNguon,$event)" readonly>
           </div>
           <div class="motphantu">
              <div class="nameInput">Ví đích</div>
              <input class="inputAdd" pInputText name="WalletDestination" [(ngModel)]="pickedWallet2.label" 
-             (click)="showViDich(searchViDich,$event)" readonly required>
+            (click)="showViDich(searchViDich,$event)" readonly>
           </div>
           <div class="motphanhai">
              <div class="nameInput">Lý do</div>
@@ -39,7 +39,7 @@
           </div>
           <div class="motphantu">
              <div class="nameInput">Số tiền</div>
-             <input class="inputAdd" pInputText  name="Amount" ngModel required>
+             <input class="inputAdd" pInputText  name="Amount" ngModel required type="number" step=".001">
           </div>
           <div class="motphantu">
              <div class="nameInput">Phương thức thanh toán</div>
@@ -49,7 +49,7 @@
           </div>
           <div class="motphanhai">
              <div class="nameInput">Số tham chiếu</div>
-             <input class="inputAdd" pInputText  name="PaymentId" ngModel placeholder="Mã chuyển khoản..." required>
+             <input class="inputAdd" pInputText  name="PaymentId" ngModel placeholder="Mã chuyển khoản...">
           </div>
           <div class="textarea">
              <div class="nameInput">Ghi chú</div>

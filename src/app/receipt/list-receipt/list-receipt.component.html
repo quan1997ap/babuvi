@@ -78,7 +78,7 @@
                       </span>
  
                       <span *ngIf="col.field=='amount'?true:false" class="displayBlockInMB canTrai classOrange">
-                         <div>{{money_format(data[col.field])}}</div>
+                        <div>{{money_format(data[col.field],data.symbols,data.symbolsLocation)}}</div>
                       </span>
                       <span *ngIf="col.field=='receiptCode'?true:false" class="displayBlockInMB canTrai">
                          <div>{{data.receiptCode}}</div>

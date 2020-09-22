@@ -236,6 +236,7 @@ export class CartManualComponent implements OnInit {
         (document.getElementById("attackData") as HTMLInputElement).value = ""
       } else {
         this.blockScreen = false;
+        this.loading = false;
         this.messageService.add({ key: 'taodonhang', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     })

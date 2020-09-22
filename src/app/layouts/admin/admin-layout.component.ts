@@ -131,7 +131,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }, time);
   }
-
+  detectChangeSubscript:any;
   ngAfterViewInit() {
     this.loading = false;
     this.filterMenu(JSON.parse(localStorage.getItem("lMenu")));
@@ -139,7 +139,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     
     this.firstName = JSON.parse(localStorage.getItem("userData")).username;
 
-    this._passData.loaded().subscribe(res => {
+    this.detectChangeSubscript = this._passData.loaded().subscribe(res => {
       this.loading = res;
       this.cdref.detectChanges();
     })
@@ -236,6 +236,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.detectChangeSubscript.unsubscribe();
     this._router.unsubscribe();
   }
 

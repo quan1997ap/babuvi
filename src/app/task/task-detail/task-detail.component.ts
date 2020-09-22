@@ -48,24 +48,37 @@ export class TaskDetailComponent implements OnInit {
   vn: any;
   UrlConverted: string;
   dataMember: any = { username: "" };
-  ngOnInit() {
+  async ngOnInit() {
     this.loading = true;
     this.TaskCOde = this.route.snapshot.queryParams.id
 
-    this.taskServices.getTaskStatus().toPromise().then(async data => {
+    this.vn = {
+      firstDayOfWeek: 0,
+      dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
+      dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+      dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+      monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      today: 'Hôm nay',
+      clear: 'Xóa',
+      dateFormat: 'dd/mm/yy',
+      weekHeader: 'tuần'
+    };
+
+    await this.taskServices.getTaskStatus().toPromise().then(async data => {
       if (data.result.success) {
         console.log(data)
         let fileType: any = [];
         fileType = data;
-        fileType['result'].data.forEach(element => {
-          this.taskStatus.push({ label: element.displayValue, value: element.value })
+        await fileType['result'].data.forEach( async element => {
+          await this.taskStatus.push({ label: element.displayValue, value: element.value })
         }); console.log(this.taskStatus)
       } else {
         this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
       }
     })
 
-    this.taskServices.getTaskByCode(this.TaskCOde).toPromise().then(data => {
+    await this.taskServices.getTaskByCode(this.TaskCOde).toPromise().then(data => {
       if (data.result.success) {
         this.datas = data;
         this.data = this.datas.result.data;
@@ -92,6 +105,7 @@ export class TaskDetailComponent implements OnInit {
       }
     });
 
+    
     this.systemService.getAttachFileType().toPromise().then(data => {
       if (data.result.success) {
         let fileType: any = [];
@@ -104,19 +118,6 @@ export class TaskDetailComponent implements OnInit {
         this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
       }
     });
-
-    this.vn = {
-      firstDayOfWeek: 0,
-      dayNames: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"],
-      dayNamesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-      dayNamesMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-      monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-      monthNamesShort: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-      today: 'Hôm nay',
-      clear: 'Xóa',
-      dateFormat: 'dd/mm/yy',
-      weekHeader: 'tuần'
-    };
   }
 
   loadData() {
@@ -296,25 +297,29 @@ export class TaskDetailComponent implements OnInit {
     }, 100);
   }
 
-  updateDescription() {
-    setTimeout(() => {
-      this.loading = true;
-      this.taskServices.updateTaskDescrip({
-        TaskId: this.currentTaskId,
-        Content: this.data.content,
-        DueDate: this.data.dueDate,
-        Status: this.data.status
-      })
-        .toPromise().then(() => {
-          this.loadData();
-          this.EditMota = false;
-          this.UrlConverted = this.convertToUrl(this.data.content);
-          this.oldDescription = this.data.content
-          this.loading = false;
-        }
-        )
-    }, 100);
-
+    updateDescription() {
+      setTimeout(() => {
+        this.loading = true;
+        this.taskServices.updateTaskDescrip({
+          TaskId: this.currentTaskId,
+          Content: this.data.content,
+          DueDate: this.data.dueDate,
+          Status: this.data.status
+        })
+          .toPromise().then((data) => {console.log(data)
+            if (data.result.success){
+              this.loadData();
+              this.EditMota = false;
+              this.UrlConverted = this.convertToUrl(this.data.content);
+              this.oldDescription = this.data.content
+              this.loading = false;
+            } else {
+              this.loading = false;
+              this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+            }
+          }
+          )
+      }, 100);
 
   }
 

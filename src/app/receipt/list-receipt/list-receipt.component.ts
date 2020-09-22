@@ -60,7 +60,7 @@ export class ListReceiptComponent implements OnInit {
       if (data.result.success == true) {
         this.dataFetch = data.result;
         this.datas = this.dataFetch.data.lsData;
-        console.log(this.datas)
+        this.datas.forEach(e => {if (e.symbolsLocation != '1'){console.log(e)}});
         this.maxPage = data.result.data.pageCount;
         if (this.maxPage > 5) { this.pages = [1, 2, 3, 4, 5]; } else {
           for (let i = 1; i <= this.maxPage; i++) {
@@ -270,7 +270,7 @@ export class ListReceiptComponent implements OnInit {
     }
   }
 
-  money_format(nStr: string) {
+  money_format(nStr: string,kihieu, vitri) {
     let kq: string = "";
     if (parseFloat(nStr) == 0) {
       kq = "";
@@ -283,7 +283,14 @@ export class ListReceiptComponent implements OnInit {
       while (rgx.test(x1)) {
         x1 = x1.replace(rgx, "$1" + "." + "$2");
       }
-      kq = x1 + x2 +" đ";
+      kq = x1 + x2 + kihieu;
+      switch(vitri){
+        case '1':
+          kq = x1 + x2 + ' ' + kihieu;
+          break;
+        case '2': 
+          kq = kihieu + ' ' + x1 + x2;
+      }
     }
     return kq;
   }

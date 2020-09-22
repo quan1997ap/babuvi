@@ -45,6 +45,8 @@ export class AddNewReceiptComponent implements OnInit {
         let data1 = [];
         data1 = data.result.data;
         data1.forEach(e => this.dropdownKieuBienLai.push({ label: e.displayValue, value: e.value }))
+      } else {
+        this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     })
     //Lý do
@@ -54,6 +56,8 @@ export class AddNewReceiptComponent implements OnInit {
         let data1 = [];
         data1 = data.result.data;
         data1.forEach(e => this.dropdownLydo.push({ label: e.displayValue, value: e.value }))
+      } else {
+        this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     })
     //Phương thức thanh toán
@@ -63,6 +67,8 @@ export class AddNewReceiptComponent implements OnInit {
         let data1 = [];
         data1 = data.result.data;
         data1.forEach(e => this.dropdownPttt.push({ label: e.displayValue, value: e.value }))
+      } else {
+        this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     })
   }
@@ -95,8 +101,11 @@ export class AddNewReceiptComponent implements OnInit {
             this.messageService.add({ key: 'thembienlai', severity: 'success', summary: 'Thông báo', detail: 'Tạo biên lai thành công!' });
           } else {
             this.loading = false;
-            this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.message });
+            this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
           }
+        }).catch(err=> {
+          this.loading = false;
+          this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: 'Đã xảy ra lỗi!' });
         })
       }
     })
@@ -122,10 +131,10 @@ export class AddNewReceiptComponent implements OnInit {
               this.listWallet = [];
               if (dulieu.result.data.length == 0) { this.msg1 = "(Không có kết quả)" }
               dulieu.result.data.forEach(e => this.listWallet.push({ label: `${e.walletName} - ${e.walletCode}`, value: e.walletId }))
-              console.log(data)
               this.loading = false;
             } else {
               this.loading = false;
+              this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
             }
           });
           break;
@@ -143,6 +152,7 @@ export class AddNewReceiptComponent implements OnInit {
               this.loading = false;
             } else {
               this.loading = false;
+              this.messageService.add({ key: 'thembienlai', severity: 'error', summary: 'Thông báo', detail: data.result.message });
             }
           });
           break;

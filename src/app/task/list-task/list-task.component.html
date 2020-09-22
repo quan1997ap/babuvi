@@ -85,10 +85,10 @@
                       *Phần sự kiện: nếu là cột mã công việc thì chuyển trang tới chi tiết công việc
                       -->
                       <span *ngIf="col.field=='refCode'||col.field=='lsMember'?false:true"
-                         [class]="col.field=='taskCode'? 'classBold classBlue canTrai':col.field=='typeDisplay'? 
-                     buttonType(data['type']):col.field=='statusDisplay'?buttonStatus(data['status']):'displayBlockInMB canTrai'"
-                     (click)="col.field=='taskCode'?goToTaskDetail(data['taskCode']):''">
-                         {{col.type =='date'?(data[col.field]| date:"dd/MM/yyyy"):(data[col.field])}}
+                        [class]="col.field=='taskCode'? 'classBold classBlue canTrai':col.field=='typeDisplay'? 
+                    buttonType(data['type']):col.field=='statusDisplay'?buttonStatus(data['status']):'displayBlockInMB canTrai'">
+                        <span *ngIf="col.field!='taskCode'">{{col.type =='date'?(data[col.field]| date:"dd/MM/yyyy"):(data[col.field])}}</span>
+                        <a *ngIf="col.field=='taskCode'" href="{{returnLink}}" target="_blank" (mousedown)="getCurrentLink(data['taskCode'])">{{(data[col.field])}}</a>
                          <div *ngIf="col.field=='dueDate'?true:false" [class]="data.isLated==true?'redText':'greenText'">
                             {{data.dueText}}
                          </div>
@@ -97,7 +97,9 @@
                       Click vào mã sẽ chuyển tới đơn hàng hoặc kiện hàng tương ứng -->
                       <span *ngIf="col.field=='refCode'?true:false" class="displayBlockInMB canTrai">
                          <div>{{data.refTypeDisplay}}</div>
-                         <div class="classBlue" (click)="goToOrder(data['refId'],data['refType'])">{{data[col.field]}}</div>
+                         <a (mousedown)="goToOrder(data['refId'],data['refType'])" target="_blank" href="{{returnLinkOrder}}">
+                           {{data[col.field]}}
+                        </a>
                       </span>
                       <!-- thêm span thứ 4 hiển thị người xử lí -->
                       <span *ngIf="col.field=='lsMember'?true:false">

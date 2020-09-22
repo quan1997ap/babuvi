@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TaskServices } from '../../services/task.services';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { formatDate} from '@angular/common';
 @Component({
   selector: 'app-list-task',
@@ -16,7 +16,7 @@ export class ListTaskComponent implements OnInit {
     private taskServices: TaskServices,
     private router: Router,
     private messageService: MessageService,
-
+    private route: ActivatedRoute
   ) { }
   datas: any;
   loaiThamChieu: any = [];
@@ -163,7 +163,11 @@ export class ListTaskComponent implements OnInit {
       if (form['EndDate'] == "1970-01-01") { form['EndDate'] = null}
     }
     this.nullForm = form;
-    console.log(form)
+    if (form['RefCode'] != null && (form['RefType'] == null || form['RefType'].trim() == '')){
+      this.messageService.add({ key: 'dscongviec', severity: 'warn', summary: 'Thông báo', detail: 'Vui lòng chọn loại tham chiếu kèm theo!' });
+      this.loading = false;
+      return false;
+    }
     this.selectPage(1)
   }
   ResetForm(formLoc) {
@@ -266,15 +270,33 @@ export class ListTaskComponent implements OnInit {
     }
   };
 
-  goToTaskDetail(taskId){
-    this.router.navigate(['task/task-detail'],{queryParams:{id:taskId}})
+  // goToTaskDetail(taskId){
+  //   this.router.navigate(['task/task-detail'],{queryParams:{id:taskId}})
+  // }
+
+  // goToOrder(refId,refType){
+  //   switch(refType){
+  //     case "1":
+  //       //this.router.navigate([`/ship-manager/detail-orders?orderId=${refId}`]);
+  //       this.router.navigate(['ship-manager/detail-orders'],{queryParams:{orderId:refId}})
+  //       break;
+  //     case "2":
+  //       alert("Chưa làm chi tiết kiện hàng")
+  //       break;
+  //   }
+  // }
+
+  returnLink:string;
+  getCurrentLink(taskId){
+    let url = window.location.href.replace(this.router.url,`/task/task-detail?id=${taskId}`);
+    this.returnLink = url;
   }
 
+  returnLinkOrder:string;
   goToOrder(refId,refType){
     switch(refType){
       case "1":
-        //this.router.navigate([`/ship-manager/detail-orders?orderId=${refId}`]);
-        this.router.navigate(['ship-manager/detail-orders'],{queryParams:{orderId:refId}})
+        this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${refId}`);
         break;
       case "2":
         alert("Chưa làm chi tiết kiện hàng")
