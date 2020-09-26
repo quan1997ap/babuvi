@@ -9,6 +9,7 @@ export class User {
     avatarUrl: string;
     id: number;
     WarehouseReceive: number;
+    userCode: string;
     lsUserSetting: any[];
 
 

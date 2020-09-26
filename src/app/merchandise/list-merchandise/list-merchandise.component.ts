@@ -21,6 +21,7 @@ export class ListMerchandiseComponent implements OnInit {
     private messageService: MessageService,
 
   ) { }
+  OpenFormAdd:any;
   datas: any = {data:{dataCount:0}};
   lsDetail: any;
   columns: any;

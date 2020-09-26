@@ -112,11 +112,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthChildGuard,
     CheckAuthToken,
     {
-       provide: {
-        PERFECT_SCROLLBAR_CONFIG,
-        HttpService
-       },
-       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     },
     LstClientService,
     PassDataService,

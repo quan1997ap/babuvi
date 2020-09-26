@@ -1,3 +1,4 @@
+import { User } from './../../model/user.model';
 import { Component, OnInit, OnDestroy, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { MenuItems, Menu, ChildrenItems } from '../../shared/menu-items/menu-items';
@@ -31,6 +32,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _router: Subscription;
 
+  currentUser: User;
   today: number = Date.now();
   url: string;
   showSettings = false;
@@ -114,7 +116,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   loading: boolean = false;
 
   showNotify: boolean = false;
-  showItemCart: boolean = false
+  showItemCart: boolean = false;
+  end: any;
 
   listenerData(time: number) {
     var _self = this;
@@ -138,7 +141,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     this.listenerData(100);
     
     this.firstName = JSON.parse(localStorage.getItem("userData")).username;
-
+    this.currentUser = JSON.parse(localStorage.getItem("userData"));
     this.detectChangeSubscript = this._passData.loaded().subscribe(res => {
       this.loading = res;
       this.cdref.detectChanges();

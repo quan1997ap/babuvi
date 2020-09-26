@@ -275,7 +275,7 @@ export const ApiApplication = {
         controller: ApiBaseUrl + 'print',
         printWarehouseExp: 'printWarehouseExp',
         printDeliveryRequest: 'printDeliveryRequest',
-        printShipByExpCode: 'printShipByExpCode',
+        printShipByDeliveryRequest: 'printShipByDeliveryRequest',
     },
 };
 

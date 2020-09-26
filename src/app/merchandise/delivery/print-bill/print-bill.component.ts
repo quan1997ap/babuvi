@@ -13,9 +13,10 @@ import { APP_NAME } from 'app/config/app.config';
 export class PrintBillComponent implements OnInit {
   APP_NAME = APP_NAME;
   messages: any[];
-  loading: boolean = false;
+  loading: boolean[] = [];
   expCode: any;
   deliveryRequestCode: any;
+  deliveryRequestId: any;
   isDisable: boolean[] = [];
   expData: WarehouseExp = new WarehouseExp();
   shipData: any;
@@ -34,9 +35,14 @@ export class PrintBillComponent implements OnInit {
     if (this.dialogData.expCode) {
       this.expCode = this.dialogData.expCode;
       this.printWarehouseExp(this.expCode);
-      this.printShipByExpCode(this.expCode);
     } else {
       this.isDisable['exp'] = true;
+    }
+
+    if (this.dialogData.deliveryRequestId) {
+      this.deliveryRequestId = this.dialogData.deliveryRequestId;
+      this.printShipByDeliveryRequest(this.deliveryRequestId);
+    } else {
       this.isDisable['ship'] = true;
     }
 
@@ -66,10 +72,10 @@ export class PrintBillComponent implements OnInit {
    * @param expCode
    */
   printWarehouseExp(expCode) {
-    this.loading = true;
+    this.loading['exp'] = true;
     this.printService.printWarehouseExp(expCode).toPromise()
         .then(res => {
-          this.loading = false;
+          this.loading['exp'] = false;
           if (res.result.success) {
             this.expData = res.result.data;
             this.sumExpWeight = this.sumWeightOfExpList();
@@ -79,7 +85,7 @@ export class PrintBillComponent implements OnInit {
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.loading['exp'] = false;
           this.isDisable['exp'] = true;
           this.showMessage('alert-danger', 'Không lấy được thông tin phiếu xuất hàng');
         });
@@ -89,21 +95,20 @@ export class PrintBillComponent implements OnInit {
    * Get shipping information
    * @param expCode
    */
-  printShipByExpCode(expCode) {
-    this.loading = true;
-    this.printService.printShipByExpCode(expCode).toPromise()
+  printShipByDeliveryRequest(deliveryRequestId) {
+    this.loading['ship'] = true;
+    this.printService.printShipByDeliveryRequest(deliveryRequestId).toPromise()
         .then(res => {
-          this.loading = false;
+          this.loading['ship'] = false;
           if (res.result.success) {
             this.shipData = res.result.data;
-            this.sumExpWeight = this.sumWeightOfExpList();
           } else {
             this.isDisable['ship'] = true;
             this.showMessage('alert-danger', res.result.message);
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.loading['ship'] = false;
           this.isDisable['ship'] = true;
           this.showMessage('alert-danger', 'Không lấy được thông tin phiếu vận đơn');
         });
@@ -114,10 +119,10 @@ export class PrintBillComponent implements OnInit {
    * @param deliveryCode
    */
   printDeliveryRequest(deliveryCode) {
-    this.loading = true;
+    this.loading['request'] = true;
     this.printService.printDeliveryRequest(deliveryCode).toPromise()
         .then(res => {
-          this.loading = false;
+          this.loading['request'] = false;
           if (res.result.success) {
             this.deliveryRequest = res.result.data;
             this.sumRequestWeight = this.sumWeightOfRequestList();
@@ -127,7 +132,7 @@ export class PrintBillComponent implements OnInit {
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.loading['request'] = false;
           this.isDisable['request'] = true;
           this.showMessage('alert-danger', 'Không lấy được thông tin phiếu yêu cầu giao hàng');
         });

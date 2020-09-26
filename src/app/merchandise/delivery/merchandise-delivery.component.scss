@@ -132,4 +132,13 @@ td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:la
       }
     }
   }
+
+  .merchandise-table-container {
+    overflow-x: scroll;
+    webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    .table-wrapper {
+      min-width: 370px;
+    }
+  }
 }

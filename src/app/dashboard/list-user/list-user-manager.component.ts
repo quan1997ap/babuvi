@@ -19,7 +19,7 @@ export class listUserManagerComponent implements OnInit {
   displayedColumns = ['userCode', 'username', 'firstName', 'lastName', 
   'phone', 'statusDisplay', 'rightDisplay', 'createdDate'];
   dataSource = new MatTableDataSource<ClientProfile>(ELEMENT_DATA);
-  private _lstButton: MenuFromServer[] = []
+  _lstButton: MenuFromServer[] = []
   values: any
 
   ngOnInit(){

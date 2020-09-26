@@ -20,7 +20,8 @@ export class BasicCardComponent implements OnInit, AfterViewInit {
   clientProfile: ClientProfile;
   walletId: number;
   lstTransaction: TransactionManager[] = [];
-
+  picker: any;
+  
   constructor(private _commonServices: CommonService) {}
 
   ngOnInit() {

@@ -29,7 +29,7 @@ export class DeliveryRequest {
     statusDisplay;
     missingAmount;
     warehouseExp;
-    shipment: [];
+    shipment: any[];
     lsParentDetail: any[];
     lsDetail: any[];
 }

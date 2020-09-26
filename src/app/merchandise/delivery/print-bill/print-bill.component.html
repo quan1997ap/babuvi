@@ -5,16 +5,16 @@
   <button ngxPrint printSectionId="print-section-form-1"
           [styleSheetFile]="styleSheetFiles"
           [printDelay]="printDelay"
-          mat-button [disabled]="loading || isDisable['exp']"
+          mat-button [disabled]="loading['exp']"
           class="btn btn-primary d-block w-100 mb-3">In phiếu xuất hàng</button>
   <button ngxPrint printSectionId="print-section-form-2"
           [styleSheetFile]="styleSheetFiles"
           [printDelay]="printDelay"
-          mat-button [disabled]="loading || isDisable['ship']" class="btn btn-primary d-block w-100 mb-3">In phiếu vận đơn</button>
+          mat-button [disabled]="loading['ship']" class="btn btn-primary d-block w-100 mb-3">In phiếu vận đơn</button>
   <button ngxPrint printSectionId="print-section-form-3"
           [styleSheetFile]="styleSheetFiles"
           [printDelay]="printDelay"
-          mat-button [disabled]="loading || isDisable['request']" class="btn btn-primary d-block w-100 mb-3">In phiếu yêu cầu giao hàng</button>
+          mat-button [disabled]="loading['request']" class="btn btn-primary d-block w-100 mb-3">In phiếu yêu cầu giao hàng</button>
   <div id="print-section-form-1">
     <div class="print-container">
       <div class="page">
@@ -26,11 +26,11 @@
               <div><strong>Loại:</strong> {{expData?.typeDisplay}} </div>
               <div><strong>Kho xuất:</strong> {{expData?.expWarehouseName}} </div>
               <div><strong>Điện thoại:</strong> {{expData?.expWarehousePhone}}</div>
-              <div><strong>Địa chỉ:</strong> {{expData?.expWarehouseAddress + expData?.expWarehouseDistrict + expData?.expWarehouseCity}}</div>
+              <div><strong>Địa chỉ:</strong> {{expData?.expWarehouseAddress + (expData? '-' + expData.expWarehouseDistrict: '') + (expData? '-' + expData.expWarehouseCity : '')}}</div>
               <div class="text-center">**************</div>
               <div><strong>Khách hàng:</strong> {{expData?.customerName}} </div>
               <div><strong>Điện thoại:</strong> {{expData?.customerPhone}}</div>
-              <div><strong>Địa chỉ:</strong> {{expData?.customerAddress + expData?.customerDistrict + expData?.customerCity }}</div>
+              <div><strong>Địa chỉ:</strong> {{expData?.customerAddress + (expData ? '-' + expData.customerDistrict : '' ) + (expData? '-' + expData.customerCity : '') }}</div>
             </div>
             <div class="list">
               <table>
@@ -48,7 +48,8 @@
                   <td>{{mer.paymentWeight}}</td>
                 </tr>
                 <tr>
-                  <td colspan="2" class="no-border">{{expData?.lsDetail?.length}} kiện hàng</td>
+                  <td class="no-border">{{expData?.lsDetail?.length}} kiện hàng</td>
+                  <td class="no-border"></td>
                   <td class="no-border">{{sumExpWeight}} kg</td>
                 </tr>
                 </tbody>
@@ -67,9 +68,9 @@
     <div class="print-container">
       <div class="page">
         <div class="subpage">
-          <div class="form-2">
-            <ngx-barcode [bc-value]="shipData?.shipCode" bc-height="30" bc-font-size="15" bc-width="1.8" [bc-display-value]="true"></ngx-barcode>
-            <div class="text-center">Vận chuyển: <span>{{shipData?.transporterName}}</span></div>
+          <div *ngFor="let shipDt of shipData" class="form-2">
+            <ngx-barcode [bc-value]="shipDt?.shipCode" bc-height="30" bc-font-size="15" bc-width="1.8" [bc-display-value]="true"></ngx-barcode>
+            <div class="text-center">Vận chuyển: <span>{{shipDt?.transporterName}}</span></div>
           </div>
         </div>
       </div>
@@ -113,7 +114,8 @@
                   <td>{{mer.paymentWeight}}</td>
                 </tr>
                 <tr>
-                  <td colspan="2" class="no-border">{{deliveryRequest.lsDetail?.length}}</td>
+                  <td class="no-border">{{deliveryRequest.lsDetail?.length}} kiện hàng</td>
+                  <td class="no-border"></td>
                   <td class="no-border">{{sumRequestWeight}} kg</td>
                 </tr>
                 </tbody>
@@ -132,7 +134,7 @@
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close class="btn btn-secondary  mr-2">Hủy</button>
 </mat-dialog-actions>
-<div class="spinner-wrapper" [hidden]="!loading">
+<div class="spinner-wrapper" [hidden]="!(loading['exp'] || loading['ship'] || loading['request'])">
   <div class="spinner-container">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </div>

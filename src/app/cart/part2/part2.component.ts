@@ -32,7 +32,7 @@ import { WalletService } from 'app/services/wallet.services';
 })
 export class Part2Component implements OnInit {
   
-  private _allItemsSelect: ItemsOnShop[] = [];
+  _allItemsSelect: ItemsOnShop[] = [];
   userId: number = 0;
 
   isHiddenSpinner: boolean = false;
@@ -45,7 +45,7 @@ export class Part2Component implements OnInit {
   isBill: boolean = false;
 
   allAddress: lstAddressAll;
-  private lstAddress: lstAddress[] = [];
+  lstAddress: lstAddress[] = [];
 
   bookingProduct: BookingProductModel;
   checkedAddress: lstAddress[];

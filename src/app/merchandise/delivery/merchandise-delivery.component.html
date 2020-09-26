@@ -71,14 +71,13 @@
             <div class="block-title text-uppercase p-2 font-weight-bold">Thông tin phiếu xuất hàng</div>
             <div class="block-content p-3">
                 <p>Mã phiếu xuất: <span
-                        class="font-weight-bold">{{ deliveryRequest?.warehouseExp?.WarehouseExpCode }}</span></p>
-                <p>Ngày xuất: <span>{{ deliveryRequest?.warehouseExp?.ExpDate | date: 'dd/mm/yyy' }}</span></p>
+                        class="font-weight-bold">{{ deliveryRequest?.warehouseExp?.warehouseExpCode }}</span></p>
+                <p>Ngày xuất: <span>{{ deliveryRequest?.warehouseExp?.expDate | date: 'dd/mm/yyy' }}</span></p>
                 <p>Người xuất:
-                    <span>{{ deliveryRequest?.warehouseExp?.StorekeeperFirstName }} {{deliveryRequest?.warehouseExp?.StorekeeperLastName}}</span>
+                    <span>{{ deliveryRequest?.warehouseExp?.storekeeperFirstName }} {{deliveryRequest?.warehouseExp?.storekeeperLastName}}</span>
                 </p>
                 <p>Mã vận đơn: <span class="font-weight-bold text-info">
-                    <span *ngFor="let code of deliveryRequest?.warehouseExp?.ShipmentCode">
-                    {{ code }}</span>
+                    {{ shipmentCodes }}
                 </span>
                 </p>
                 <p>Trạng thái: <span class="font-weight-bold">{{ deliveryRequest?.warehouseExp?.statusDisplay }}</span>
@@ -96,64 +95,69 @@
                            #parentMerchandiseCd="ngModel"
                            [(ngModel)]="parentMerchandiseCode" (keydown.enter)="applyFilter(parentMerchandiseCd.value)">
                 </div>
-                <table mat-table [dataSource]="dataSource" class="w-100 merchandise-table">
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="orderCode">
-                        <th class="merchandise-code text-center" mat-header-cell *matHeaderCellDef>
-                            <span>Mã đơn hàng</span>
-                        </th>
-                        <td [class.text-center]="!element.isParrent" mat-cell [attr.colspan]="element.isParrent ? 5 : 1"
-                            *matCellDef="let element">
+                <div class="merchandise-table-container">
+                    <div class="table-wrapper">
+                        <table mat-table [dataSource]="dataSource" class="w-100 merchandise-table">
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="orderCode">
+                                <th class="merchandise-code text-center" mat-header-cell *matHeaderCellDef>
+                                    <span>Mã đơn hàng</span>
+                                </th>
+                                <td [class.text-center]="!element.isParrent" mat-cell
+                                    [attr.colspan]="element.isParrent ? 5 : 1"
+                                    *matCellDef="let element">
                             <span *ngIf="element.isParrent" class="font-weight-bold">
                                 Mã kiện hàng: {{element.merchandiseCode}}
                                 <span *ngIf="element.paymentWeight"> - Cân nặng: {{element.paymentWeight}} kg</span>
                             </span>
-                            <span *ngIf="!element.isParrent">
+                                    <span *ngIf="!element.isParrent">
                             {{element.orderCode}}
                             </span>
-                        </td>
-                    </ng-container>
+                                </td>
+                            </ng-container>
 
-                    <ng-container matColumnDef="merchandiseCode">
-                        <th class="text-center" mat-header-cell *matHeaderCellDef> Mã kiện</th>
-                        <td class="text-center" mat-cell [hidden]="element.isParrent"
-                            *matCellDef="let element"> {{element.merchandiseCode}}
-                        </td>
-                    </ng-container>
+                            <ng-container matColumnDef="merchandiseCode">
+                                <th class="text-center" mat-header-cell *matHeaderCellDef> Mã kiện</th>
+                                <td class="text-center" mat-cell [hidden]="element.isParrent"
+                                    *matCellDef="let element"> {{element.merchandiseCode}}
+                                </td>
+                            </ng-container>
 
-                    <ng-container matColumnDef="netWeight">
-                        <th class="text-center" mat-header-cell *matHeaderCellDef> Cân nặng</th>
-                        <td class="text-center" mat-cell [hidden]="element.isParrent"
-                            *matCellDef="let element"> {{element.netWeight}} kg
-                        </td>
-                    </ng-container>
+                            <ng-container matColumnDef="netWeight">
+                                <th class="text-center" mat-header-cell *matHeaderCellDef> Cân nặng</th>
+                                <td class="text-center" mat-cell [hidden]="element.isParrent"
+                                    *matCellDef="let element"> {{element.netWeight}} kg
+                                </td>
+                            </ng-container>
 
-                    <ng-container matColumnDef="capacity">
-                        <th class="text-center" mat-header-cell *matHeaderCellDef> Thể tích</th>
-                        <td class="text-center" mat-cell [hidden]="element.isParrent"
-                            *matCellDef="let element">
-                            {{element.length}} x {{element.width}}
-                            x {{element.height}}
-                        </td>
-                    </ng-container>
+                            <ng-container matColumnDef="capacity">
+                                <th class="text-center" mat-header-cell *matHeaderCellDef> Thể tích</th>
+                                <td class="text-center" mat-cell [hidden]="element.isParrent"
+                                    *matCellDef="let element">
+                                    {{element.length}} x {{element.width}}
+                                    x {{element.height}}
+                                </td>
+                            </ng-container>
 
-                    <ng-container matColumnDef="chargedWeight">
-                        <th class="text-center" mat-header-cell *matHeaderCellDef> Quy đổi</th>
-                        <td class="text-center" mat-cell [hidden]="element.isParrent"
-                            *matCellDef="let element">{{element.chargedWeight}} kg
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-                <div *ngIf="dataSource.data.length === 0" class="text-center p-2">Không có dữ liệu</div>
-                <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
+                            <ng-container matColumnDef="chargedWeight">
+                                <th class="text-center" mat-header-cell *matHeaderCellDef> Quy đổi</th>
+                                <td class="text-center" mat-cell [hidden]="element.isParrent"
+                                    *matCellDef="let element">{{element.chargedWeight}} kg
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <div *ngIf="dataSource.data.length === 0" class="text-center p-2">Không có dữ liệu</div>
+                        <mat-paginator class="mb-2" [pageSize]="10" showFirstLastButtons></mat-paginator>
+                    </div>
+                </div>
                 <div class="missing-amount">
                     <div class="font-weight-bold mb-2">Tổng tiền còn thiếu: <span
                             class="text-danger">{{deliveryRequest.missingAmount | currency: 'VND'}}</span></div>
 
                     <div class="form-group">
-                        <button (click)="paymentOrders()" [disabled]="!deliveryRequest.missingAmount > 0"
+                        <button (click)="paymentOrders()" [disabled]="!(deliveryRequest.missingAmount > 0)"
                                 class="btn btn-sm btn-danger mr-1">
                             Thanh toán
                         </button>

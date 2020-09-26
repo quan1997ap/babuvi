@@ -24,6 +24,7 @@ export class ListReceiptComponent implements OnInit {
     private messageService: MessageService,
 
   ) { }
+  GhiChu:any;
   datas: any;
   DropdownLydo: any = [];
   DropdownTrangThai: any = [];
@@ -126,7 +127,7 @@ export class ListReceiptComponent implements OnInit {
     }
   }
 
-  FuncThem(e) {
+  FuncThem() {
     this.confirmationService.confirm({
       key: "dsbienlai",
       header: "Xác nhận",

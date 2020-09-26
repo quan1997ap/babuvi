@@ -41,6 +41,7 @@ export class ExchangeComponent {
   loading: boolean = true;
   detectWidthLayout: boolean = true;
   detectWidthLayoutSM: boolean = true;
+  pageEvent: void;
 
   constructor(
     private _passData: PassDataService,

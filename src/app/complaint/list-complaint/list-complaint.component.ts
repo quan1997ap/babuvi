@@ -16,7 +16,7 @@ import { Message } from 'primeng/api';
 })
 export class ListComplaintComponent implements OnInit, AfterViewInit {
 
-
+  pageEvent:any;
   filterConditions = {
     ComplainCode: '',
     OrderCode: '',

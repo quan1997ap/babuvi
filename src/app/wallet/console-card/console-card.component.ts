@@ -29,11 +29,11 @@ export class ConsoleCardComponent implements OnInit {
 
   ELEMENT_DATA: header[] = []
   dataSource = new MatTableDataSource<header>(this.ELEMENT_DATA)
-  private _receiptopup: ReceiptTopup[] = []
-  private _detroyItemReceiptTopup: ReceiptTopup[] = [];
-  private _lstButton: MenuFromServer[] = []
+  _receiptopup: ReceiptTopup[] = []
+  _detroyItemReceiptTopup: ReceiptTopup[] = [];
+  _lstButton: MenuFromServer[] = []
   values: any
-  private _isDetele: any[] = [];
+  _isDetele: any[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator
 

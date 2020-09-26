@@ -18,6 +18,7 @@ export class ListTaskComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute
   ) { }
+  GhiChu:any;
   datas: any;
   loaiThamChieu: any = [];
   loaiCongViec: any = [];
@@ -136,7 +137,7 @@ export class ListTaskComponent implements OnInit {
     }
   }
 
-  FuncThem(e) {
+  FuncThem() {
     this.confirmationService.confirm({
       key: "dscongviec",
       header: "Xác nhận",

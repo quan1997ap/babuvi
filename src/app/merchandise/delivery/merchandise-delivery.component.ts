@@ -23,6 +23,7 @@ export class MerchandiseDeliveryComponent implements OnInit {
     parentMerchandiseCode: string;
     account: ClientProfile;
     userId: any;
+    shipmentCodes: string = '';
 
     displayedColumns: string[] = ['orderCode', 'merchandiseCode', 'netWeight', 'capacity', 'chargedWeight'];
     dataSource = new MatTableDataSource<any>();
@@ -51,6 +52,11 @@ export class MerchandiseDeliveryComponent implements OnInit {
                 this.loading = false;
                 if (res.result.success) {
                     this.deliveryRequest = res.result.data;
+                    if (this.deliveryRequest && this.deliveryRequest.shipment && this.deliveryRequest.shipment.length > 0) {
+                        this.shipmentCodes = this.deliveryRequest.shipment.map(e => e.shipmentCode).join(', ')
+                    } else {
+                        this.shipmentCodes = '';
+                    }
                     this.sortMerchandiseLsAndMergeParent();
                 } else {
                     this.deliveryRequest = new DeliveryRequest();
@@ -83,16 +89,16 @@ export class MerchandiseDeliveryComponent implements OnInit {
     sortMerchandiseLsAndMergeParent() {
         let parent: any[];
         parent = this.deliveryRequest.lsParentDetail;
-        const nullParent = this.deliveryRequest.lsParentDetail.find(e => e.merchandiseId === null);
+        const nullParent = this.deliveryRequest.lsParentDetail.find(e => e.merchandiseWarehouseId === null);
         if (!nullParent) {
-            this.deliveryRequest.lsParentDetail = parent = [{merchandiseId: null}, ...parent];
+            this.deliveryRequest.lsParentDetail = parent = [{merchandiseWarehouseId: null}, ...parent];
         }
         this.merchandiseList = [];
         for (const p of parent) {
             p.isParrent = true;
-            const merchandiseLsByParentId = this.deliveryRequest.lsDetail.filter(e => e.parentId === p.merchandiseId);
+            const merchandiseLsByParentId = this.deliveryRequest.lsDetail.filter(e => e.parentId === p.merchandiseWarehouseId);
             if (merchandiseLsByParentId.length > 0) {
-                if (p.merchandiseId === null) {
+                if (p.merchandiseWarehouseId === null) {
                     this.merchandiseList = [...this.merchandiseList, ...merchandiseLsByParentId];
                 } else {
                     this.merchandiseList = [...this.merchandiseList, p, ...merchandiseLsByParentId];
@@ -181,8 +187,7 @@ export class MerchandiseDeliveryComponent implements OnInit {
      */
     sendDelivery() {
         const body = {
-            deliveryRequestCode: this.deliveryRequestCode,
-            storekeeperId: this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.storekeeperId : null,
+            DeliveryRequestCode: this.deliveryRequestCode,
         };
         this.loading = true;
         this.merchandiseServices.sendDelivery(body).toPromise()
@@ -233,8 +238,6 @@ export class MerchandiseDeliveryComponent implements OnInit {
     exportByDeliveryRequest() {
         const body = {
             DeliveryRequestCode: this.deliveryRequestCode,
-            StorekeeperId: this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.storekeeperId : null,
-            UserId: this.userId,
         };
         this.loading = true;
         this.warehouseExpService.createWarehouseExpByDeliveryRequest(body).toPromise()
@@ -259,9 +262,7 @@ export class MerchandiseDeliveryComponent implements OnInit {
      */
     cancelExp() {
         const body = {
-            DeliveryRequestCode: this.deliveryRequestCode,
-            StorekeeperId: this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.storekeeperId : null,
-            UserId: this.userId,
+            WarehouseExpCode: this.deliveryRequest && this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.warehouseExpCode : null,
         };
         this.loading = true;
         this.warehouseExpService.cancelWarehouseExp(body).toPromise()
@@ -285,9 +286,11 @@ export class MerchandiseDeliveryComponent implements OnInit {
      * Print bill
      */
     printExpBill() {
+        console.log(this.deliveryRequest.deliveryRequestId);
         const printData = {
-            expCode: this.deliveryRequest && this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.WarehouseExpCode : null,
+            expCode: this.deliveryRequest && this.deliveryRequest.warehouseExp ? this.deliveryRequest.warehouseExp.warehouseExpCode : null,
             deliveryRequestCode: this.deliveryRequestCode,
+            deliveryRequestId: this.deliveryRequest.deliveryRequestId,
         }
         this.dialog.open(PrintBillComponent, {
             data: printData,

@@ -25,8 +25,8 @@ import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-d
 })
 export class Part1Component implements OnInit {
 
-  private _allServicesCart: ProductServicesOption[];
-  private _allItemsCart: AllLstCart[];
+  _allServicesCart: ProductServicesOption[];
+  _allItemsCart: AllLstCart[];
   checked: Boolean = false;
   userId;
   account: ClientProfile;
@@ -42,7 +42,7 @@ export class Part1Component implements OnInit {
   totalPage: number;
   lastScrollTop: number = 0;
   oldItemServicesCart: ProductServicesOption;
-  private _allItemsSelect: ItemsOnShop[];
+  _allItemsSelect: ItemsOnShop[];
 
   constructor (
     private _passData: PassDataService,

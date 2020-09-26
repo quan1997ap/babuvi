@@ -89,7 +89,10 @@ export class LoginComponent implements AfterViewInit {
       
     })
   }
-	
+  
+	loginKey(data: any) {
+    console.log(data);
+  }
 }
 
 

@@ -66,7 +66,7 @@
                             </div><!-- end ngRepeat: address in listAddress -->
                             <div class="adr-oms radio" data-address="add" >
                                 <p class="mar-left9 mar-bot15">
-                                    <span class="mar-right10"><input type="radio" name="r1"  value="-1" (change)="changeLocation($event.target.value, '')" /></span>
+                                    <span class="mar-right10"><input type="radio" name="r1"  value="-1" (change)="changeLocation($event.target.value)" /></span>
                                     <span class="item-name">Thêm địa chỉ nhận hàng</span>
                                 </p>
                                 <div class="add_address hidden" *ngIf="edited">

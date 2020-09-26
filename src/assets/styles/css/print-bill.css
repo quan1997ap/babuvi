@@ -14,8 +14,9 @@ h1 {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
 }
+
 .page {
-    width: 44mm;
+    width: 80mm;
     margin: 2mm auto;
     background: white;
 }

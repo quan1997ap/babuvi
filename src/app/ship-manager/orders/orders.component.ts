@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, OnInit, HostListener} from '@angular/core';
+import {AfterViewInit, Component, OnInit, HostListener, ViewChild} from '@angular/core';
 import {ShipManagerService} from 'app/services/ship-manager.service';
 import {ClientProfile} from 'app/model/client-profile.model';
 import {ShipOrders} from 'app/model/ship-orders.model';
-import {MatDialog, MatTableDataSource} from '@angular/material';
-import {Router} from '@angular/router';
+import {MatDialog, MatTableDataSource, MatPaginator} from '@angular/material';
+import {Router, ActivatedRoute, NavigationStart} from '@angular/router';
 import {PaymentOrdersComponent} from '../../payment-orders/payment-orders.component';
 import { PassDataService } from 'app/services/pass-data.services';
 import {MessageService} from 'primeng/components/common/api';
@@ -16,28 +16,42 @@ import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-d
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent implements OnInit, AfterViewInit {
+export class OrdersComponent implements OnInit {
 
   ELEMENT_DATA: ShipOrders[] = [];
-
+  @ViewChild('paginator') paginator: MatPaginator;
   displayedColumns: string[] = ['position', 'name', 'symbol'];
   // dataSource = ELEMENT_DATA;
   dataSource: MatTableDataSource<ShipOrders>;
-  private account: ClientProfile;
-  private _shipOrders: ShipOrders[];
+  account: ClientProfile;
+  _shipOrders: ShipOrders[];
   msgs: Message[] = [];
 
   dataCount: number;
   pageSize: number;
-  pageIndex: number;
+  pageIndex: number = 1;
 
   constructor(
+              private route: ActivatedRoute,
               private _passData: PassDataService,
               private _shipManager: ShipManagerService,
               private router: Router,
               public dialog: MatDialog) {
-    this._passData.loading(true);
-  }
+                this._passData.loading(true);
+                this.route.queryParams.subscribe(params => {
+                  if (params['pageIndex']) {
+                    this.pageIndex = params['pageIndex'];
+                  }
+                });
+                this.router.events
+                    .subscribe((event: NavigationStart) => {
+                      if (['popstate', 'imperative'].includes(event.navigationTrigger)) {
+                        this.pageIndex = Number(new URLSearchParams(event.url.split('?')[1]).get('pageIndex')) ?
+                            Number(new URLSearchParams(event.url.split('?')[1]).get('pageIndex')) : 1;
+                        this.getDataFromServer();
+                      }
+                    });
+              }
   detectWidthLayout: boolean = true;
   detectWidthLayoutSm: boolean = true;
   ngOnInit() {
@@ -58,6 +72,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     // this._shipOrders = new ShipOrders();
     this._shipOrders = [];
     this.dataSource = new MatTableDataSource<ShipOrders>();
+    this.getDataFromServer();
   }
 
 
@@ -74,55 +89,55 @@ export class OrdersComponent implements OnInit, AfterViewInit {
       this.detectWidthLayoutSm = true
     }
   }
-  
-  ngAfterViewInit() {
-    this.getAllOrders();
+
+  /**
+   * Set page index when user click to paginator
+   * @param event
+   */
+  detectPage(event: any) {
+    this.pageIndex = event.pageIndex + 1;
   }
-
-  public getAllOrders() {
-    this._shipManager.getAllOrders(this.account.userId, 1).subscribe(res => {
-        if(res.result.success) {
-          const dataItem = res.result;
-          // page
-          this.dataCount = dataItem.dataCount;
-          this.pageIndex = dataItem.pageIndex;
-          // data
-          this._shipOrders = res.result.data;
-          this.dataSource.data = res.result.data;
-        } else {
-
-        }
-        this._passData.loading(false);
-    }, error => {
-      this._passData.loading(false);
+  
+  /**
+   * Routing page index
+   * @param event
+   */
+  pageEvent(event) {
+    this.detectPage(event);
+    // changes the route without moving from the current view or
+    // triggering a navigation event,
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        pageIndex: this.pageIndex
+      },
+      queryParamsHandling: 'merge',
+      // preserve the existing query params in the route
+      skipLocationChange: false
+      // do not trigger navigation
     });
   }
 
-  detectPage(event: any) {
-    const lastPage = Math.floor(event.length/event.pageSize);
-    if (event.previousPageIndex > event.pageIndex) {
-      this.pageIndex = event.pageIndex === 0 ? 0 : this.pageIndex-1;
-    } else {
-      this.pageIndex = event.pageIndex === lastPage ? lastPage+1 : this.pageIndex+1;
-    }
-  }
-
-  getServerData(event) {
+  /**
+   * Get data from server with page index
+   */
+  getDataFromServer() {
     this._passData.loading(true);
-    this.detectPage(event);
     this._shipManager.getAllOrders(this.account.userId, this.pageIndex).subscribe(res => {
-        if(res.result.success) {
-          const dataItem = res.result;
-          // page
-          this.dataCount = dataItem.dataCount;
-          this.pageIndex = dataItem.pageIndex;
-          // data
-          this._shipOrders = res.result.data;
-          this.dataSource.data = res.result.data;
-        } else {
-          // this.showMessage('Hủy đơn hàng thành công', 'success');
-        }
-        this._passData.loading(false);
+      if(res.result.success) {
+        const dataItem = res.result;
+        // page
+        this.dataCount = dataItem.dataCount;
+        this.pageIndex = dataItem.pageIndex;
+        // data
+        this._shipOrders = res.result.data;
+        this.dataSource.data = res.result.data;
+        this.paginator.pageIndex = this.pageIndex - 1;
+
+      } else {
+        // this.showMessage('Hủy đơn hàng thành công', 'success');
+      }
+      this._passData.loading(false);
     }, error => {
       this._passData.loading(false);
     });
@@ -147,7 +162,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     }).afterClosed().subscribe((res) => {
       if (res) {
         this.showMessage('Thanh toán thành công', 'success');
-        this.getAllOrders();
+        this.getDataFromServer();
       }
     });
   }

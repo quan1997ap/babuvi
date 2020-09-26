@@ -12,6 +12,8 @@ import { formatDate} from '@angular/common';
     providers: [MerchandiseServices]
 })
 export class ListRequestComponent implements OnInit {
+    msgs:any;
+    clear:any;
     hinhthuc: any[]; hayhay = "i>2?'':'none'"
     trangthai: any[];
     dropdownHinhthuc: SelectItem[] = [];

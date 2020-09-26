@@ -44,7 +44,7 @@ export class SpaceTabContentComponent implements OnInit {
   data = Object.assign( ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
   private search = [];
-  private filteredUsers = [];
+  filteredUsers = [];
   public inputValues: any;
   myControl = new FormControl();
   private spaceUser = [];
