@@ -96,11 +96,18 @@ export class MerchandiseServices extends ApiService {
     searchListDeliveryRequest(page:any,perPage:any,datasearch:any){
         return this.post(this.apiBaseController + `searchListDeliveryRequest/?page=${page}&perPage=${perPage}`,datasearch)
     }
+    searchListDeliveryRequestManager(page:any,perPage:any,datasearch:any){
+        return this.post(this.apiBaseController + `searchListDeliveryRequestManager/?page=${page}&perPage=${perPage}`,datasearch)
+    }
     deleteLsDeliveryRequest(deleteIds:any){
-        return this.put(this.apiBaseController + "deleteLsDeliveryRequest/", deleteIds);
+        return this.put(this.apiBaseController + "cancelLsDeliveryRequest/", deleteIds);
     }
 
     searchMerchandise(page:number,perPage:number,data){
         return this.post(this.apiBaseController + `searchMerchandise?perPage=${perPage}&page=${page}`,data)
+    }
+
+    searchMerchandiseManager(page:number,perPage:number,data){
+        return this.post(this.apiBaseController + `searchMerchandiseManager?perPage=${perPage}&page=${page}`,data)
     }
 }

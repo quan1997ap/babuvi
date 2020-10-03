@@ -18,6 +18,7 @@ import {MerchandiseServices} from 'app/services/merchandise.services';
 import { SystemService } from 'app/services/system.services';
 //component
 import {ListMerchandiseComponent} from './list-merchandise/list-merchandise.component';
+import {ListMerchandiseManagerComponent} from './list-merchandise-manager/list-merchandise-manager.component';
 import {PaymentOrdersComponent} from '../payment-orders/payment-orders.component';
 import {PaymentOrdersModule} from '../payment-orders/payment-orders.module';
 import { MerchandiseDeliveryComponent } from './delivery/merchandise-delivery.component';
@@ -64,7 +65,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         HistoryDialogComponent,
         MerchandiseDeliveryComponent,
         PrintBillComponent,
-        ListMerchandiseComponent
+        ListMerchandiseComponent,
+        ListMerchandiseManagerComponent
     ],
     providers: [
         MerchandiseServices,

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RequestComponent} from './request/request.component';
 import {ListRequestComponent } from './list-request/list-request.component';
+import {ListRequestManagerComponent } from './list-request-manager/list-request-manager.component';
 import {RouterModule} from '@angular/router';
 import {DeliveryRoutes} from './delivery.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -35,6 +36,7 @@ import { MessageService } from 'primeng/api';
         RequestComponent,
         ConfirmComponent,
         ListRequestComponent,
+        ListRequestManagerComponent,
     ],
     imports: [
         CommonModule,

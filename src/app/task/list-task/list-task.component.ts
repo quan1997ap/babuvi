@@ -184,6 +184,8 @@ export class ListTaskComponent implements OnInit {
       case "4": return "btnKhieuNai"; break;
       case "5": return "btnThemVanDon"; break;
       case "6": return "btnCapNhatVanDon"; break;
+      case "7": return "btnXacNhanDon"; break;
+      case "8": return "btnChuanBiHang"; break;
     }
   }
   buttonStatus(status) { //function trả lại kiểu class cho loại trạng thái 
@@ -301,6 +303,8 @@ export class ListTaskComponent implements OnInit {
         break;
       case "2":
         alert("Chưa làm chi tiết kiện hàng")
+      case "3":
+        this.returnLinkOrder = window.location.href.replace(this.router.url,`/delivery/list-request-manager`);
         break;
     }
   }

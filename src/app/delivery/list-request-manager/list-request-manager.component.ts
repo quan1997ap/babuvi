@@ -6,12 +6,12 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { formatDate} from '@angular/common';
 @Component({
-    selector: 'app-list-request',
-    templateUrl: './list-request.component.html',
-    styleUrls: ['./list-request.component.scss'],
+    selector: 'app-list-request-manager',
+    templateUrl: './list-request-manager.component.html',
+    styleUrls: ['./list-request-manager.component.scss'],
     providers: [MerchandiseServices]
 })
-export class ListRequestComponent implements OnInit {
+export class ListRequestManagerComponent implements OnInit {
     msgs:any;
     clear:any;
     hinhthuc: any[]; hayhay = "i>2?'':'none'"
@@ -60,7 +60,7 @@ export class ListRequestComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
         this.columns = this.header_mock;
-        this.merchandiseServices.searchListDeliveryRequest(1, 10, this.nullForm).toPromise().then(data => {
+        this.merchandiseServices.searchListDeliveryRequestManager(1, 10, this.nullForm).toPromise().then(data => {
             if (data.result.success == true) {
                 
                 this.dataFetch = data.result;
@@ -183,7 +183,7 @@ export class ListRequestComponent implements OnInit {
         this.nullForm = form;
         this.loading = true;
          //console.log(form); return;
-        this.merchandiseServices.searchListDeliveryRequest(1, 10, form).toPromise().then(data => {
+        this.merchandiseServices.searchListDeliveryRequestManager(1, 10, form).toPromise().then(data => {
             if (data.message == "successful") {
                 this.dataFetch = data.result;
                 this.datas = this.dataFetch.data.lsData;
@@ -214,7 +214,7 @@ export class ListRequestComponent implements OnInit {
         if (this.hideElement == 'none') { this.hideElement = null } else (this.hideElement = 'none')
     }
     loadDataFromServerPerPage(numb) {
-        this.merchandiseServices.searchListDeliveryRequest(numb, 10, this.nullForm).toPromise().then(data => {
+        this.merchandiseServices.searchListDeliveryRequestManager(numb, 10, this.nullForm).toPromise().then(data => {
             if (data.result.success == true) {
                 this.dataFetch = data.result;
                 this.datas = this.dataFetch.data.lsData;
