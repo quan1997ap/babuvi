@@ -163,7 +163,7 @@ export class ListRequestComponent implements OnInit {
                             this.loading = false;
                         } else {
                             this.loading = false;
-                            this.messageService.add({ key: 'dsyeucau', severity: 'error', summary: 'Thông báo', detail: data.message });
+                            this.messageService.add({ key: 'dsyeucau', severity: 'error', summary: 'Thông báo', detail: data.result.message });
                         }
                     })
             }

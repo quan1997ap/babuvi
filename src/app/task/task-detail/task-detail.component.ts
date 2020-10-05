@@ -74,7 +74,7 @@ export class TaskDetailComponent implements OnInit {
           await this.taskStatus.push({ label: element.displayValue, value: element.value })
         }); console.log(this.taskStatus)
       } else {
-        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     })
 
@@ -101,7 +101,7 @@ export class TaskDetailComponent implements OnInit {
         this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Tải dữ liệu thành công!" });
       } else {
         this.loading = false
-        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     });
 
@@ -115,7 +115,7 @@ export class TaskDetailComponent implements OnInit {
         });
         console.log(this.attachFileType)
       } else {
-        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
       }
     });
   }
@@ -153,7 +153,7 @@ export class TaskDetailComponent implements OnInit {
               this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: `Đã gỡ bỏ ${username}!` });
               this.loading = false;
             } else {
-              this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });
+              this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
               this.loading = false;
             }
           }
@@ -215,7 +215,7 @@ export class TaskDetailComponent implements OnInit {
             this.loading = false;
           } else {
             this.loading = false;
-            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.message });  
+            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });  
           }  
         }
         )
