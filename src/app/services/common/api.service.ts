@@ -49,7 +49,7 @@ export class ApiService {
         const requestoptions = new RequestOptions({
             method: RequestMethod.Post,
             url: apiUrl,
-            headers: this.getJsonHeaders(),
+            headers: this.getformHeaders(),
             body: condition
         });
         
@@ -404,6 +404,20 @@ export class ApiService {
         const headers = new Headers(
             {
                 'Content-Type': 'application/json',
+                'Module': Module,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Access-Control-Allow-Origin': '*'
+            });
+            let t1 = localStorage.getItem("token");
+            if(localStorage.getItem("token")) {
+                headers.append('Authorization', 'bearer '+JSON.parse(localStorage.getItem("token")).accessToken);
+            }
+
+        return headers;
+    }
+    getformHeaders() {
+        const headers = new Headers(
+            {
                 'Module': Module,
                 'X-Requested-With': 'XMLHttpRequest',
                 'Access-Control-Allow-Origin': '*'
