@@ -1,0 +1,204 @@
+<div autoscroll="true" class="ng-scope">
+    <div class="d-flex">
+        <div class="tab-title"> Thay đổi địa chỉ nhận hàng</div>
+        <div class="border-tab"></div>
+    </div>
+    <div style=" background: #fff">
+        <div class="row message-section">
+            <p-messages [(value)]="msgs" [closable]="false" [style]="{'width': '100% !important'}" (click)="clear()">
+            </p-messages>
+        </div>
+        <div class="row clearfix config-delivery-address" style="max-width: 1000px;">
+            <div class="col-md-12">
+                <div class="col-md-12" style="padding: 0">
+                    <div class="box-header with-border box-ls">
+                        <span> <i class="fa fa-map-marker"></i> &nbsp;
+                            <span class="box-title"> Chọn địa chỉ nhận hàng</span>
+                        </span>
+                        <span (click)="closeFormConfigAddress()" class="set-address">
+                            <i class="fa fa-times"></i>
+                        </span>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body box-body-content">
+                        <p class="ng-binding max-address-msg" *ngIf="lstAddress && lstAddress.length ===5">
+                            Note: Bạn chỉ có thể thêm tối đa 5 địa chỉ nhận hàng.
+                        </p>
+                        <div class="description">
+                            <div class="addressbox">
+                                <div class="adr-oms radio ng-scope" *ngFor="let address of lstAddress; let i = index">
+                                    <div class="address p-grid">
+                                        <div class="p-col-12 p-md-7 p-col-8 d-flex no-padding">
+                                            <div class="radio-check-address">
+                                                <input type="radio" name="r1" class="minimal"
+                                                    value="{{address.deliveryAddressId}}" [checked]="address.selected"
+                                                    (change)="changeLocation($event.target.value, address)">
+                                            </div>
+                                            <div class="content-address">
+                                                <p class="mb10">
+                                                    <strong class="item-name ng-binding">{{address.receiver}}</strong> -
+                                                    <span class="item-mobile ng-binding">0902244692</span>
+                                                    <span class="mb10" *ngIf="address.isDefault == true">
+                                                        <span class="text-orange"> &nbsp;[ Mặc định ]</span></span>
+                                                </p>
+                                                <p class="ng-binding mb10">{{address.address}} -
+                                                    {{address.districtDisplay}}
+                                                    -
+                                                    {{address.cityDisplay}}</p>
+                                                <p class="text-red ng-binding"></p>
+                                            </div>
+                                        </div>
+                                        <div class="p-col-12 p-md-5 p-col-4 d-flex no-padding">
+                                            <div class="action-address">
+                                                <span class="edit" (click)="updateAddress(address, i)">
+                                                    <i class="fa fa-edit"></i> Sửa</span>
+                                                <span class="delete" (click)="delAddress(address)">
+                                                    <i class="fa fa-trash"></i> Xoá
+                                                </span>
+                                                <!-- <span class="set-default" (click)="setDefaultAddress(address, i)">
+                                                    <i class="fa fa-cog"></i> Đặt làm mặc định
+                                                </span> -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div><!-- end ngRepeat: address in listAddress -->
+
+                                <div class="adr-oms radio add-address address" data-address="add"
+                                    *ngIf="lstAddress && lstAddress.length < 5">
+                                    <p class="mar-left9 mar-bot15 ">
+                                        <span class="radio-add-address"><input type="radio" name="r1" value="-1"
+                                                (change)="changeLocation($event.target.value, '')" /></span>
+                                        <span class="item-name">Thêm địa chỉ nhận hàng</span>
+                                    </p>
+                                    <div class="add_address hidden" *ngIf="edited">
+                                        <form class="form ng-pristine ng-valid" id="user_address"
+                                            style="max-width: 1000px;">
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label">Người nhận <span
+                                                        class="text-red">*</span> </label>
+                                                <div class="col-8">
+                                                    <input type="text" name="receiverName" class="w100"
+                                                        [(ngModel)]="receiverName" placeholder="Nguyễn văn A">
+                                                </div>
+                                            </div>
+                                            <!-- <div class="w100">
+    
+                                            </div> -->
+                                            <div class="form-group clearfix box-tel row">
+                                                <label class="col-4 control-label">Điện thoại <span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <input type="tel" name="Phone" class="w100"
+                                                        [(ngModel)]="receiverPhone" placeholder="Nhập số điện thoại">
+                                                    <div class="text-lastchild ng-binding">Nhân viên giao nhận Babuvi sẽ
+                                                        liên hệ với SĐT này.</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label">Email<br><small
+                                                        class="text-nomal">(không
+                                                        bắt buộc)</small></label>
+                                                <div class="col-8">
+                                                    <input type="text" name="Email" class="w100"
+                                                        [(ngModel)]="receiverEmail" placeholder="Nhập địa chỉ email"
+                                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label pad-t20">Quốc gia<span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <mat-form-field class="w100">
+                                                        <mat-select placeholder="chọn quốc gia"
+                                                            (selectionChange)="changeNational($event.value)">
+                                                            <mat-option>---</mat-option>
+                                                            <mat-option *ngFor="let country of nation"
+                                                                [value]="country">
+                                                                {{ country.areaName }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label pad-t20">Thành phố<span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <mat-form-field class="w100">
+                                                        <mat-select placeholder="chọn Thành phố"
+                                                            (selectionChange)="changeCity($event.value)">
+                                                            <mat-option>---</mat-option>
+                                                            <mat-option *ngFor="let country of lstDataCountry"
+                                                                [value]="country">
+                                                                {{ country.areaName }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label pad-t20">Quận huyện<span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <mat-form-field class="w100">
+                                                        <mat-select placeholder="chọn Quận huyện"
+                                                            (selectionChange)="changeDistrict($event.value)">
+                                                            <mat-option>---</mat-option>
+                                                            <mat-option *ngFor="let country of district"
+                                                                [value]="country">
+                                                                {{ country.areaName }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label pad-t20">Xã Phường<span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <mat-form-field class="w100">
+                                                        <mat-select placeholder="chọn Xã Phường"
+                                                            (selectionChange)="changeWards($event.value)">
+                                                            <mat-option>---</mat-option>
+                                                            <mat-option *ngFor="let ward of wards" [value]="ward">
+                                                                {{ ward.areaName }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label">Số nhà <span
+                                                        class="text-red">*</span></label>
+                                                <div class="col-8">
+                                                    <input placeholder="Nhập địa chỉ" type="text" class="w100"
+                                                        name="Address" [(ngModel)]="receiverAddress" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <label class="col-4 control-label">Ghi chú <small
+                                                        class="text-nomal">(không
+                                                        bắt buộc)</small></label>
+                                                <div class="col-8">
+                                                    <textarea placeholder="Nhập ghi chú" class="w100" cols="30" rows="4"
+                                                        name="description" [(ngModel)]="receiverDescription"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix row">
+                                                <div class="col-12 pull-right">
+                                                    <button type="button" class="btn btn-block btn-danger"
+                                                        (click)="btnAddNewAdrress()">Thêm địa chỉ</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div><!-- end .add_address-->
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end .box-body-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

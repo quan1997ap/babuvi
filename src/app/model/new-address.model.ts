@@ -15,6 +15,7 @@ export class NewAddress {
     Description: string = "";
     deliveryAddressCode: string = null;
     deliveryAddressId: number = null;
+    isDefault: boolean;
     // validate: ValidateAddress = new ValidateAddress();
 }
 

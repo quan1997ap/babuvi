@@ -67,9 +67,19 @@ export const AppRoutes: Routes = [{
         loadChildren: './warehouseimp/warehouse-imp.module#WarehouseImpModule'
     },
     {
+        path: 'warehouseexp',
+        canActivate: [AuthGuard],
+        loadChildren: './warehouseexp/warehouse-exp.module#WarehouseExpModule'
+    },
+    {
         path: 'order',
         canActivate: [AuthGuard],
         loadChildren: './order/order.module#OrderModule'
+    },
+    {
+        path: 'order-consignment',
+        canActivate: [AuthGuard],
+        loadChildren: './order-consignment/order-consignment.module#OrderConsignmentModule'
     },
     {
         path: 'delivery',

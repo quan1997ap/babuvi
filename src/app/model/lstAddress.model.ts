@@ -17,4 +17,5 @@ export class lstAddress {
     receiver: string = null;
     status: string = null;
     userId: number = null;
+    selected: boolean = false;
 }
