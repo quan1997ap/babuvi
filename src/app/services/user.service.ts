@@ -50,6 +50,10 @@ export class UserService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff);
     }
 
+    comfirmFollowZalo(userPhone: string) {
+        return this.put(this.apiBaseController + ApiApplication.user.comfirmFollowZalo + '?userPhone=' + userPhone);
+    }
+
     getUserStaffs() {
         return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff).pipe(map((res: any) => {
             if (res.message === 'successful') {

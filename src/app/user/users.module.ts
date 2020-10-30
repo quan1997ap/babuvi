@@ -1,3 +1,4 @@
+import { ConnectZaloComponent } from './connect-zalo/connect-zalo.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -57,7 +58,8 @@ import { TableModule } from 'primeng/table';
     UserProfileComponent,
     UserListComponent,
     ChangePasswordComponent,
-    UserEditComponent
+    UserEditComponent,
+    ConnectZaloComponent
   ],
   providers: [
     ConfirmationService,

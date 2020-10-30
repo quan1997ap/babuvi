@@ -1,3 +1,4 @@
+import { ConnectZaloComponent } from './connect-zalo/connect-zalo.component';
 import { Routes } from '@angular/router';
 
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -29,6 +30,11 @@ export const UsersRoutes: Routes = [{
     // add
     path: 'add-user',
     component: UserEditComponent,
+  },
+  {
+    // connect-zalo
+    path: 'connect-zalo',
+    component: ConnectZaloComponent,
   },
   ]
 }];

@@ -12,7 +12,7 @@ export class CurrencyFormatChina {
 
             var p = num.toFixed(2).split(".");
             return p[0].split("").reverse().reduce(function(acc, num, i, orig) {
-                return  num=="-" ? acc : num + (i && !(i % chunkLength) ? "." : "") + acc;
+                return  num=="-" ? "-" + acc : num + (i && !(i % chunkLength) ? "." : "") + acc;
             }, "") + "," + p[1];
         } else {
             return '0';
