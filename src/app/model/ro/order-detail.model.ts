@@ -30,6 +30,7 @@ export class OrderData {
     exchangeRate;
     netWeight;
     chargedWeight;
+    totalPriceOriginal;
     totalPrice;
     totalFee;
     amount;

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import {OrderBuyComponent} from './order-buy/order-buy.component';
 import {OrderBuyEditComponent} from './order-buy-edit/order-buy-edit.component';
+import {OrderFinishComponent} from './order-finish/order-finish.component';
 export const OrderRoutes: Routes = [
     {
         path: '',
@@ -15,6 +16,9 @@ export const OrderRoutes: Routes = [
         }, {
             path: 'order-buy-edit',
             component: OrderBuyEditComponent
+        }, {
+            path: 'order-finish',
+            component: OrderFinishComponent
         }
     ]
     }];

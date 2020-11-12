@@ -1,6 +1,6 @@
 export class LService {
-    serviceOrderId: string = null;
-    serviceId: string = null;
+    serviceOrderId: number = null;
+    serviceId: number = null;
     orderId: string = null;
     amount: number = null;
     amountCny: number = null;

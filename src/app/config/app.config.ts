@@ -1,6 +1,6 @@
 export const Module = "babuvi";
-export const ApiBaseUrl = "https:backenddl.babuvi.com/api/";
-//export const ApiBaseUrl = "http://localhost:5000/api/";
+//export const ApiBaseUrl = "https:backenddl.babuvi.com/api/";
+export const ApiBaseUrl = "http://localhost:5000/api/";
 export const APP_NAME = 'Babuvi';
 export const MessageType = {
     Default: 'default',
@@ -229,9 +229,12 @@ export const ApiApplication = {
         getOrderViewModelById: 'getOrderViewModelById',
         payListOrder: 'paylistorder',
         getOrderBuy: 'getorderbuy/',
+        addNewOrderService:'addNewOrderService',
+        deleteOrderService:'deleteOrderService',
         saveOrderAfterBuy: 'saveorderafterbuy',
         completedBuyOrder: 'completedbuyorder',
         editOrderAfterCompleted: 'editOrderAfterCompleted',
+        orderFinish:'orderFinish',
         startBuy: 'startbuy',
         getLsOrderPay: 'getlsorderpay',
         sumMissingAmount: 'sumMissingAmount',

@@ -94,7 +94,6 @@ export class Part1Component implements OnInit {
       .subscribe(
         resAll => {
           if (resAll.result.success) {
-            console.log(resAll.result);
             this.totalPage = resAll.result.pageCount;
             if (this.totalPage >= this.page) {
               this.page++;

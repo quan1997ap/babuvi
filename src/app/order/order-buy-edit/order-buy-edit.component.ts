@@ -4,6 +4,7 @@ import {ChatDTO} from 'app/model/dto/chat.model';
 import {OrderService} from 'app/services/order.service';
 import {LOrderDetail, OrderChat} from 'app/model/ro/order-detail.model';
 import {OrderDetailService} from 'app/services/order-detail.service';
+import {PassDataService } from 'app/services/pass-data.services'
 import {FormGroupDirective} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {APP_NAME} from 'app/config/app.config';
@@ -43,6 +44,7 @@ export class OrderBuyEditComponent implements OnInit {
     };
 
     constructor(
+        private _passData: PassDataService,
         private activeRoute: ActivatedRoute,
         private orderService: OrderService,
         private orderDetailService: OrderDetailService,
@@ -252,6 +254,47 @@ export class OrderBuyEditComponent implements OnInit {
                 this.loading = false;
                 this.showMessage('alert-danger', 'Hủy đơn hàng thất bại');
             });
+        }
+    }
+
+    isSelectedServices (event: any, inx: number, data: OrderBuy) {
+        if (event.currentTarget.checked) {
+          let ServiceId = data.lsService[inx].serviceId;
+          let OrderId = data.orderData.orderId;
+          this._passData.loading(true);
+          this.orderService.addNewOrderService(ServiceId, OrderId).subscribe(
+            res => {
+              if (res.result.success) {
+                //data.lsService[inx] = res.result.data;
+                this.showMessage('Cập nhật thành công', 'success');
+              } else {
+                this.showMessage(res.result.message, 'error');
+              }
+              this._passData.loading(false);
+            },
+            error => {
+              this.showMessage('Cập nhật thành công', 'error');
+              this._passData.loading(false);
+            }
+          )
+        } else {
+          let serviceOrderId = data.lsService[inx].serviceOrderId;
+          this._passData.loading(true);
+          this.orderService.delOrderService(serviceOrderId).subscribe(
+            res => {
+              if (res.result.success) {
+                //data.lsService[inx] = res.result.data;
+                this.showMessage('Cập nhật thành công', 'success');
+              } else {
+                this.showMessage(res.result.message, 'error');
+              }
+              this._passData.loading(false);
+            },
+            error => {
+              this.showMessage('Cập nhật thành công', 'error');
+              this._passData.loading(false);
+            }
+          )
         }
     }
 }

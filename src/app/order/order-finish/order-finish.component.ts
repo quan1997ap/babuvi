@@ -4,7 +4,6 @@ import {ChatDTO} from 'app/model/dto/chat.model';
 import {OrderService} from 'app/services/order.service';
 import {LOrderDetail, OrderChat} from 'app/model/ro/order-detail.model';
 import {OrderDetailService} from 'app/services/order-detail.service';
-import {PassDataService } from 'app/services/pass-data.services'
 import {FormGroupDirective} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {APP_NAME} from 'app/config/app.config';
@@ -12,11 +11,11 @@ import {ClientProfile} from 'app/model/client-profile.model';
 import {CurrencyMaskInputMode} from 'ngx-currency';
 
 @Component({
-    selector: 'app-order-buy',
-    templateUrl: './order-buy.component.html',
-    styleUrls: ['./order-buy.component.scss']
+    selector: 'app-order-finish',
+    templateUrl: './order-finish.component.html',
+    styleUrls: ['./order-finish.component.scss']
 })
-export class OrderBuyComponent implements OnInit {
+export class OrderFinishComponent implements OnInit {
     @ViewChild('orderByForm') orderByForm: FormGroupDirective;
     orderBuy: OrderBuy = new OrderBuy();
     chatContent: ChatDTO = new ChatDTO();
@@ -44,7 +43,6 @@ export class OrderBuyComponent implements OnInit {
     };
 
     constructor(
-        private _passData: PassDataService,
         private activeRoute: ActivatedRoute,
         private orderService: OrderService,
         private orderDetailService: OrderDetailService,
@@ -140,29 +138,29 @@ export class OrderBuyComponent implements OnInit {
     /**
      * Save order
      */
-    saveOrderForm() {
-        this.prepareDataBeforeSave();
-        this.loading = true;
-        this.orderService.saveOrderAfterBuy(this.orderBuy).toPromise()
-            .then((res) => {
-                this.loading = false;
-                if (res.result.success) {
-                    this.getOrderBuy(this.orderId);
-                    this.showMessage('alert-success', 'Lưu đơn hàng thành công');
-                } else {
-                    this.showMessage('alert-danger', res.result.message);
-                }
+     saveOrderForm() {
+         this.prepareDataBeforeSave();
+         this.loading = true;
+         this.orderService.orderFinish(this.orderBuy).toPromise()
+             .then((res) => {
+                 this.loading = false;
+                 if (res.result.success) {
+                     this.getOrderBuy(this.orderId);
+                     this.showMessage('alert-success', 'Lưu đơn hàng thành công');
+                 } else {
+                     this.showMessage('alert-danger', res.result.message);
+             }
             })
-            .catch(() => {
-                this.loading = false;
+             .catch(() => {
+                 this.loading = false;
                 this.showMessage('alert-danger', 'Không thể lưu đơn hàng');
-            });
-    }
+             });
+     }
 
     /**
      * Complete order
      */
-    completeOrderForm() {
+    /*completeOrderForm() {
         this.prepareDataBeforeSave();
         this.loading = true;
         this.orderService.completedBuyOrder(this.orderBuy).toPromise()
@@ -179,12 +177,12 @@ export class OrderBuyComponent implements OnInit {
                 this.loading = false;
                 this.showMessage('alert-danger', 'Không thể hoàn tất đơn hàng');
             });
-    }
+    }*/
 
     /**
      * start by order
      */
-    startBuy() {
+    /*startBuy() {
         this.loading = true;
         this.orderService.startBuy(this.orderId).toPromise()
             .then((res) => {
@@ -199,7 +197,7 @@ export class OrderBuyComponent implements OnInit {
             this.loading = false;
             this.showMessage('alert-danger', 'Không thể bắt đầu mua hàng hàng');
         });
-    }
+    }*/
 
     /**
      * Set data order to data buy
@@ -207,16 +205,11 @@ export class OrderBuyComponent implements OnInit {
      */
     prepareBuyQuantityAndPrice(lsOrderDetail: LOrderDetail[]) {
         lsOrderDetail.map(e => {
-            if (e.quantityBuy == null) {
-                e.quantityBuy = e.quantityOrder;
-            } /*else {
-                e.quantityBuy = e.quantityBuy;
-            }*/
-            if (e.buyOriginalPrice == null) {
-                e.buyOriginalPrice = e.orderOriginalPrice;
-            } /*else {
-                e.buyOriginalPrice = e.buyOriginalPrice;
-            }*/
+            if (e.quantityReceived == null) {
+                e.quantityReceived = e.quantityBuy;
+            } else {
+                e.quantityReceived = e.quantityReceived;
+            }
         });
     }
 
@@ -246,10 +239,10 @@ export class OrderBuyComponent implements OnInit {
     /**
      * Cancel order by staff
      */
-    staffCancelOrder() {
+    cancelOrder() {
         if (confirm("Bạn có chắc muốn hủy?")) {
             this.loading = true;
-            this.orderService.staffCancelOrder(this.orderId).toPromise()
+            this.orderService.cancelOrderAfterBuy(this.orderId).toPromise()
                 .then((res) => {
                     this.loading = false;
                     if (res.result.success) {
@@ -262,47 +255,6 @@ export class OrderBuyComponent implements OnInit {
                 this.loading = false;
                 this.showMessage('alert-danger', 'Hủy đơn hàng thất bại');
             });
-        }
-    }
-
-    isSelectedServices (event: any, inx: number, data: OrderBuy) {
-        if (event.currentTarget.checked) {
-          let ServiceId = data.lsService[inx].serviceId;
-          let OrderId = data.orderData.orderId;
-          this._passData.loading(true);
-          this.orderService.addNewOrderService(ServiceId, OrderId).subscribe(
-            res => {
-              if (res.result.success) {
-                //data.lsService[inx] = res.result.data;
-                this.showMessage('Cập nhật thành công', 'success');
-              } else {
-                this.showMessage(res.result.message, 'error');
-              }
-              this._passData.loading(false);
-            },
-            error => {
-              this.showMessage('Cập nhật thành công', 'error');
-              this._passData.loading(false);
-            }
-          )
-        } else {
-          let serviceOrderId = data.lsService[inx].serviceOrderId;
-          this._passData.loading(true);
-          this.orderService.delOrderService(serviceOrderId).subscribe(
-            res => {
-              if (res.result.success) {
-                //data.lsService[inx] = res.result.data;
-                this.showMessage('Cập nhật thành công', 'success');
-              } else {
-                this.showMessage(res.result.message, 'error');
-              }
-              this._passData.loading(false);
-            },
-            error => {
-              this.showMessage('Cập nhật thành công', 'error');
-              this._passData.loading(false);
-            }
-          )
         }
     }
 }

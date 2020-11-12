@@ -40,6 +40,17 @@ export class OrderService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.order.getOrderBuy + orderId);
     }
 
+    addNewOrderService(ServiceId: number, OrderId: number) {
+        return this.post(this.apiBaseController +  ApiApplication.order.addNewOrderService + '?'
+                        + 'ServiceId' + '=' + ServiceId + '&'
+                        + 'OrderId' + '=' + OrderId);
+    }
+
+    delOrderService(serviceOrderId: number) {
+        return this.post(this.apiBaseController +  ApiApplication.order.deleteOrderService + '?'
+                        + 'serviceOrderId' + '=' + serviceOrderId);
+    }
+
     saveOrderAfterBuy(orderBuy: OrderBuy) {
         return this.put(this.apiBaseController + ApiApplication.order.saveOrderAfterBuy, orderBuy);
     }
@@ -51,6 +62,10 @@ export class OrderService extends ApiService {
     editOrderAfterCompleted(orderBuy: OrderBuy) {
          return this.put(this.apiBaseController + ApiApplication.order.editOrderAfterCompleted, orderBuy);
     }
+
+    orderFinish(orderBuy: OrderBuy) {
+        return this.put(this.apiBaseController + ApiApplication.order.orderFinish, orderBuy);
+   }
 
     startBuy(orderId: number) {
         const param = '?orderId=' + orderId;

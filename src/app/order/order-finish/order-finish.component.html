@@ -1,30 +1,22 @@
 <div *ngFor="let message of messages" class="message alert {{message.messageClass}}"
      role="alert">{{message.detail}}</div>
-<h2 class="title-lst-client m-1 mb-3">Đặt hàng</h2>
+<h2 class="title-lst-client m-1 mb-3">Hoàn tất đơn hàng</h2>
 <div class="btn-dashboard m-1 mb-2">
-    <span class="top-feature">
-        <button mat-raised-button color="warn"
-                [disabled]="orderBuy.orderData.status === '14'"
-                (click)="startBuy()">Bắt đầu</button>
-    </span>
     <span class="top-feature">
         <button mat-raised-button
                 (click)="orderBuyForm.ngSubmit.emit()"
-                [disabled]="orderBuy.orderData.status === '2' || orderBuy.orderData.status === '14'"
-                color="warn">Lưu</button>
+                [disabled]="orderBuy.orderData.status === '14' 
+                || orderBuy.orderData.status === '15'
+                || orderBuy.orderData.status === '16'
+                || orderBuy.orderData.status === '17'"
+                color="warn">Hoàn Tất</button>
     </span>
-    <span class="top-feature">
+    <!--<span class="top-feature">
         <button mat-raised-button
-                (click)="completeOrderForm()"
-                [disabled]="orderBuy.orderData.status === '2' || orderBuy.orderData.status === '14'"
-                color="warn">Hoàn tất</button>
-    </span>
-    <span class="top-feature">
-        <button mat-raised-button
-                (click)="staffCancelOrder()"
+                (click)="cancelOrder()"
                 [disabled]="orderBuy.orderData.status === '14'"
                 color="warn">Hủy</button>
-    </span>
+    </span>-->
 </div>
 <mat-card class="card m-1">
     <mat-card-header class="header-card">
@@ -35,37 +27,6 @@
                 {{ orderBuy.orderData.statusDisplay }}
             </span>
         </span>
-        <span class="title-name">Tổng tiền hàng:</span>&nbsp;
-        <span class="code-name font-weight-bold"> ¥{{orderBuy.orderData.totalPriceOriginal}}</span>
-
-        <div class=" w60 content-inline">
-            <div class="w100 txtAlign-right">
-              <div class="content-inline-right ver-align-mid">
-                <span class="material-icons cur-point corBl" [mat-menu-trigger-for]="user" > drag_indicator </span>
-              </div>
-              <div class="content-inline-right" *ngFor="let itemsServices of orderBuy.lsService; let inx = index;">
-                <span *ngIf="itemsServices.locationDisplay == '1' && itemsServices.isOption !== '1'">
-                  <input class="mar-r10 ver-align-mid" type="checkbox" 
-                          [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"  
-                          (change)="isSelectedServices($event, inx, orderBuy)"/> 
-                  <span class="mar-r10 ver-align-mid">{{itemsServices.display}}</span>
-                </span>
-              </div>
-            </div>
-        </div>
-
-        <mat-menu #user="matMenu" class="opt-menu" x-position="before">
-            <div *ngFor="let itemsServices of orderBuy.lsService; let inx = index;">
-              <label mat-menu-item *ngIf="itemsServices.locationDisplay == '2' && itemsServices.isOption !== '1'" data-toggle="tooltip" data-placement="top">
-                <div class="checker">
-                  <span class="checked ng-binding">
-                    <input type="checkbox" [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"  
-                                          (change)="isSelectedServices($event, inx, orderBuy)"/> {{itemsServices.display}}
-                  </span>
-                </div>
-              </label>
-            </div>
-          </mat-menu>
     </mat-card-header>
 </mat-card>
 
@@ -77,9 +38,10 @@
                 <div class="product-list-header row mb-3 p-2 border-bottom">
                     <div class="col font-weight-bold">Sản phẩm</div>
                     <div class="col-2 d-none d-sm-block text-center font-weight-bold">Số lượng order</div>
-                    <div class="col-2 d-none d-sm-block text-center font-weight-bold">Đơn giá</div>
+                    <!--<div class="col-2 d-none d-sm-block text-center font-weight-bold">Đơn giá</div>-->
                     <div class="col-2 d-none d-sm-block text-center font-weight-bold">Số lượng mua</div>
-                    <div class="col-2 d-none d-sm-block text-center font-weight-bold">Giá mua thật</div>
+                    <div class="col-2 d-none d-sm-block text-center font-weight-bold">Số lượng nhận</div>
+                    <!--<div class="col-2 d-none d-sm-block text-center font-weight-bold">Giá mua thật</div>-->
                 </div>
                 <ul class="product-list-content list-group list-group-flush">
                     <li *ngFor="let item of orderBuy.lsOrderDetail"
@@ -110,7 +72,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2 d-flex mb-2">
+                        <!--<div class="col-sm-2 d-flex mb-2">
                             <label for="orderOriginalPrice-{{item.orderDetailId}}"
                                    class="d-block d-sm-none col font-weight-bold">Đơn
                                 giá:</label>
@@ -123,7 +85,7 @@
                                            [(ngModel)]="item.orderOriginalPrice">
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-sm-2 d-flex mb-2">
                             <label for="quantityBuy-{{item.orderDetailId}}"
                                    class="d-block d-sm-none col font-weight-bold">Số lượng
@@ -139,6 +101,20 @@
                             </div>
                         </div>
                         <div class="col-sm-2 d-flex mb-2">
+                            <label for="quantityReceived-{{item.orderDetailId}}"
+                                   class="d-block d-sm-none col font-weight-bold">Số lượng
+                                nhận:</label>
+                            <div class="text-sm-center col">
+                                <div class="form-group w-75 m-auto">
+                                    <input type="number" class="form-control p-1"
+                                           onClick="this.select()"
+                                           id="quantityReceived-{{item.orderDetailId}}" name="quantityReceived"
+                                           ngModel
+                                           [(ngModel)]="item.quantityReceived">
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="col-sm-2 d-flex mb-2">
                             <label for="buyOriginalPrice-{{item.orderDetailId}}"
                                    class="d-block d-sm-none col font-weight-bold">Giá mua
                                 thật:</label>
@@ -152,7 +128,7 @@
                                            [(ngModel)]="item.buyOriginalPrice">
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="w-100 mb-2">
                             <div class="form-group">
                                 <textarea class="form-control p-1"
@@ -248,11 +224,11 @@
                         </div>
 
                         <div class="form-group mb-2">
-                            <label for="inlandFee">Phí vận chuyển nội địa khách</label>
-                            <span matTooltip="Phí vận chuyển shop Trung quốc thu của đơn hàng hiển thị cho khách"
+                            <label for="inlandFee">Phí vận chuyển nội địa</label>
+                            <span matTooltip="Phí vận chuyển shop Trung quốc thu của đơn hàng"
                                   class="d-inline-block ml-1"
                                   matTooltipPosition="above"
-                                  aria-label="Phí vận chuyển shop Trung quốc thu của đơn hàng hiển thị cho khách">
+                                  aria-label="Phí vận chuyển shop Trung quốc thu của đơn hàng">
                                 <i class="fa fa-info-circle"></i>
                             </span>
                             <input type="text" class="form-control p-1" id="inlandFee" name="inlandFee"
@@ -263,7 +239,7 @@
                                    [(ngModel)]="inlandFee">
                             <div *ngIf="inlandFeeTmp.invalid && ((inlandFeeTmp.dirty || inlandFeeTmp.touched)|| orderBuyForm.submitted)"
                                  class="alert-no-bg">
-                                <small *ngIf="inlandFeeTmp.errors.required" role="alert">Trường "Phí vận chuyển nội địa khách"
+                                <small *ngIf="inlandFeeTmp.errors.required" role="alert">Trường "Phí vận chuyển nội địa"
                                     không
                                     được để trống</small>
                             </div>

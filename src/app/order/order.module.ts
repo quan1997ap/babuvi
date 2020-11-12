@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OrderBuyComponent} from './order-buy/order-buy.component';
 import {OrderBuyEditComponent} from './order-buy-edit/order-buy-edit.component';
+import {OrderFinishComponent} from './order-finish/order-finish.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {OrderRoutes} from './order.routing';
@@ -32,7 +33,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 @NgModule({
     declarations: [
         OrderBuyComponent,
-        OrderBuyEditComponent
+        OrderBuyEditComponent,
+        OrderFinishComponent
     ],
     imports: [
         CommonModule,

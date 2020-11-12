@@ -27,6 +27,37 @@
                 {{ orderBuy.orderData.statusDisplay }}
             </span>
         </span>
+        <span class="title-name">Tổng tiền hàng:</span>&nbsp;
+        <span class="code-name font-weight-bold"> ¥{{orderBuy.orderData.totalPriceOriginal}}</span>
+
+        <div class=" w60 content-inline">
+            <div class="w100 txtAlign-right">
+              <div class="content-inline-right ver-align-mid">
+                <span class="material-icons cur-point corBl" [mat-menu-trigger-for]="user" > drag_indicator </span>
+              </div>
+              <div class="content-inline-right" *ngFor="let itemsServices of orderBuy.lsService; let inx = index;">
+                <span *ngIf="itemsServices.locationDisplay == '1' && itemsServices.isOption !== '1'">
+                  <input class="mar-r10 ver-align-mid" type="checkbox" 
+                          [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"  
+                          (change)="isSelectedServices($event, inx, orderBuy)"/> 
+                  <span class="mar-r10 ver-align-mid">{{itemsServices.display}}</span>
+                </span>
+              </div>
+            </div>
+        </div>
+
+        <mat-menu #user="matMenu" class="opt-menu" x-position="before">
+            <div *ngFor="let itemsServices of orderBuy.lsService; let inx = index;">
+              <label mat-menu-item *ngIf="itemsServices.locationDisplay == '2' && itemsServices.isOption !== '1'" data-toggle="tooltip" data-placement="top">
+                <div class="checker">
+                  <span class="checked ng-binding">
+                    <input type="checkbox" [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"  
+                                          (change)="isSelectedServices($event, inx, orderBuy)"/> {{itemsServices.display}}
+                  </span>
+                </div>
+              </label>
+            </div>
+          </mat-menu>
     </mat-card-header>
 </mat-card>
 
