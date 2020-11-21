@@ -60,4 +60,16 @@ export class TaskServices extends ApiService {
     deleteTaskAttachFile(fileid){
         return this.delete(this.apiBaseController + `deleteAttachFile?attackFileId=${fileid}`)
     }
+
+    updateAmount(data:any){
+        return this.post(this.apiBaseController + `updateTaskAmount`,data)
+    }
+
+    getLsReasion(data:any){
+        return this.post(this.apiBaseController + `getLsTaskReasion`,{lsTask:data})
+    }
+
+    updateManyTaskStatus(data:any){
+        return this.post(this.apiBaseController + `updateLsTaskStatus`,{lsTask:data})
+    }
 }

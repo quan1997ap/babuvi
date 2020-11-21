@@ -1,3 +1,5 @@
+<div *ngFor="let message of messages" class="message alert {{message.messageClass}}"
+     role="alert">{{message.detail}}</div>
 <h3>Để nhận thông tin tình trạng đơn hàng, tài chính qua Zalo bạn làm theo các bước sau:</h3>
  <!--<div class="zalo-follow-only-button" data-oaid="{{zaloOfficialId}}" data-callback="{{callback}}"></div>-->
 <p>Bước 1:  Ấn vào nút quan tâm bên dưới nhé!</p>

@@ -13,6 +13,18 @@ export class SystemService extends ApiService {
         super(ApiApplication.system.controller, http, _router);
     }
 
+    getAllWarehouse() {
+        return this.get(this.apiBaseController + ApiApplication.system.getAllWarehouse);
+    }
+
+    getWarehouseImpStatus() {
+        return this.get(this.apiBaseController + ApiApplication.system.getWarehouseImpStatus);
+    }
+
+    getWarehouseExpStatus() {
+        return this.get(this.apiBaseController + ApiApplication.system.getWarehouseExpStatus);
+    }
+
     getInfoRating(userId: number) {
         return this.get(this.apiBaseController + ApiApplication.system.getVerticalMenu + '?userId=' + userId);
     }

@@ -63,6 +63,10 @@ export class OrderService extends ApiService {
          return this.put(this.apiBaseController + ApiApplication.order.editOrderAfterCompleted, orderBuy);
     }
 
+    orderBuyRework(orderBuy: OrderBuy) {
+        return this.put(this.apiBaseController + ApiApplication.order.orderBuyRework, orderBuy);
+    }
+
     orderFinish(orderBuy: OrderBuy) {
         return this.put(this.apiBaseController + ApiApplication.order.orderFinish, orderBuy);
    }

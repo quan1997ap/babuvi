@@ -38,9 +38,11 @@
                 [itemSize]="27" [filter]="false" [style]="{'width':'100%'}" required></p-dropdown>
           </div>
           <div class="motphantu">
-             <div class="nameInput">Số tiền</div>
-             <input class="inputAdd" pInputText  name="Amount" ngModel required type="number" step=".001">
-          </div>
+            <div class="nameInput" style="display:flex; justify-content: space-between;">Số tiền 
+              <span style="font-weight: 400;text-align: right;">{{money_format(SoTienNhap,'','1')}}</span>
+           </div>
+            <input class="inputAdd" pInputText  name="Amount" ngModel required type="number" step=".001" [(ngModel)]="SoTienNhap">
+         </div>
           <div class="motphantu">
              <div class="nameInput">Phương thức thanh toán</div>
              <!-- <input class="inputAdd" pInputText> -->

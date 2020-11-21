@@ -7,9 +7,12 @@ import {ApDomain} from "../../model/imp-exp-status.model";
 import {Warehouse} from "../../model/warehouse.model";
 import {Storekeeper} from "../../model/storekeeper.model";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
-import {WarehouseImpService} from "../../services/warehouse-imp.service";
 import { ActivatedRoute } from "@angular/router";
 import {Location} from "@angular/common"
+//Service
+import {WarehouseImpService} from "app/services/warehouse-imp.service";
+import { SystemService } from 'app/services/system.services';
+import { UserService } from 'app/services/user.service';
 
 
 @Component({
@@ -57,6 +60,8 @@ export class AddWarehouseImpComponent implements OnInit {
 
     constructor(
         private warehouseImpService: WarehouseImpService,
+        private systemService: SystemService,
+        private userService: UserService,
         private changeDetectorRef: ChangeDetectorRef,
         private activeRoute: ActivatedRoute,
         private location: Location,
@@ -122,7 +127,7 @@ export class AddWarehouseImpComponent implements OnInit {
             this.warehouseImpDetailList = [...this.warehouseImpDetailList];
         } else {
             // Push new warehouse import detail data to list and refresh list
-            this.warehouseImpDetailList = [...this.warehouseImpDetailList, this.warehouseImpDetail];
+            this.warehouseImpDetailList = [ this.warehouseImpDetail, ...this.warehouseImpDetailList];
         }
         // Because warehouse import detail data is pass by reference to form data, need to init new warehouse import detail and reset form
         this.warehouseImpDetail = new WarehouseImpDetail();
@@ -175,7 +180,7 @@ export class AddWarehouseImpComponent implements OnInit {
                 deleteApiIds = deleteApiIds.filter((v, i) => deleteApiIds.indexOf(v) === i);
                 if (deleteApiIds.length > 0) {
                     this.loading = true;
-                    this.warehouseImpService.deleteMerchandise(deleteApiIds).toPromise()
+                    this.warehouseImpService.deleteLsImpDetail(deleteApiIds).toPromise()
                         .then((res) => {
                             this.loading = false;
                             if (res.result.success) {
@@ -212,7 +217,7 @@ export class AddWarehouseImpComponent implements OnInit {
      */
     loadWareHouseStatus() {
         this.loading = true;
-        this.warehouseImpService.getWarehouseImpStatus().toPromise()
+        this.systemService.getWarehouseImpStatus().toPromise()
             .then((res) => {
                 this.loading = false;
                 if (res.result.success) {
@@ -235,7 +240,7 @@ export class AddWarehouseImpComponent implements OnInit {
      */
     loadWareHouseList() {
         this.loading = true;
-        this.warehouseImpService.getAllWarehouse().toPromise()
+        this.systemService.getAllWarehouse().toPromise()
             .then((res) => {
                 this.loading = false;
                 if (res.result.success) {
@@ -259,7 +264,7 @@ export class AddWarehouseImpComponent implements OnInit {
      */
     loadListStorekeeperInWarehouse(value) {
         this.loading = true;
-        this.warehouseImpService.getListStorekeeperInWarehouse(value).toPromise()
+        this.userService.getListStorekeeperInWarehouse(value).toPromise()
             .then((res) => {
                 this.loading = false;
                 if (res.result.success) {
@@ -318,6 +323,7 @@ export class AddWarehouseImpComponent implements OnInit {
                 this.loading = false;
                 if (res.result.success) {
                     this.warehouseImp = res.result.data;
+                    this.warehouseExpCode = this.warehouseImp.warehouseExpCode;
                     this.warehouseImp.impDate = this.warehouseImp.impDate ?
                         new Date(this.warehouseImp.impDate).toISOString().substr(0, 10) :
                         new Date().toISOString().substr(0, 10);
@@ -386,19 +392,21 @@ export class AddWarehouseImpComponent implements OnInit {
         this.warehouseImp.warehouseImpId = data.warehouseImpId;
         this.warehouseImp.warehouseId = data.warehouseId;
         this.warehouseImp.status = isLoadFromExpCode ? this.defaultStatus : data.status;
-        this.warehouseImpDetailList = data.lsDetail.map( item => {
-            const warehouseImpDetail = new WarehouseImpDetail();
-            warehouseImpDetail.merchandiseCode = item.merchandiseCode;
-            warehouseImpDetail.warehouseImpDetailId = item.warehouseImpDetailId;
-            warehouseImpDetail.netWeight = item.netWeight;
-            warehouseImpDetail.chargedWeight = item.chargedWeight;
-            warehouseImpDetail.paymentWeight = item.paymentWeight;
-            warehouseImpDetail.length = item.length;
-            warehouseImpDetail.width = item.width;
-            warehouseImpDetail.height = item.height;
-            warehouseImpDetail.shelfPosition = this.warehouseImpDetail.shelfPosition;
-            return warehouseImpDetail;
-        });
+        if (!isLoadFromExpCode) {
+            this.warehouseImpDetailList = data.lsDetail.map( item => {
+                const warehouseImpDetail = new WarehouseImpDetail();
+                warehouseImpDetail.merchandiseCode = item.merchandiseCode;
+                warehouseImpDetail.warehouseImpDetailId = item.warehouseImpDetailId;
+                warehouseImpDetail.netWeight = item.netWeight;
+                warehouseImpDetail.chargedWeight = item.chargedWeight;
+                warehouseImpDetail.paymentWeight = item.paymentWeight;
+                warehouseImpDetail.length = item.length;
+                warehouseImpDetail.width = item.width;
+                warehouseImpDetail.height = item.height;
+                warehouseImpDetail.shelfPosition = this.warehouseImpDetail.shelfPosition;
+                return warehouseImpDetail;
+            });
+        }
     }
 
     /**

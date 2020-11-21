@@ -1,5 +1,7 @@
+import {WarehouseExpDetail} from './warehouse-exp-detail.model';
+
 export class WarehouseExp {
-    warehouseExpIdr;
+    warehouseExpId;
     warehouseExpCode;
     expDate;
     expWarehouseId;
@@ -30,5 +32,5 @@ export class WarehouseExp {
     createdUserId;
     changeUserId;
     shipmentCode;
-    lsDetail;
+    lsDetail: WarehouseExpDetail[];
 }

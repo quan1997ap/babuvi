@@ -147,7 +147,9 @@ export const ApiApplication = {
     shipManager: {
         controller: ApiBaseUrl + 'order',
         allOrder: 'allorder/',
-        cancelOrder: 'customerCancelOrder'
+        cancelOrder: 'customerCancelOrder',
+        searchOrder: 'searchOrder',
+        searchOrderConsignment: 'searchOrderConsignment'
     },
     cart: {
         controller: ApiBaseUrl + 'cart',
@@ -177,6 +179,7 @@ export const ApiApplication = {
     fileManager: {
         controller: ApiBaseUrl + 'fileManager',
         upLoadImageOneDrive: 'upLoadImageOneDrive',
+        upLoadAttachFileOneDrive:'upLoadAttachFileOneDrive'
     },
     compplain: {
         controller: ApiBaseUrl + 'complain',
@@ -203,6 +206,7 @@ export const ApiApplication = {
         controller: ApiBaseUrl + 'system',
         getOrderStatus: 'getorderstatus/',
         getWarehouseImpStatus: 'getWarehouseImpStatus/',
+        getWarehouseExpStatus: 'getWarehouseExpStatus/',
         getAllWarehouse: 'getallwarehouse',
         getDeliveryRequestType: 'getDeliveryRequestType',
         getAllArea: 'getallarea',
@@ -234,6 +238,7 @@ export const ApiApplication = {
         saveOrderAfterBuy: 'saveorderafterbuy',
         completedBuyOrder: 'completedbuyorder',
         editOrderAfterCompleted: 'editOrderAfterCompleted',
+        orderBuyRework: 'orderBuyRework',
         orderFinish:'orderFinish',
         startBuy: 'startbuy',
         getLsOrderPay: 'getlsorderpay',
@@ -250,6 +255,10 @@ export const ApiApplication = {
         deleteLsImpDetail: 'deletelsimpdetail',
         createWarehouseExpByDeliveryRequest: 'createWarehouseExpByDeliveryRequest/',
         cancelWarehouseExp: 'cancelWarehouseExp/',
+        saveWarehouseExp: 'saveWarehouseExp',
+        getWarehouseExpById: 'getWarehouseExpById',
+        deleteLsExpDetail: 'deleteLsExpDetail',
+        completeWarehouseExp: 'completeWarehouseExp'
     },
     user: {
         controller: ApiBaseUrl + 'user',

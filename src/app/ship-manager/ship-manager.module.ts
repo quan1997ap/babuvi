@@ -29,14 +29,17 @@ import {PaymentOrdersModule} from '../payment-orders/payment-orders.module';
 import {PaymentOrdersComponent} from '../payment-orders/payment-orders.component';
 import { CurrencyFormat } from '../common/pipe-format-money.component';
 import { ShareCommonModule } from '../common/share-common.module';
-import {
-  MessagesModule
-} from 'primeng/primeng';
+import {DialogModule} from 'primeng/dialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {CalendarModule} from 'primeng/calendar';
+import { MessagesModule } from 'primeng/primeng';
 import { MessageService } from 'primeng/api';
+import {DropdownModule} from 'primeng/dropdown';
 import {DeliveryModule} from "../delivery/delivery.module";
 import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-dialog.component';
 import { CommonViewModule } from 'app/common-view/common-view.module';
 import { CustomUrlSerializer } from './custom-url-serializer';
+import { ConsignmentOrdersComponent } from './consignment-orders/consignment-orders.component';
 
 @NgModule({
   imports: [
@@ -65,10 +68,15 @@ import { CustomUrlSerializer } from './custom-url-serializer';
     MatProgressSpinnerModule,
     DeliveryModule,
     MatPaginatorModule,
-    CommonViewModule
+    CommonViewModule,
+    DialogModule,
+    InputTextModule,
+    CalendarModule,
+    DropdownModule
    ],
   declarations: [
     OrdersComponent,
+    ConsignmentOrdersComponent,
     OrderDetailComponent
   ],
   providers: [

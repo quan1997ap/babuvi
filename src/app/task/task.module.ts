@@ -43,6 +43,7 @@ import { ToastModule } from 'primeng/toast';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmationService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import { TooltipModule } from 'primeng/tooltip';
     ConfirmDialogModule,
     ToastModule,
     OverlayPanelModule,
-    TooltipModule
+    TooltipModule,
+    DialogModule
    ],
   declarations: [
     ListTaskComponent,

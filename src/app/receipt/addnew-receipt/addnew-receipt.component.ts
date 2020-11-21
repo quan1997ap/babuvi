@@ -31,6 +31,7 @@ export class AddNewReceiptComponent implements OnInit {
   dropdownPttt: any = [];
   pickedWallet1: any = { label: "", value: "" };
   pickedWallet2: any = { label: "", value: "" };
+  SoTienNhap:any;
   ngOnInit() {
     //load dữ liệu cho 3 dropdown kiểu biên lai, lý do và phương thức thanh toán
     this.loadDataForDropdown()
@@ -97,6 +98,7 @@ export class AddNewReceiptComponent implements OnInit {
           console.log(data)
           if (data.result.success) {
             form.onReset();
+            this.SoTienNhap = undefined
             this.loading = false;
             this.messageService.add({ key: 'thembienlai', severity: 'success', summary: 'Thông báo', detail: 'Tạo biên lai thành công!' });
           } else {
@@ -175,6 +177,7 @@ export class AddNewReceiptComponent implements OnInit {
       document.getElementById("namewallet2").focus()
     }, 250);
   }
+  
   ClearWallet(id) {
     switch (id) {
       case 1:
@@ -182,6 +185,30 @@ export class AddNewReceiptComponent implements OnInit {
       case 2:
         this.pickedWallet2 = { label: "", value: "" }; break;
     }
+  }
+
+  money_format(sotien: number, kihieu, vitri) {
+    let nStr = sotien==undefined?'':sotien.toString();
+    let kq: string = "";
+    if (sotien == undefined){ return kq}
+      nStr += "";
+      let x = nStr.split(".");
+      let x1 = x[0];
+      let x2 = x.length > 1 ? "," + x[1] : "";
+      let rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "." + "$2");
+      }
+      kq = x1 + x2 + kihieu;
+      switch (vitri) {
+        case '1':
+          kq = x1 + x2 + ' ' + kihieu;
+          break;
+        case '2':
+          kq = kihieu + ' ' + x1 + x2;
+      }
+    
+    return kq;
   }
 }
 

@@ -96,8 +96,12 @@
 
       <div class="fileDinhkem">
         <div *ngFor="let link of data.lsAttachFile;let i = index" class="everyLink">
-          <div><a [href]="getLink(link.attachLink)" target="_blank"> {{link.attachName}}
-              <i class="fa fa-link" aria-hidden="true"></i></a> -
+          <div>
+            <div (click)="previewLink(link.attachLink,link.type)" class="Linkpreview" pTooltip="Xem trước">
+              {{link.attachName}}
+            </div>
+            <a [href]="getLink(link.attachLink)" target="_blank"> <i class="fa fa-download" aria-hidden="true"></i>Tải
+              xuống</a> -
             <u (click)="removeAttachFile(link.attachFileId)" style="cursor: pointer;">Xóa bỏ</u>
           </div>
         </div>
@@ -109,12 +113,19 @@
           (click)="findhandle.show($event)"></button></div>
       <div><button type="button" class="classBtn">Ngày tạo: <b>{{createDateForShow}}</b></button></div>
       <div><button type="button" class="classBtn classBtnHover" (click)="datedue.show($event)">
-        Hạn hoàn thành: <b>{{dueDateForShow}}</b>
-      <br *ngIf="data.dueText != null?true:false">
-      <span *ngIf="data.dueText != null?true:false" class="dueTextCSS">
-        Quá hạn: {{data.dueText}}
-      </span>
-    </button></div>
+          Hạn hoàn thành: <b>{{dueDateForShow}}</b>
+          <br *ngIf="data.dueText != null?true:false">
+          <span *ngIf="data.dueText != null?true:false" class="dueTextCSS">
+            Quá hạn: {{data.dueText}}
+          </span>
+        </button></div>
+      <div><button type="button" class="classBtn classBtnHover" (click)="editTongTien = true;">
+          Tổng tiền: <b>
+            <span *ngIf="data.symbolsLocation == '2'">{{data.currencySymbol}}</span>
+            {{money_format(data.amount,'','1')}}
+            <span *ngIf="data.symbolsLocation == '1'">{{data.currencySymbol}}</span>
+          </b>
+        </button></div>
       <div>
         <p-dropdown [options]="taskStatus" [(ngModel)]="currentStatus" style="text-align:center" [itemSize]="27"
           [filter]="false" [style]="{'width':'100%','margin':'2px'}" (onChange)="updateTaskStatus($event)"></p-dropdown>
@@ -130,8 +141,12 @@
 
       <div class="fileDinhkem">
         <div *ngFor="let link of data.lsAttachFile;let i = index" class="everyLink">
-          <div><a [href]="getLink(link.attachLink)" target="_blank"> {{link.attachName}}
-              <i class="fa fa-link" aria-hidden="true"></i></a> -
+          <div>
+            <div (click)="previewLink(link.attachLink,link.type)" class="Linkpreview" pTooltip="Xem trước">
+              {{link.attachName}}
+            </div>
+            <a [href]="getLink(link.attachLink)" target="_blank"> <i class="fa fa-download" aria-hidden="true"></i>Tải
+              xuống</a> -
             <u (click)="removeAttachFile(link.attachFileId)" style="cursor: pointer;">Xóa bỏ</u>
           </div>
         </div>
@@ -141,7 +156,7 @@
 
   <!-- panel Thêm file đính kèm -->
   <p-overlayPanel #attack [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'">
-    <div>
+    <!-- <div>
       <h6>Thêm file đính kèm</h6>
       <hr>
       <form #formAttach="ngForm">
@@ -162,6 +177,23 @@
         <button (click)="AddAttachFile(formAttach,attack)" class="btn btn-success classBold">Thêm</button>
       </div>
 
+    </div> -->
+    <div>
+      <h6><b>File đính kèm</b></h6>
+      <hr>
+      <form #Attachform="ngForm">
+        <div>
+          <input id="attackData" type="file" (change)="onChangeFile($event)" name="attackFile" ngModel>
+        </div>
+      </form>
+      <div style="padding:10px 0 10px 0">
+        <button (click)="dinhkemFile(attackImage,data)" class="btn btn-success classBold">Tải lên</button>
+      </div>
+      <div *ngFor="let alink of arrayContainDataForShow;let k = index" style="max-width: 100%;">
+        <a [href]="alink.AttachLink">{{ returnNama(alink.AttachName)}}</a>
+        <span *ngIf="countImage(data) > 0?true:false"> - </span>
+        <u (click)="deleteImage(data,k)" style="cursor: pointer;" *ngIf="countImage(data) > 0?true:false">Xóa bỏ</u>
+      </div>
     </div>
   </p-overlayPanel>
 
@@ -212,4 +244,33 @@
   <p-progressSpinner></p-progressSpinner>
 </div>
 <p-confirmDialog key="chitietcv" icon="pi pi-exclamation-triangle" appendTo="body"></p-confirmDialog>
+<p-confirmDialog #cd key="chitietcvConfirm" icon="pi pi-exclamation-triangle" appendTo="body">
+  <p-footer>
+    <div *ngIf="showPickReasion">
+      <p-dropdown [options]="dropdownLyDo" [(ngModel)]="currentLyDo" style="text-align:center" [itemSize]="27"
+        [filter]="false" [style]="{'width':'100%','margin':'2px'}" placeholder="-- Chọn lý do thay đổi   --">
+      </p-dropdown>
+      <br><br>
+    </div>
+    <button type="button" pButton icon="pi pi-check" label="Có" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="pi pi-times" label="Không" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 <p-toast key="chitietcv"></p-toast>
+
+<p-dialog header="Sửa tổng tiền" [(visible)]="editTongTien" [modal]="true" appendTo="body">
+  <div style="text-align: center;">
+    <input [ngModel]="data.amount" type="number" step="0.01" style=" padding:4px;margin:2px" [(ngModel)]="tongtien">
+    <button class="classBtn classBtnHover" (click)="changeAmount(tongtien)">OK</button>
+  </div>
+  <div>Số tiền nhập: {{money_format(tongtienTrust,'','1')}}</div>
+</p-dialog>
+
+<p-dialog [showHeader]="false" [modal]="true" [(visible)]="isOpenLargeImg" appendTo="body" [dismissableMask]="true"
+  [contentStyle]="{'height':'500px','width':'500px'}" [style]="{width: '500px', height: '500px'}">
+  <div>
+    <iframe [src]="linkAttackUrl" name="chitiet" style="border:none;width:450px; height:400px;"
+      *ngIf="!isImage"></iframe>
+    <img [src]="linkAttackUrl" name="hinhanh" style="width:450px; height:400px;" *ngIf="isImage">
+  </div>
+</p-dialog>

@@ -18,7 +18,6 @@ export class ListTaskComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute
   ) { }
-  GhiChu:any;
   datas: any;
   loaiThamChieu: any = [];
   loaiCongViec: any = [];
@@ -38,11 +37,19 @@ export class ListTaskComponent implements OnInit {
     TaskStatus: null
   };
   checkedAll: boolean = false;
+  showPickReasion:boolean = false;
+  editTongTien:boolean = false;
+  tongtien:any;
+  dataEditSotien :any = {amount:0};
+  dropdownLyDo:any = [];
+  currentLyDo:null;
   RowCheckedbox: string[] = [];
+  mangDulieuTinhTong:any;
   header_mock = [
     { header: "Mã công việc", field: "taskCode", width: "9%", type: "text" },
     { header: "Loại công việc", field: "typeDisplay", width: "9%", type: "text" },
     { header: "Nội dung", field: "taskName", width: "21%", type: "text" },
+    { header: "Số tiền", field: "amount", width:"10%", type:"text"},
     { header: "Mã tham chiếu", field: "refCode", width: "10%", type: "text" },
     { header: "Người xử lý", field: "lsMember", width: "10%", type: "text" },
     { header: "Ngày tạo", field: "createdDate", width: "10%", type: "date" },
@@ -135,23 +142,82 @@ export class ListTaskComponent implements OnInit {
     } else {
       this.RowCheckedbox = []
     }
+    this.tinhTongTien()
+  }
+ 
+  tongTienDuLieuDaChon :number = 0;
+  tinhTongTien(){
+    let tinhtong : any = 0;
+    this.RowCheckedbox.forEach(e=> {
+      this.datas.forEach(data=>{ if (e == data.taskId){tinhtong += data.amount;}})
+    })
+    console.log(tinhtong) 
+    this.tongTienDuLieuDaChon = tinhtong
   }
 
-  FuncThem() {
-    this.confirmationService.confirm({
-      key: "dscongviec",
+  async updataStatus(e,statusName){
+    if (this.RowCheckedbox.length == 0){ 
+      this.messageService.add({ key: 'dscongviec', severity: 'error', summary: 'Thông báo', detail: "Cần chọn dữ liệu trước khi thao tác này!" });
+      return;
+    }
+    let bodyRequest = []
+    this.RowCheckedbox.forEach(x=>{
+      this.datas.forEach(y => {
+        console.log(y);
+        if (x == y.taskId){
+          bodyRequest.push({ 
+            TaskId: y.taskId, 
+            Content: y.content, 
+            DueDate: y.dueDate,
+            Type: y.type, 
+            Amount: y.amount,
+            Status: e })
+        }
+      });
+    });
+    await this.taskServices.getLsReasion(bodyRequest).toPromise().then(async data=> {
+      if (data.result.success) {console.log(data,bodyRequest)
+        let dataReasion = [];
+        this.dropdownLyDo = [];
+        dataReasion = data.result.data;
+        await dataReasion.forEach(e=> this.dropdownLyDo.push({value: e.taskReasionId, label: e.reasionName}))
+      } else {
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+      }
+    });
+    if (this.dropdownLyDo.length != 0){this.showPickReasion = await true} else { this.showPickReasion = await false;}
+    await this.confirmationService.confirm({
+      key: "chitietcvConfirm",
       header: "Xác nhận",
-      message: 'Thêm kiện hàng mới?',
+      message: `Cập nhật trạng thái các dòng đã chọn thành "${statusName}"?`,
       acceptLabel: "Có",
       rejectLabel: "Không",
       accept: () => {
-        alert("Chưa có api thêm")
+        this.loading = true;
+        bodyRequest.forEach(line=>{ line.taskReasionId = this.currentLyDo})
+        console.log(bodyRequest)
+        this.taskServices.updateManyTaskStatus(bodyRequest).toPromise().then(res=>{
+          if (res.result.success){
+            this.RowCheckedbox.forEach(x=>{
+              this.datas.forEach(y => {
+                if (x == y.taskId){
+                  this.TrangThai.forEach(tt=>{
+                    if(tt.value == e){ y.status = tt.value; y.statusDisplay = tt.label;console.log(tt,y)}
+                  })
+                }
+              });
+            });
+            this.currentLyDo = null;
+            this.loading = false;
+            this.messageService.add({ key: 'dscongviec', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
+          } else {
+            this.loading = false;
+            this.messageService.add({ key: 'dscongviec', severity: 'error', summary: 'Thông báo', detail: res.result.message });
+          }
+        })
       }
     });
-
   }
-  FuncSua(){alert("Chưa có api sửa")}
-  FuncXoa() { alert("Chưa có api xóa")}
 
   FuncLoc(formLoc) {
     this.loading = true;
@@ -186,6 +252,12 @@ export class ListTaskComponent implements OnInit {
       case "6": return "btnCapNhatVanDon"; break;
       case "7": return "btnXacNhanDon"; break;
       case "8": return "btnChuanBiHang"; break;
+      case "9": return "btnDatLaiHang"; break;
+      case "10": return "btnTqXacNhanHoanTien"; break;
+      case "11": return "btnHoanTienKhach"; break;
+      case "12": return "btnThatLac"; break;
+      case "13": return "btnThatLac"; break;
+      case "14": return "btnThatLac"; break;
     }
   }
   buttonStatus(status) { //function trả lại kiểu class cho loại trạng thái 
@@ -307,5 +379,61 @@ export class ListTaskComponent implements OnInit {
         this.returnLinkOrder = window.location.href.replace(this.router.url,`/delivery/list-request-manager`);
         break;
     }
+  }
+
+  money_format(sotien: number, kihieu, vitri) {
+    let nStr = sotien==undefined?'':sotien.toString()
+    let kq: string = "";
+    if (parseFloat(nStr) == 0) {
+      kq = "";
+    } else {
+      nStr += "";
+      let x = nStr.split(".");
+      let x1 = x[0];
+      let x2 = x.length > 1 ? "," + x[1] : "";
+      let rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "." + "$2");
+      }
+      kq = x1 + x2 + kihieu;
+      switch (vitri) {
+        case '1':
+          kq = x1 + x2 + ' ' + kihieu;
+          break;
+        case '2':
+          kq = kihieu + ' ' + x1 + x2;
+      }
+    }
+    return kq;
+  }
+
+  activeEditTongtien(data){
+    this.editTongTien = true;
+    this.dataEditSotien = data
+  }
+
+  changeAmount(e) {
+    console.log(e)
+    this.editTongTien = false;
+    this.loading = true;
+    this.taskServices.updateAmount(
+      {
+        TaskId: this.dataEditSotien.taskId,
+        Content: this.dataEditSotien.content,
+        DueDate: this.dataEditSotien.dueDate,
+        Status: this.dataEditSotien.status,
+        Amount: e
+      }
+    ).toPromise().then((res) => {
+      console.log(res)
+      if (res.result.success) {
+        this.dataEditSotien.amount = e;
+        this.messageService.add({ key: 'dscongviec', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
+        this.loading = false;
+      } else {
+        this.loading = false;
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: res.result.message });
+      }
+    })
   }
 }

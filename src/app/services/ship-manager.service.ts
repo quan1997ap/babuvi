@@ -22,5 +22,15 @@ export class ShipManagerService extends ApiService {
         return this.put(this.apiBaseController + ApiApplication.shipManager.cancelOrder
                 + '?orderId='+orderId);
     }
-    
+
+     //API danh sách đơn hàng
+     getListOrders(data,page,perPage){
+        return this.post(this.apiBaseController + ApiApplication.shipManager.searchOrder + `?perPage=${perPage}&page=${page}`,data)
+    }
+
+    //API danh sách đơn kí gửi
+    getConsignmentOrders(data,page,perPage){
+        return this.post(this.apiBaseController + ApiApplication.shipManager.searchOrderConsignment + `?perPage=${perPage}&page=${page}`,data)
+    }
+
 }

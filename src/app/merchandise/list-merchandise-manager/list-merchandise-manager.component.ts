@@ -79,6 +79,7 @@ export class ListMerchandiseManagerComponent implements OnInit {
       if(data.result.success){
         let arr = [];
         arr = data.result.data;
+        this.DropdownTrangthai.push({label:"Tất cả trạng thái",value:null})
         arr.forEach(e=>this.DropdownTrangthai.push({label:e.displayValue,value:e.value}))
       }
     })

@@ -14,6 +14,12 @@ export class UserService extends ApiService {
     constructor(http: HttpService, _router: Router ) { 
         super(ApiApplication.user.controller, http, _router);
     }
+
+    getListStorekeeperInWarehouse(warehouseId) {
+        const param = '?warehouseId=' + warehouseId;
+        return this.get(this.apiBaseController + ApiApplication.user.getListStorekeeperInWarehouse + param);
+    }
+
    GetListWarehouseVN() {
         return this.get(ApiApplication.system.controller + "/" + ApiApplication.system.getWarehouseVN);
     }

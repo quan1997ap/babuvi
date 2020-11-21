@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import * as $ from 'jquery';
 //service
 import { TaskServices } from '../../services/task.services';
 import { SystemService } from '../../services/system.services';
 import { UserService } from '../../services/user.service';
+import { FileManagerServices } from 'app/services/fileManager.services';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-task-detail',
@@ -15,7 +16,8 @@ import { UserService } from '../../services/user.service';
   providers: [
     TaskServices,
     SystemService,
-    UserService
+    UserService,
+    FileManagerServices
   ]
 })
 export class TaskDetailComponent implements OnInit {
@@ -26,8 +28,14 @@ export class TaskDetailComponent implements OnInit {
     private messageService: MessageService,
     private userService: UserService,
     private route: ActivatedRoute,
-    private confirmationService: ConfirmationService
-  ) { }
+    private confirmationService: ConfirmationService,
+    private fileManagerService: FileManagerServices,
+    private sanitizer: DomSanitizer
+  ) { 
+    this.linkAttackUrl =
+      this.sanitizer.bypassSecurityTrustResourceUrl(this.Linkpreview);
+  }
+  linkAttackUrl:any;
   @ViewChild("scollBottom1stTime") scollBottom1stTime: ElementRef;
   TaskCOde: string;
   currentTaskId: number;
@@ -48,6 +56,9 @@ export class TaskDetailComponent implements OnInit {
   vn: any;
   UrlConverted: string;
   dataMember: any = { username: "" };
+  editTongTien: boolean = false;
+  oldValue: any;
+  tongtien: number;
   async ngOnInit() {
     this.loading = true;
     this.TaskCOde = this.route.snapshot.queryParams.id
@@ -70,7 +81,7 @@ export class TaskDetailComponent implements OnInit {
         console.log(data)
         let fileType: any = [];
         fileType = data;
-        await fileType['result'].data.forEach( async element => {
+        await fileType['result'].data.forEach(async element => {
           await this.taskStatus.push({ label: element.displayValue, value: element.value })
         }); console.log(this.taskStatus)
       } else {
@@ -82,6 +93,7 @@ export class TaskDetailComponent implements OnInit {
       if (data.result.success) {
         this.datas = data;
         this.data = this.datas.result.data;
+        this.oldValue = [this.data].splice(0)[0].amount;
         this.oldDescription = this.data.content //nếu hủy sửa nội dung, nội dung sẽ gán lại bằng Olddescription
         this.UrlConverted = this.convertToUrl(this.data.content)
         this.currentTaskId = this.data.taskId;
@@ -105,7 +117,7 @@ export class TaskDetailComponent implements OnInit {
       }
     });
 
-    
+
     this.systemService.getAttachFileType().toPromise().then(data => {
       if (data.result.success) {
         let fileType: any = [];
@@ -120,6 +132,8 @@ export class TaskDetailComponent implements OnInit {
     });
   }
 
+  dropdownLyDo: any = [];
+  currentLyDo: null;
   loadData() {
     this.loading = true;
     this.taskServices.getTaskByCode(this.TaskCOde).toPromise()
@@ -136,8 +150,8 @@ export class TaskDetailComponent implements OnInit {
       })
   }
 
-  removeMember(userId,taskUserId,username) {
-    console.log(this.currentTaskId, userId,taskUserId)
+  removeMember(userId, taskUserId, username) {
+    console.log(this.currentTaskId, userId, taskUserId)
     this.confirmationService.confirm({
       key: "chitietcv",
       header: "Xác nhận",
@@ -146,7 +160,7 @@ export class TaskDetailComponent implements OnInit {
       rejectLabel: "Không",
       accept: () => {
         this.loading = true;
-        this.taskServices.removeTaskMember({ TaskId: this.currentTaskId, UserId: userId,TaskMemberId:taskUserId }).toPromise().then(
+        this.taskServices.removeTaskMember({ TaskId: this.currentTaskId, UserId: userId, TaskMemberId: taskUserId }).toPromise().then(
           data => {
             if (data.result.success) {
               this.data.lsMember.splice(this.data.lsMember.findIndex(e => e.UserId == userId), 1);
@@ -193,10 +207,31 @@ export class TaskDetailComponent implements OnInit {
     )
   }
 
-  updateTaskStatus(e) {
-    let tus = this.taskStatus.find(e => e.value == this.currentStatus);
-    this.confirmationService.confirm({
-      key: "chitietcv",
+  showPickReasion: boolean = false;
+  async updateTaskStatus(event) {
+    console.log(this.data, this.currentStatus)
+    let bodyRequest = [{
+      Content: this.data.content,
+      DueDate: this.data.dueDate,
+      Status: this.currentStatus,
+      Type: this.data.type,
+      TaskId: this.currentTaskId,
+      Amount: this.data.amount,
+    }]
+    await this.taskServices.getLsReasion(bodyRequest).toPromise().then(async data => {
+      if (data.result.success) {
+        let dataReasion = [];
+        this.dropdownLyDo = [];
+        dataReasion = data.result.data;
+        await dataReasion.forEach(e => this.dropdownLyDo.push({ value: e.taskReasionId, label: e.reasionName }))
+      } else {
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+      }
+    });
+    if (this.dropdownLyDo.length != 0) { this.showPickReasion = await true } else { this.showPickReasion = await false; }
+    let tus = await this.taskStatus.find(e => e.value == this.currentStatus);
+    await this.confirmationService.confirm({
+      key: "chitietcvConfirm",
       header: "Xác nhận",
       message: `Cập nhật trạng thái công việc thành “${tus.label.bold()}”?`,
       acceptLabel: "Có",
@@ -207,16 +242,22 @@ export class TaskDetailComponent implements OnInit {
           TaskId: this.currentTaskId,
           Content: this.data.content,
           DueDate: this.data.dueDate,
-          Status: this.currentStatus
+          Type: this.data.type,
+          Status: this.currentStatus,
+          taskReasionId: this.currentLyDo,
+          Amount: this.data.amount
         }).toPromise().then((data) => {
-          if(data.result.success){
+          if (data.result.success) {
+            console.log(data)
             this.oldStatus = this.currentStatus;
+            this.currentLyDo = null;
             this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
             this.loading = false;
           } else {
+            this.currentStatus = this.oldStatus;
             this.loading = false;
-            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });  
-          }  
+            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+          }
         }
         )
       },
@@ -297,29 +338,30 @@ export class TaskDetailComponent implements OnInit {
     }, 100);
   }
 
-    updateDescription() {
-      setTimeout(() => {
-        this.loading = true;
-        this.taskServices.updateTaskDescrip({
-          TaskId: this.currentTaskId,
-          Content: this.data.content,
-          DueDate: this.data.dueDate,
-          Status: this.data.status
-        })
-          .toPromise().then((data) => {console.log(data)
-            if (data.result.success){
-              this.loadData();
-              this.EditMota = false;
-              this.UrlConverted = this.convertToUrl(this.data.content);
-              this.oldDescription = this.data.content
-              this.loading = false;
-            } else {
-              this.loading = false;
-              this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
-            }
+  updateDescription() {
+    setTimeout(() => {
+      this.loading = true;
+      this.taskServices.updateTaskDescrip({
+        TaskId: this.currentTaskId,
+        Content: this.data.content,
+        DueDate: this.data.dueDate,
+        Status: this.data.status
+      })
+        .toPromise().then((data) => {
+          console.log(data)
+          if (data.result.success) {
+            this.loadData();
+            this.EditMota = false;
+            this.UrlConverted = this.convertToUrl(this.data.content);
+            this.oldDescription = this.data.content
+            this.loading = false;
+          } else {
+            this.loading = false;
+            this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
           }
-          )
-      }, 100);
+        }
+        )
+    }, 100);
 
   }
 
@@ -349,15 +391,15 @@ export class TaskDetailComponent implements OnInit {
     let attachFile = {
       AttachLink: form.value.attachLink,
       AttachName: form.value.attachName,
-      Type: form.value.Type == null ? 1 : form.value.Type,
+      Type: form.value.type,
       RefId: this.data.taskId
     }
     this.loading = true;
     this.taskServices.addTaskAttachFile(attachFile).toPromise().then(data => {
       if (data.result.success) {
         this.loadData();
-        panel.hide();
-        form.onReset();
+        // panel.hide();
+        // form.onReset();
         this.loading = false;
       } else {
         this.loading = false;
@@ -390,6 +432,21 @@ export class TaskDetailComponent implements OnInit {
     if (link.indexOf("https://") != -1) { return link }
     else { return "https://" + link }
   }
+  arrayContainDataForShow:any;
+  Linkpreview:string;
+  isOpenLargeImg:boolean = false;
+  attackImage:any;
+  isImage:boolean = false;
+  previewLink(link,type){
+    console.log(link)
+    let catchLink = '';
+    if (link.indexOf("https://") != -1) { catchLink = link }
+    else { catchLink = "https://" + link };
+    this.Linkpreview = catchLink;
+    this.linkAttackUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.Linkpreview);
+    if (type == '1'){ this.isImage= true} else { this.isImage = false;};console.log(this.isImage)
+    this.isOpenLargeImg = true;
+  }
 
   getFirstCharacterInUserName(username: string) {
     return username.slice(0, 1).toUpperCase()
@@ -409,6 +466,83 @@ export class TaskDetailComponent implements OnInit {
     // return text.replace(urlRegex, '<a href="$1">$1</a>')
   }
 
+  changeAmount(e) {
+    console.log(e)
+    this.editTongTien = false;
+    this.loading = true;
+    this.taskServices.updateAmount(
+      {
+        TaskId: this.currentTaskId,
+        Content: this.data.content,
+        DueDate: this.data.dueDate,
+        Status: this.currentStatus,
+        Amount: e
+      }
+    ).toPromise().then((res) => {
+      console.log(res)
+      if (res.result.success) {
+        this.data.amount = e;
+        this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
+        this.loading = false;
+      } else {
+        this.loading = false;
+        this.data.amount = this.oldValue;
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: res.result.message });
+      }
+    })
+  }
 
+  fileUpload: any;
+  arrayContainLink: any = [];
+  onChangeFile(e) {
+    if (e.target.files[0] == undefined) {
+    } else {
+      this.fileUpload = e.target.files[0];console.log(this.fileUpload)
+    }
+  }
+  dinhkemFile(panel, rowValue) {
+    this.loading = true;
+    let formdat = new FormData();
+    formdat.append('file', this.fileUpload);console.log(formdat)
+    // this.blockScreen = true;
+    this.fileManagerService.uploadFile(formdat).toPromise().then(data => {
+      console.log(data)
+      if (data.result.success) {
+        let form = { value: data.result.data };
+        this.AddAttachFile(form, "panel");
+        (document.getElementById("attackData") as HTMLInputElement).value = "";
+        this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Tải lên thành công!" });
+      } else {
+        //this.blockScreen = false;
+        this.loading = false;
+        this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+      }
+    })
+  }
 
+  money_format(sotien: number, kihieu, vitri) {
+    let nStr = sotien==undefined?'':sotien.toString()
+    let kq: string = "";
+    if (parseFloat(nStr) == 0) {
+      kq = "";
+    } else {
+      nStr += "";
+      let x = nStr.split(".");
+      let x1 = x[0];
+      let x2 = x.length > 1 ? "," + x[1] : "";
+      let rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "." + "$2");
+      }
+      kq = x1 + x2 + kihieu;
+      switch (vitri) {
+        case '1':
+          kq = x1 + x2 + ' ' + kihieu;
+          break;
+        case '2':
+          kq = kihieu + ' ' + x1 + x2;
+      }
+    }
+    return kq;
+  }
 }

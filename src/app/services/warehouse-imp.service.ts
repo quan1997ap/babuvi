@@ -11,20 +11,12 @@ export class WarehouseImpService extends ApiService {
         super(ApiApplication.warehouse.controller, http, _router);
     }
 
-    getWarehouseImpStatus() {
-        return this.get(ApiApplication.system.controller + '/' + ApiApplication.system.getWarehouseImpStatus);
-    }
-
     saveWarehouseImp(data: WarehouseImp) {
         return this.post(this.apiBaseController + ApiApplication.warehouse.saveWarehouseImp, data);
     }
 
     completeWarehouseImp(data: WarehouseImp) {
         return this.put(this.apiBaseController + ApiApplication.warehouse.completeWarehouseImp, data);
-    }
-
-    getAllWarehouse() {
-        return this.get(ApiApplication.system.controller + '/' + ApiApplication.system.getAllWarehouse);
     }
 
     getWarehouseExpByCode(expCode) {
@@ -37,12 +29,7 @@ export class WarehouseImpService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.warehouse.getWarehouseImpViewById + param);
     }
 
-    getListStorekeeperInWarehouse(warehouseId) {
-        const param = '?warehouseId=' + warehouseId;
-        return this.get(ApiApplication.user.controller + '/' + ApiApplication.user.getListStorekeeperInWarehouse + param);
-    }
-
-    deleteMerchandise(deleteIds) {
+    deleteLsImpDetail(deleteIds) {
         const body = {
             lsId: deleteIds
         };

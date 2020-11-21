@@ -7,16 +7,16 @@
             <div class="block">
                 <div class="block-title text-uppercase p-2 font-weight-bold">Phiếu xuất kho nội bộ</div>
                 <div class="block-content p-3">
-                    <form #warehouseImpForm="ngForm" (keydown.enter)="$event.preventDefault()">
+                    <form #warehouseExpForm="ngForm" (keydown.enter)="$event.preventDefault()">
                         <div class="form-group">
-                            <label for="warehouseImpCode">Mã phiếu xuất</label>
-                            <input type="text" class="form-control" id="warehouseImpCode" name="warehouseImpCode"
-                                   ngModel [readonly]="true" [(ngModel)]="warehouseImp.warehouseImpCode">
+                            <label for="warehouseExpCode">Mã phiếu xuất</label>
+                            <input type="text" class="form-control" id="warehouseExpCode" name="warehouseExpCode"
+                                   ngModel [readonly]="true" [(ngModel)]="warehouseExp.warehouseExpCode">
                         </div>
                         <div class="form-group">
                             <label for="expWarehouseId">Kho xuất hàng</label>
                             <select class="form-control" id="expWarehouseId" name="expWarehouseId" ngModel
-                                    [(ngModel)]="warehouseImp.expWarehouseId">
+                                    [(ngModel)]="warehouseExp.expWarehouseId">
                                 <option *ngFor="let warehouse of warehouseList"
                                         [value]="warehouse.warehouseId">{{warehouse.name}}</option>
                             </select>
@@ -24,22 +24,22 @@
                         <div class="form-group">
                             <label for="warehouseId">Kho nhập hàng</label>
                             <select class="form-control" id="warehouseId" name="warehouseId" ngModel
-                                    [(ngModel)]="warehouseImp.warehouseId" #warehouseId
+                                    [(ngModel)]="warehouseExp.warehouseId" #warehouseId
                                     (change)="loadListStorekeeperInWarehouse(warehouseId.value)">
                                 <option *ngFor="let warehouse of warehouseList"
                                         [value]="warehouse.warehouseId">{{warehouse.name}}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="impDate">Ngày xuất hàng</label>
-                            <input type="date" class="form-control" id="impDate" name="impDate" ngModel
-                                   [(ngModel)]="warehouseImp.impDate">
+                            <label for="expDate">Ngày xuất hàng</label>
+                            <input type="date" class="form-control" id="expDate" name="expDate" ngModel
+                                   [(ngModel)]="warehouseExp.expDate">
                         </div>
                         <div class="form-group">
                             <label for="storekeeperId">Thủ kho</label>
                             <!--                            TODO: need to set property of storekeeper by property of object-->
                             <select class="form-control" id="storekeeperId" name="storekeeperId" ngModel
-                                    [(ngModel)]="warehouseImp.storekeeperId">
+                                    [(ngModel)]="warehouseExp.storekeeperId">
                                 <option *ngFor="let keeper of storekeeperList"
                                         [value]="keeper.userId">{{keeper.firstName + ' ' + keeper.lastName}}</option>
                             </select>
@@ -47,14 +47,14 @@
                         <div class="form-group">
                             <label for="status">Trạng thái</label>
                             <select class="form-control" id="status" name="status" ngModel
-                                    [(ngModel)]="warehouseImp.status">
-                                <option *ngFor="let status of warehouseImpStatusList"
+                                    [(ngModel)]="warehouseExp.status">
+                                <option *ngFor="let status of warehouseExpStatusList"
                                         [value]="status.value">{{status.displayValue}}</option>
                             </select>
                         </div>
                         <div class="row ml-0 mr-0">
-                            <button type="submit" (click)="saveWarehouseImp(warehouseImpForm)" class="btn btn-primary w-25 col">Lưu</button>
-                            <button type="button" (click)="completeWarehouseImp(warehouseImpForm)"
+                            <button type="submit" (click)="saveWarehouseExp(warehouseExpForm)" class="btn btn-primary w-25 col">Lưu</button>
+                            <button type="button" (click)="completeWarehouseExp(warehouseExpForm)"
                                     class="btn btn-success w-25 col ml-3">Hoàn tất
                             </button>
                         </div>
@@ -67,13 +67,14 @@
                 <div class="block-title text-uppercase p-2 font-weight-bold">Chi tiết phiếu xuất hàng</div>
                 <div class="block-content">
                     <div class="add-warehouse-imp-detail p-3">
-                        <form #warehouseImpDetailForm="ngForm" (keydown.enter)="$event.preventDefault()">
+                        <form #warehouseExpDetailForm="ngForm" (keydown.enter)="$event.preventDefault()">
                             <div class="form-row">
                                 <div class="form-group col-sm">
                                     <label for="merchandiseCode">Mã kiện hàng</label>
                                     <input type="text" class="form-control" id="merchandiseCode" name="merchandiseCode"
                                            required #merchandiseCode="ngModel" ngModel
-                                           [(ngModel)]="warehouseImpDetail.merchandiseCode"
+                                           [(ngModel)]="warehouseExpDetail.merchandiseCode"
+                                           (keyup.enter)="saveWarehouseExpDetail(warehouseExpDetailForm, $event)"
                                            #inputToFocus tabindex="1">
                                 </div>
                             </div>
@@ -87,7 +88,7 @@
                         <ngx-datatable
                                 class="material"
                                 rowHeight="auto"
-                                [rows]="warehouseImpDetailList"
+                                [rows]="warehouseExpDetailList"
                                 [messages]="tableMessage"
                                 [columnMode]="columnMode.force"
                                 [headerHeight]="45"

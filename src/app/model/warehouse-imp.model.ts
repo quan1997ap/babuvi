@@ -5,6 +5,7 @@ export class WarehouseImp {
     warehouseImpId;
     warehouseImpCode;
     warehouseExpId;
+    warehouseExpCode;
     warehouseId;
     expWarehouseId;
     impDate;

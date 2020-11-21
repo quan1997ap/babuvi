@@ -6,8 +6,11 @@ import {WarehouseImpRoutes} from './warehouse-imp.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
-import {WarehouseImpService} from '../services/warehouse-imp.service';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+//service
+import {WarehouseImpService} from "app/services/warehouse-imp.service";
+import { SystemService } from 'app/services/system.services';
+import { UserService } from 'app/services/user.service';
 
 @NgModule({
     declarations: [AddWarehouseImpComponent],
@@ -20,7 +23,11 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatDialogModule,
         MatProgressSpinnerModule,
     ],
-    providers: [WarehouseImpService]
+    providers: [
+        WarehouseImpService,
+        SystemService,
+        UserService
+    ]
 })
 export class WarehouseImpModule {
 }

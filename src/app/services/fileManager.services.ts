@@ -13,4 +13,8 @@ export class FileManagerServices extends ApiService {
     uploadImg(data:any){
         return this.postNoConvert(this.apiBaseController + ApiApplication.fileManager.upLoadImageOneDrive,data)
     }
+
+    uploadFile(data:any){
+        return this.postNoConvert(this.apiBaseController + ApiApplication.fileManager.upLoadAttachFileOneDrive,data)
+    }
 }

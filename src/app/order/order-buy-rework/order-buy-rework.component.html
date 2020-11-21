@@ -1,6 +1,6 @@
 <div *ngFor="let message of messages" class="message alert {{message.messageClass}}"
      role="alert">{{message.detail}}</div>
-<h2 class="title-lst-client m-1 mb-3">Điều chỉnh Đặt hàng</h2>
+<h2 class="title-lst-client m-1 mb-3">Đặt lại đơn hàng</h2>
 <div class="btn-dashboard m-1 mb-2">
     <span class="top-feature">
         <button mat-raised-button
@@ -9,7 +9,7 @@
                 || orderBuy.orderData.status === '15'
                 || orderBuy.orderData.status === '16'
                 || orderBuy.orderData.status === '17'"
-                color="warn">Điều chỉnh</button>
+                color="warn">Đặt hàng</button>
     </span>
     <span class="top-feature">
         <button mat-raised-button

@@ -131,6 +131,10 @@ export class RegisterComponent {
                 return;
             }
         };
+        if (formSignUp.controls.acount.status != "VALID") {
+            this.notice('Tài khoản chỉ bao gồm chữ hoa, chữ thường và số!');
+            return;
+        };
         if (formSignUp.controls.email.status != "VALID") {
             this.notice('Email không đúng định dạng!');
             return;

@@ -420,7 +420,7 @@ export class ApiService {
             {
                 'Module': Module,
                 'X-Requested-With': 'XMLHttpRequest',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
             });
             let t1 = localStorage.getItem("token");
             if(localStorage.getItem("token")) {

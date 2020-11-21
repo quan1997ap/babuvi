@@ -7,16 +7,15 @@ import {RouterModule} from '@angular/router';
 import {DeliveryRoutes} from './delivery.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxDatatableModule} from '@swimlane/ngx-datatable';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MerchandiseServices} from 'app/services/merchandise.services';
 import {PaymentOrdersComponent} from '../payment-orders/payment-orders.component';
 import {PaymentOrdersModule} from '../payment-orders/payment-orders.module';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ConfirmComponent } from './confirm/confirm.component';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {DialogModule} from 'primeng/dialog';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
@@ -44,13 +43,12 @@ import { MessageService } from 'primeng/api';
         FormsModule,
         NgxDatatableModule,
         ReactiveFormsModule,
+        PaymentOrdersModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
         MatTableModule,
         MatPaginatorModule,
-        MatCheckboxModule,
-        PaymentOrdersModule,
-        MatProgressSpinnerModule,
         MatDialogModule,
-        MatButtonModule,
         InputTextModule,
         DialogModule,
         ConfirmDialogModule,
