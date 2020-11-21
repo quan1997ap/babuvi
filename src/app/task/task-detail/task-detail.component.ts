@@ -94,6 +94,7 @@ export class TaskDetailComponent implements OnInit {
         this.datas = data;
         this.data = this.datas.result.data;
         this.oldValue = [this.data].splice(0)[0].amount;
+        this.tongtien = this.data.amount;
         this.oldDescription = this.data.content //nếu hủy sửa nội dung, nội dung sẽ gán lại bằng Olddescription
         this.UrlConverted = this.convertToUrl(this.data.content)
         this.currentTaskId = this.data.taskId;
@@ -104,7 +105,6 @@ export class TaskDetailComponent implements OnInit {
         this.Old_dueDate = this.dueDate //nếu hủy cập nhật ngày hết hạn, ngày hết hạn sẽ gán lại bằng Old_dueDate
         this.dueDateForShow = formatDate(this.Old_dueDate, 'hh:mm dd-MM-yyyy', 'en-US');
         this.createDateForShow = formatDate(new Date(this.data.createdDate), 'hh:mm dd-MM-yyyy', 'en-US');
-        console.log(this.datas)
         setTimeout(() => {
           this.scrollToBottom(); // sau khi tải dữ liệu về, thanh cuộn đến cuối trang chat
         }, 500);
@@ -467,19 +467,19 @@ export class TaskDetailComponent implements OnInit {
   }
 
   changeAmount(e) {
-    console.log(e)
     this.editTongTien = false;
     this.loading = true;
+    console.log(e);
+    console.log(this.tongtien);
     this.taskServices.updateAmount(
       {
         TaskId: this.currentTaskId,
         Content: this.data.content,
         DueDate: this.data.dueDate,
         Status: this.currentStatus,
-        Amount: e
+        Amount: e,
       }
     ).toPromise().then((res) => {
-      console.log(res)
       if (res.result.success) {
         this.data.amount = e;
         this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });

@@ -409,7 +409,8 @@ export class ListTaskComponent implements OnInit {
 
   activeEditTongtien(data){
     this.editTongTien = true;
-    this.dataEditSotien = data
+    this.dataEditSotien = data;
+    this.tongtien = data.amount;
   }
 
   changeAmount(e) {
