@@ -52,12 +52,20 @@ export class UserService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.user.getInfoUserById + '?userid=' + userId);
     }
 
+    SearchUserCustomer(page:number, perPage:number,data:any) {
+        return this.post(this.apiBaseController + ApiApplication.user.SearchUserCustomer + `?perPage=${perPage}&page=${page}`,data);
+    }
+
     getListUserStaff() {
         return this.get(this.apiBaseController + ApiApplication.user.getListUserStaff);
     }
 
     comfirmFollowZalo(userPhone: string) {
         return this.put(this.apiBaseController + ApiApplication.user.comfirmFollowZalo + '?userPhone=' + userPhone);
+    }
+
+    checkConnectedZalo() {
+        return this.get(this.apiBaseController + ApiApplication.user.CheckConnectedZalo);
     }
 
     getUserStaffs() {

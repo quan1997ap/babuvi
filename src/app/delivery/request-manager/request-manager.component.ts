@@ -11,16 +11,18 @@ import {ConfirmComponent} from '../confirm/confirm.component';
 
 @Component({
     selector: 'app-request',
-    templateUrl: './request.component.html',
-    styleUrls: ['./request.component.scss']
+    templateUrl: './request-manager.component.html',
+    styleUrls: ['./request-manager.component.scss']
 })
-export class RequestComponent implements OnInit {
+export class RequestManagerComponent implements OnInit {
     displayedColumns: string[] = ['select', 'merchandiseId', 'weight', 'capacity', 'orderId', 'address', 'warehouse', 'impDate', 'status'];
     dataSource = new MatTableDataSource<MerchandiseWarehouse>();
     selection = new SelectionModel<MerchandiseWarehouse>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     countMer: number;
     sumAmount: number;
+    userCode: string = "";
+    userName: string = "";
     messages: any[] = [];
     page = 1;
     perPage = 999;
@@ -57,13 +59,14 @@ export class RequestComponent implements OnInit {
 
     loadMerchandiseInWarehouse() {
         this.loading = true;
-        this.merchandiseServices.getMerchandiseInWarehouse(this.page, this.perPage).toPromise()
+        this.merchandiseServices.getMerchandiseInWarehouseManager(this.userCode, this.page, this.perPage).toPromise()
             .then((res) => {
                 this.loading = false;
                 if (res.result.success) {
                     this.dataSource.data = res.result.data.lsMerchandise;
                     this.countMer = res.result.data.dataCount;
                     this.sumAmount = res.result.data.totalAmount;
+                    this.userName = res.result.data.userName;
                     this.dataSource.paginator = this.paginator;
                     this.selection.clear();
                 } else {
@@ -173,5 +176,11 @@ export class RequestComponent implements OnInit {
     goToOrderDetail(orderId: any) {
         this.router.navigate(['ship-manager/detail-orders/'], {queryParams: {orderId: orderId}}).then();
     }
+
+    FuncLoc(formLoc) {
+        let form = formLoc.value;
+        this.userCode = form['UserCode'];
+        this.loadMerchandiseInWarehouse();
+      }
 }
 

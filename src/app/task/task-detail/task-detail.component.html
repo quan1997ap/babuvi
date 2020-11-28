@@ -263,7 +263,7 @@
     <input [ngModel]="data.amount" type="number" step="0.01" style=" padding:4px;margin:2px" [(ngModel)]="tongtien">
     <button class="classBtn classBtnHover" (click)="changeAmount(tongtien)">OK</button>
   </div>
-  <div>Số tiền nhập: {{money_format(tongtienTrust,'','1')}}</div>
+  <div>Số tiền nhập: {{money_format(tongtien,'','1')}}</div>
 </p-dialog>
 
 <p-dialog [showHeader]="false" [modal]="true" [(visible)]="isOpenLargeImg" appendTo="body" [dismissableMask]="true"

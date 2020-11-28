@@ -22,6 +22,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShipManagerRoutes } from './ship-manager.routing';
 import { OrdersComponent } from './orders/orders.component';
+import { OrdersManagerComponent } from './orders-manager/orders-manager.component';
 import { ShipManagerService } from 'app/services/ship-manager.service';
 import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { OrderDetailService } from 'app/services/order-detail.service';
@@ -76,6 +77,7 @@ import { ConsignmentOrdersComponent } from './consignment-orders/consignment-ord
    ],
   declarations: [
     OrdersComponent,
+    OrdersManagerComponent,
     ConsignmentOrdersComponent,
     OrderDetailComponent
   ],

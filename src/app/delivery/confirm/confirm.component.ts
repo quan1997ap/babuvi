@@ -62,16 +62,16 @@ export class ConfirmComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.account = JSON.parse(localStorage.getItem('userData'));
-        this.userId = this.account.userId;
-        this.customer = JSON.parse(localStorage.getItem('customerData'));
-        this.customerId = this.customer.userId;
+        // this.account = JSON.parse(localStorage.getItem('userData'));
+        // this.userId = this.account.userId;
+        // this.customer = JSON.parse(localStorage.getItem('customerData'));
+        // this.customerId = this.customer.userId;
         if (this.dialogData.mwIds) {
             this.mwIds = this.dialogData.mwIds;
             if (this.mwIds.length > 0) {
-                this.getMerchandiseList(this.mwIds);
                 this.getDeliveryRequestType();
-                this.getDefaultDeliveryAddress();
+                //this.getDefaultDeliveryAddress();
+                this.getMerchandiseList(this.mwIds);
                 this.getCountry();
             } else {
                 this.showMessage('alert-danger', 'Không thể lấy thông tin đơn hàng');
@@ -81,7 +81,7 @@ export class ConfirmComponent implements OnInit {
             this.orderId = this.dialogData.orderId;
             this.getMerchandiseListByOrderId(this.orderId);
             this.getDeliveryRequestType();
-            this.getDefaultDeliveryAddress();
+            //this.getDefaultDeliveryAddress();
             this.getCountry();
         }
         else {
@@ -96,6 +96,7 @@ export class ConfirmComponent implements OnInit {
      */
     saveDelivery(deliveryForm: NgForm) {
         if (deliveryForm.valid) {
+            this.toggleLoading(true);
             this.prepareBeforeSave();
             this.merchandiseServices.addDeliveryRequest(this.delivery).toPromise()
                 .then((res) => {
@@ -123,9 +124,9 @@ export class ConfirmComponent implements OnInit {
                 WarehouseId: element.warehouseId,
             }
         });
-        this.delivery.CreatedDate = new Date();
-        this.delivery.CreatedUser = this.userId;
-        this.delivery.UserId = this.customerId;
+        // this.delivery.CreatedDate = new Date();
+        // this.delivery.CreatedUser = this.userId;
+        // this.delivery.UserId = this.customerId;
     }
 
     /**
@@ -138,7 +139,14 @@ export class ConfirmComponent implements OnInit {
             .then((res) => {
                 // this.toggleLoading(false);
                 if (res.result.success) {
-                    this.dataSource.data = res.result.data;
+                    this.dataSource.data = res.result.data.lsMerchandiseWarehouse;
+
+                    this.defaultDeliveryAddress = res.result.data.deliveryAddress;
+                    this.delivery.ContactName = this.defaultDeliveryAddress.receiver;
+                    this.delivery.ContactPhone = this.defaultDeliveryAddress.phone;
+                    this.delivery.Description = this.defaultDeliveryAddress.description;
+                    this.delivery.Address = this.defaultDeliveryAddress.address;
+
                     this.dataSource.paginator = this.paginator;
                     this.getSumMissingAmount();
                 } else {
@@ -334,16 +342,16 @@ export class ConfirmComponent implements OnInit {
     /**
      * Get default delivery address
      */
-    getDefaultDeliveryAddress() {
-        this.merchandiseServices.getDeliveryAddressDefault().toPromise()
-            .then(res => {
-                if (res.result.success) {
-                    this.defaultDeliveryAddress = res.result.data;
-                    this.delivery.ContactName = this.defaultDeliveryAddress.receiver;
-                    this.delivery.ContactPhone = this.defaultDeliveryAddress.phone;
-                    this.delivery.Description = this.defaultDeliveryAddress.description;
-                    this.delivery.Address = this.defaultDeliveryAddress.address;
-                }
-            });
-    }
+    // getDefaultDeliveryAddress() {
+    //     this.merchandiseServices.getDeliveryAddressDefault().toPromise()
+    //         .then(res => {
+    //             if (res.result.success) {
+    //                 this.defaultDeliveryAddress = res.result.data;
+    //                 this.delivery.ContactName = this.defaultDeliveryAddress.receiver;
+    //                 this.delivery.ContactPhone = this.defaultDeliveryAddress.phone;
+    //                 this.delivery.Description = this.defaultDeliveryAddress.description;
+    //                 this.delivery.Address = this.defaultDeliveryAddress.address;
+    //             }
+    //         });
+    // }
 }

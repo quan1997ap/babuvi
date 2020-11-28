@@ -66,7 +66,6 @@ export class ListMerchandiseComponent implements OnInit {
             this.pages.push(i);
           }
         }
-        console.log(data)
         this.messageService.add({ key: 'dskienhang', severity: 'success', summary: 'Thông báo', detail: "Tải dữ liệu thành công" });
         this.loading = false;
       } else {
@@ -143,8 +142,14 @@ export class ListMerchandiseComponent implements OnInit {
   ResetForm(formLoc) {
     formLoc.onReset();
   }
-  goToDetailOrder(orderID) {
-    console.log(orderID)
+
+  returnLinkOrder:string;
+  redirect(orderId) {
+    //this._passData.loading(true);
+    //this._passData.setOrders(data);
+    //console.log(data);
+    //this.router.navigate(['ship-manager/detail-orders/'], { queryParams: { orderId: data.orderId } });
+    this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${orderId}`);
   }
 
   async loadDataFromServerPerPage(value){

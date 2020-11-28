@@ -45,8 +45,13 @@ export class MerchandiseServices extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.merchandise.countSumMerchandiseInWarehouse + '?userId=' + userId);
     }
 
-    getMerchandiseInWarehouse(userId, page, perPage) {
-        const param = '?userId=' + userId + '&perPage=' + perPage + '&page=' + page;
+    getMerchandiseInWarehouseManager(userCode, page, perPage) {
+        const param = '?userCode=' + userCode + '&perPage=' + perPage + '&page=' + page;
+        return this.get(this.apiBaseController + ApiApplication.merchandise.getMerchandiseInWarehouseManager + param);
+    }
+
+    getMerchandiseInWarehouse(page, perPage) {
+        const param = '?perPage=' + perPage + '&page=' + page;
         return this.get(this.apiBaseController + ApiApplication.merchandise.getMerchandiseInWarehouse + param);
     }
 

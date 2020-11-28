@@ -148,6 +148,7 @@ export const ApiApplication = {
         controller: ApiBaseUrl + 'order',
         allOrder: 'allorder/',
         cancelOrder: 'customerCancelOrder',
+        searchOrderManager: 'searchOrderManager',
         searchOrder: 'searchOrder',
         searchOrderConsignment: 'searchOrderConsignment'
     },
@@ -193,6 +194,7 @@ export const ApiApplication = {
         deleteMerchandise: 'deleteLsMerchandise/',
         countSumMerchandiseInWarehouse: 'countSumMerchandiseInWarehouse/',
         getMerchandiseInWarehouse: 'getMerchandiseInWarehouse/',
+        getMerchandiseInWarehouseManager: 'getMerchandiseInWarehouseManager/',
         getLsMerchandiseByMWId: 'GetLsMerchandiseByMWId/',
         addDeliveryRequest: 'adddeliveryrequest/',
         getDeliveryRequestByCode: 'getDeliveryRequestByCode/',
@@ -225,7 +227,8 @@ export const ApiApplication = {
         getListSex: 'getListSex',
         getCountry: 'getCountry',
         getListLevel: 'getListLevel',
-        getAttachFileType: 'getAttachFileType'
+        getAttachFileType: 'getAttachFileType',
+        getUserStatus: 'getUserStatus'
     },
     order: {
         controller: ApiBaseUrl + 'order',
@@ -272,6 +275,8 @@ export const ApiApplication = {
         getInfoUserById: 'getInfoUserById',
         getListUserStaff: 'getListUserStaff',
         comfirmFollowZalo:'comfirmFollowZalo',
+        CheckConnectedZalo: 'CheckConnectedZalo',
+        SearchUserCustomer: 'searchUserCustomer'
     },
     wallet: {
         controller: ApiBaseUrl + "wallet",

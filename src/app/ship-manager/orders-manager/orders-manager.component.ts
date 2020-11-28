@@ -13,10 +13,10 @@ import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-orders',
-  templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss']
+  templateUrl: './orders-manager.component.html',
+  styleUrls: ['./orders-manager.component.scss']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersManagerComponent implements OnInit {
 
   ELEMENT_DATA: ShipOrders[] = [];
   @ViewChild('paginator') paginator: MatPaginator;
@@ -88,6 +88,7 @@ export class OrdersComponent implements OnInit {
   }
 
   nullForm = {
+    "UserCode":null,
     "OrderCode": null,
     "ShopName": null,
     "StartDate": null,
@@ -97,7 +98,7 @@ export class OrdersComponent implements OnInit {
 
   getDataFromServer() {
     this._passData.loading(true);
-    this._shipManager.getListOrders(this.nullForm, 1, 5).subscribe(res => {
+    this._shipManager.getListOrdersManager(this.nullForm, 1, 5).subscribe(res => {
       console.log(res)
       if (res.result.success) {
         this.dataItem = res.result.data;
@@ -292,7 +293,7 @@ export class OrdersComponent implements OnInit {
 
   async loadDataFromServerPerPage(numb) {
     this._passData.loading(true);
-    await this._shipManager.getListOrders(this.nullForm, numb, 5).subscribe( async res => {
+    await this._shipManager.getListOrdersManager(this.nullForm, numb, 5).subscribe( async res => {
       console.log(res)
       if (res.result.success) {
         this.dataItem = res.result.data;

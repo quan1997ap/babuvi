@@ -61,7 +61,7 @@
                    <td *ngFor="let col of columns" class="table-tb"
                       [style.background-color]="RowCheckedbox.indexOf(data['code']) != -1?'#e2e2e2':'white' ">
                       <span class="ui-column-title">{{col.header}}: </span>
-                      <span *ngIf="col.field=='lichsu' ||col.field=='thetich'?false:true" 
+                      <span *ngIf="col.field=='lichsu' ||col.field=='thetich' ||col.field=='orderCode'?false:true" 
                       [class]="col.field=='merchandiseCode'? 'classBold classBlue CursorPointer':col.field=='orderCode'? 
                         'classBlue CursorPointer':col.field=='statusDisplay'?'classBold classBlue':''">
                         {{data[col.field]}}<span *ngIf="col.field =='netWeight'?true:false"> kg</span>
@@ -69,6 +69,11 @@
                       <span *ngIf="col.field=='thetich'?true:false">
                          {{data.width}} x {{data.length}} x {{data.height}}
                       </span>
+                      <span *ngIf="col.field=='orderCode'?true:false">
+                        <a (mousedown)="redirect(data.orderId)" target="_blank" href="{{returnLinkOrder}}">
+                           {{data.orderCode}}
+                        </a>
+                     </span>
                       <span *ngIf="col.field=='lichsu'?true:false">
                          <div *ngFor="let history of data.lsHistory;let i = index" 
                          [class]="i == data.lsHistory.length-1?'always-mark Xmark':'always-mark font-normal'">

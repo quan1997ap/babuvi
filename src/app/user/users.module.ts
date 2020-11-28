@@ -11,7 +11,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { UserProfileComponent } from './user-profile/user-profile.component'; 
 import { UserEditComponent } from './user-edit/user-edit.component';
-import { UserListComponent } from './user-list/userlist.component';
+//import { UserListComponent } from './user-list-1/userlist.component';
+import { UserListComponent } from './user-list/user-list.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { UsersRoutes } from './users.routing';
 
@@ -34,6 +35,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 
 @NgModule({
@@ -52,7 +55,9 @@ import { TableModule } from 'primeng/table';
     DropdownModule,
     MessagesModule,
     ReactiveFormsModule,
-    TableModule
+    TableModule,
+    CheckboxModule,
+    OverlayPanelModule
   ],
   declarations: [
     UserProfileComponent,

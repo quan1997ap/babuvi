@@ -1,18 +1,23 @@
 <div *ngFor="let message of messages" class="message alert {{message.messageClass}}"
      role="alert">{{message.detail}}</div>
-<h3>Để nhận thông tin tình trạng đơn hàng, tài chính qua Zalo bạn làm theo các bước sau:</h3>
- <!--<div class="zalo-follow-only-button" data-oaid="{{zaloOfficialId}}" data-callback="{{callback}}"></div>-->
-<p>Bước 1:  Ấn vào nút quan tâm bên dưới nhé!</p>
-<div class="zalo-follow-only-button" data-oaid="2872991500884904210" data-callback="userFollowZallo"></div>
-<p>Bước 2:  Nhập số điện thoại zalo và bấm đăng ký</p>
-
-<div class="no-padding form-container h100">
-    <div class="form-row">
-        <input type="text" placeholder="Số điện thoại zalo" pInputText [(ngModel)]="customerPhone" />
-    </div>
-    <div>
-        <button class="btnAddZalo" (click)="addZalo()">Kết nối zalo</button>
-    </div>
+<div [class]="notConectedZalo()">
+    <h3>Để nhận thông tin tình trạng đơn hàng, tài chính qua Zalo bạn làm theo các bước sau:</h3>
+    <!--<div class="zalo-follow-only-button" data-oaid="{{zaloOfficialId}}" data-callback="{{callback}}"></div>-->
+   <p>Bước 1:  Ấn vào nút quan tâm bên dưới nhé!</p>
+   <div class="zalo-follow-only-button" data-oaid="2872991500884904210" data-callback="userFollowZallo"></div>
+   <p>Bước 2:  Nhập số điện thoại zalo và bấm đăng ký</p>
+   
+   <div class="no-padding form-container h100">
+       <div class="form-row">
+           <input type="text" placeholder="Số điện thoại zalo" pInputText [(ngModel)]="customerPhone" />
+       </div>
+       <div>
+           <button class="btnAddZalo" (click)="addZalo()">Kết nối zalo</button>
+       </div>
+   </div>
+</div>
+<div [class]="conectedZalo()">
+    <h3>Tài khoản đã kết nối zalo thành công</h3>
 </div>
 
 

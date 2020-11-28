@@ -21,16 +21,31 @@
                     <div class="top-order form-group clearfix">
                         <ul class="lp-header list-inline">
                             <li class="col-md-5 col-xs-12 p-0">
-                                <div class="form-group">
-                                    <button (click)="requestDelivery()" [disabled]="this.selection.selected.length < 1" type="submit" class="btn btn-sm btn-info mr-1"><span
+                                <form #formFilter="ngForm" (keydown.enter)="$event.preventDefault()">
+                                    <div class="dkloc">
+                                       <div class="nameInput" style="display:flex; justify-content: space-between;">
+                                          <span style="font-weight: 400;text-align: right;">{{userName}}</span>
+                                       </div>
+                                       <input type="text" pInputText ngModel name="UserCode" placeholder="Mã khách hàng"
+                                           (keyup.enter)="FuncLoc(formFilter)">
+                                    </div>
+                                    <div class="dkloc">
+                                        <button (click)="requestDelivery()" [disabled]="this.selection.selected.length < 1" type="submit" class="btn btn-sm btn-info mr-1"><span
                                             class="fa fa-rocket"></span> Tạo yêu cầu giao
-                                    </button>
-                                    <button (click)="paymentOrders()" [disabled]="this.selection.selected.length < 1" class="btn btn-sm btn-danger mr-1"><i class="fa fa-usd"></i>
-                                        Thanh toán
-                                    </button>
-                                    <button (click)="loadMerchandiseInWarehouse()" [disabled]="loading" class="btn btn-sm btn-default btn-refresh"
-                                            apDomainId     title="Tải lại dữ liệu"><span class="fa fa-refresh"></span></button>
-                                </div>
+                                        </button>
+                                    </div>
+                                    <div class="dkloc"> 
+                                        <button (click)="paymentOrders()" [disabled]="this.selection.selected.length < 1" class="btn btn-sm btn-danger mr-1"><i class="fa fa-usd"></i>
+                                            Thanh toán
+                                        </button>
+                                    </div>
+                                    <div class="dkloc"> 
+                                        <button (click)="FuncLoc(formFilter)" [disabled]="loading" class="btn btn-sm btn-default btn-refresh"
+                                        apDomainId     title="Tải lại dữ liệu"><span class="fa fa-refresh"></span>
+                                        </button>
+                                    </div>
+                                   
+                                </form>
                             </li>
                         </ul>
                     </div>

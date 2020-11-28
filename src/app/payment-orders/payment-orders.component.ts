@@ -60,7 +60,7 @@ export class PaymentOrdersComponent implements OnInit {
                         this.dialogRef.close(res);
                     } else {
                         this.isDisable = false;
-                        this.showMessage('alert-danger', 'Không thể thanh toán đơn hàng');
+                        this.showMessage('alert-danger', res.result.message);
                     }
                 }).catch(() => {
                 this.toggleLoading(false);

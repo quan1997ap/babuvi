@@ -53,6 +53,10 @@ export class SystemService extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.system.getReceiptStatus)
     }
 
+    GetUserStatus(){
+        return this.get(this.apiBaseController + ApiApplication.system.getUserStatus)
+    }
+
     getOrderStatus(){
         return this.get(this.apiBaseController + ApiApplication.system.getOrderStatus)
     }

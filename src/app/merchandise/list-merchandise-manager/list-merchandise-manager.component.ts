@@ -143,6 +143,12 @@ export class ListMerchandiseManagerComponent implements OnInit {
   ResetForm(formLoc) {
     formLoc.onReset();
   }
+
+  returnLinkOrder:string;
+  redirect(orderId) {
+    this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${orderId}`);
+  }
+
   goToDetailOrder(orderID) {
     console.log(orderID)
   }

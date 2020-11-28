@@ -12,15 +12,48 @@ export class ConnectZaloComponent implements OnInit {
 
     constructor(
       private userService: UserService,
-    ) { }
+    ) {
+    }
 
     // Something
     messages = [];
     customerPhone: string = "";
     loading: boolean = false;
+    notConectedZaloClass: string ="invisible";
+    conectedZaloClass: string ="invisible";
 
     ngOnInit() {
-      this.loading = true;
+        this.loading = true;
+        this.userService.checkConnectedZalo().toPromise()
+          .then(async res => {
+            this.loading = false;
+            if (res.result.success) {
+                //Nếu dữ liệu là true --> đã connect zalo
+                if (res.result.data) {
+                    this.notConectedZaloClass = "invisible";
+                    this.conectedZaloClass = "visible";
+                }
+                else {
+                  this.notConectedZaloClass = "visible";
+                    this.conectedZaloClass = "invisible";
+                }
+            } else {
+              this.showMessage('alert-danger', res.result.message);
+            }
+          }
+          )
+          .catch(() => {
+            this.loading = false;
+            this.showMessage('alert-danger', 'Không kết nối được server');
+        })
+      }
+
+    notConectedZalo() {
+      return this.notConectedZaloClass;
+    }
+
+    conectedZalo() {
+      return this.conectedZaloClass;
     }
 
     addZalo() {

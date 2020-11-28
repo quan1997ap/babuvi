@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RequestComponent} from './request/request.component';
+import {RequestManagerComponent} from './request-manager/request-manager.component';
 import {ListRequestComponent } from './list-request/list-request.component';
 import {ListRequestManagerComponent } from './list-request-manager/list-request-manager.component';
 import {RouterModule} from '@angular/router';
@@ -32,6 +33,7 @@ import { MessageService } from 'primeng/api';
 
 @NgModule({
     declarations: [
+        RequestManagerComponent,
         RequestComponent,
         ConfirmComponent,
         ListRequestComponent,
