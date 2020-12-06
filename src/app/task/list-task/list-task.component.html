@@ -43,9 +43,12 @@
             </span>
             Số công việc:
             <span style="font-weight: bold;color: rgba(228, 89, 38, 0.945);">{{dataFetch.data.dataCount}}</span>
+            <span *ngIf="mangDulieuTinhTong != 0">- Tiền task chọn: 
+               <span style="font-weight: bold;color: rgba(228, 89, 38, 0.945);">{{money_format(tongTienDuLieuDaChon.toFixed(2),'','1' )}}</span>
+            </span>
             <span *ngIf="mangDulieuTinhTong != 0">- Tổng tiền: 
-            <span style="font-weight: bold;color: rgba(228, 89, 38, 0.945);">{{money_format(tongTienDuLieuDaChon.toFixed(2),'','1' )}}</span>
-           </span>
+               <span style="font-weight: bold;color: rgba(228, 89, 38, 0.945);">{{money_format(dataFetch.data.totalAmount,'','1' )}}</span>
+            </span>
          </div>
          <p-table [value]="datas" [columns]="columns" [resizableColumns]="true" [rowHover]="true" [responsive]="true">
             <ng-template pTemplate="header" let-columns>

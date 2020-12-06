@@ -59,7 +59,7 @@
                         <div class="content-inline tung w80">
                             <div class="w100 dp-inBlock">
                                <div class="content-inline w40 pad-l10 cur-point cor2b">
-                                    <a (mousedown)="redirect(item)" target="_blank" href="{{returnLinkOrder}}">
+                                    <a (mousedown)="redirectAtag(item)" target="_blank" href="{{returnLinkOrder}}">
                                         {{item.orderCode}}
                                      </a>
                                 </div>
@@ -125,7 +125,8 @@
                     </div>
 
                     <div *ngIf="!detectWidthLayout" class="w100 ver-align-mid tung">
-                            <div class="content-inline bor txt-alignCen bor-ra3 bgf4 cor8D pb5 pt5 cur-point pad-l10 pad-r10 mar-l10" (click)="redirect(item)">
+                            <div class="content-inline bor txt-alignCen bor-ra3 bgf4 cor8D pb5 pt5 cur-point pad-l10 pad-r10 mar-l10" 
+                            (click)="redirect(item)">
                                 Chi tiết
                             </div>
                             <div class="content-inline bor txt-alignCen bor-ra3 pb5 pt5 cur-point bg2b corffffff pad-l10 pad-r10 mar-l10"

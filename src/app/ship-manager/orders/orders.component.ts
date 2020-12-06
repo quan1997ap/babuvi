@@ -164,12 +164,20 @@ export class OrdersComponent implements OnInit {
   }
 
   returnLinkOrder:string;
-  redirect(data: ShipOrders) {
+
+  redirectAtag(data: ShipOrders) {
     //this._passData.loading(true);
     //this._passData.setOrders(data);
     //console.log(data);
     //this.router.navigate(['ship-manager/detail-orders/'], { queryParams: { orderId: data.orderId } });
     this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${data.orderId}`);
+  }
+
+  redirect(data: ShipOrders) {
+    this._passData.loading(true);
+    this._passData.setOrders(data);
+    this.router.navigate(['ship-manager/detail-orders/'], { queryParams: { orderId: data.orderId } });
+    //this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${data.orderId}`);
   }
 
   /**

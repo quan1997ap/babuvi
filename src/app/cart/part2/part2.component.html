@@ -47,7 +47,7 @@
                                             <input type="radio" name="r1" class="minimal" value="{{address.deliveryAddressId}}" [checked]="address.isDefault" (change)="changeLocation($event.target.value, address)" >
                                         </div>
                                         <div class="content-address">
-                                            <p><strong class="item-name ng-binding">{{address.receiver}}</strong> - <span class="item-mobile ng-binding">0902244692</span></p>
+                                            <p><strong class="item-name ng-binding">{{address.receiver}}</strong> - <span class="item-mobile ng-binding">{{address.phone}}</span></p>
                                             <p class="ng-binding">{{address.address}} - {{address.districtDisplay}} - {{address.cityDisplay}}</p>
                                             <p class="text-red ng-binding"></p>
                                             <ul class="d-block d-sm-none sm-action-address">

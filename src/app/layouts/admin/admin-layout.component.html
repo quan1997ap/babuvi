@@ -23,24 +23,15 @@
                <mat-nav-list appAccordion class="navigation relative">
                   <mat-list-item appAccordionLink *ngFor="let menuitem of _menu">
                      <a appAccordionToggle class="relative" mat-ripple
-                     [routerLink]="menuitem.state == null?[]:menuitem.state" *ngIf="menuitem.type === 'link'">
+                     *ngIf="menuitem.type === 'link'"
+                     [routerLink]="menuitem.state == null|| menuitem.state.indexOf('http') == 0 ?[]:'/'+menuitem.state" 
+                     (click)="goToExternalUrl(menuitem.state)">
                      <mat-icon>{{ menuitem.icon }}</mat-icon>
                      <span>{{ menuitem.name | translate }}</span>
                      <span fxFlex></span>
                      <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
                      </a>
-                     <a appAccordionToggle class="relative" mat-ripple href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
-                        <mat-icon>{{ menuitem.icon }}</mat-icon>
-                        <span>{{ menuitem.name | translate }}</span>
-                        <span fxFlex></span>
-                        <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
-                     </a>
-                     <a appAccordionToggle class="relative" mat-ripple href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
-                        <mat-icon>{{ menuitem.icon }}</mat-icon>
-                        <span>{{ menuitem.name | translate }}</span>
-                        <span fxFlex></span>
-                        <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
-                     </a>
+                    
                      <a appAccordionToggle class="relative" mat-ripple href="javascript:;" *ngIf="menuitem.type === 'sub'">
                         <mat-icon>{{ menuitem.icon }}</mat-icon>
                         <span>{{ menuitem.name | translate }}</span>
@@ -210,7 +201,7 @@
                   <div class="avatar">
                      <img *ngIf="currentUser && currentUser.avatarUrl" [src]="currentUser.avatarUrl" class="avatar-img">
                      <img *ngIf="!currentUser || !currentUser.avatarUrl"
-                         src="http://nguyetanh.vn/wp-content/uploads/2015/10/default_avatar.png" class="avatar-img">
+                         src="../../../assets/images/default_avatar.png" class="avatar-img">
 
                  </div>
                   <span class="name">{{firstName}}</span>

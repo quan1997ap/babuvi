@@ -46,7 +46,19 @@ export class ConnectZaloComponent implements OnInit {
             this.loading = false;
             this.showMessage('alert-danger', 'Không kết nối được server');
         })
+        this.loadScript('https://sp.zalo.me/plugins/sdk.js');
       }
+
+    //thêm load script zalo trong phần component để khi click menu sẽ hiện luôn nút quan tâm mà không phải load lại
+    public loadScript(url: string) {
+      const body = <HTMLDivElement> document.body;
+      const script = document.createElement('script');
+      script.innerHTML = '';
+      script.src = url;
+      script.async = false;
+      script.defer = true;
+      body.appendChild(script);
+    }
 
     notConectedZalo() {
       return this.notConectedZaloClass;
