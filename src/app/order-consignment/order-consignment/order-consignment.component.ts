@@ -14,6 +14,8 @@ import { AddressDataEmitModel } from './../config-delivery-address/config-delive
 
 // services
 // import { OrderService } from './../../services/order.service';
+import { CartServices } from './../../services/cart.services';
+import { SystemService } from './../../services/system.services';
 import { OrderConsignmentService } from './../../services/order-consignment.service';
 import { PassDataService } from 'app/services/pass-data.services';
 import { MessageService } from 'primeng/components/common/api';
@@ -67,6 +69,8 @@ export class OrderConsignmentComponent implements OnInit {
     private _passData: PassDataService,
     private formBuilder: FormBuilder,
     private orderConsignmentService: OrderConsignmentService,
+    private systemService: SystemService,
+    private cartServices: CartServices,
     private router: Router) {
     this._passData.loading(true);
   }
@@ -94,12 +98,12 @@ export class OrderConsignmentComponent implements OnInit {
   getAllFormData() {
     this._passData.loading(true);
     forkJoin(
-      this.orderConsignmentService.getListConsignmentWarehouse(),
-      this.orderConsignmentService.getgetWarehouseVN(),
-      this.orderConsignmentService.getListDeliveryAddressByUserId(this.account.userId),
-      this.orderConsignmentService.getLsServiceConsignment(),
-      this.orderConsignmentService.getListClassification(),
-      this.orderConsignmentService.getShippingType()
+      this.systemService.getListConsignmentWarehouse(),
+      this.systemService.getWarehouseVN(),
+      this.cartServices.getListDeliveryAddressByUserId(this.account.userId),
+      this.cartServices.getLsServiceConsignment(),
+      this.cartServices.getListClassification(),
+      this.systemService.getShippingType()
     ).subscribe(res => {
       if (res) {
         if (res[0] && res[0].length > 0) {

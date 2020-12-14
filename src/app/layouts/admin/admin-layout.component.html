@@ -156,13 +156,20 @@
          <div class="search-bar" fxFlex>
             <form class="search-form txt-size15" fxShow="false" fxShow.gt-xs>
                Tỷ giá: 
-               <span class="corF44335">{{rating}}</span>
+               <span class="corF44335">{{rating| currencyFormat}}</span>
             </form>
          </div>
 
          <span fxFlex></span>
          
-         <span class="ml-xs overflow-visible txt-size15 corF44335" >{{balance}}đ</span>
+          <!--<span class="ml-xs overflow-visible txt-size15 corF44335" >{{balance| currencyFormat}}đ</span>-->
+         <span class="ml-xs overflow-visible txt-size15 corF44335">
+            <span [innerHTML]="symbolsLocation=== '2' ? symbolsDisplay : ''" ></span>
+            <span>
+               {{balance| currencyChina}}
+            </span>
+            <span [innerHTML]="symbolsLocation === '1' ? symbolsDisplay : ''" ></span>
+         </span>
          <button (click)="moveToCart()" mat-icon-button class="ml-xs overflow-visible">
             <mat-icon>shopping_cart</mat-icon>
             <span *ngIf="showItemCart" class="notification-label">{{itemCartCount}}</span>

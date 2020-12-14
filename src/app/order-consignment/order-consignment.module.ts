@@ -21,10 +21,10 @@ import { MatCurrencyFormatModule } from 'mat-currency-format';
 import { OrderConsignmentRoutes } from './order-consignment.routing';
 
 // services
-
+import { CartServices } from './../services/cart.services';
+import { SystemService } from './../services/system.services';
 import { OrderConsignmentService } from './../services/order-consignment.service';
 import { MessageService } from 'primeng/api';
-import { CartServices } from './../services/cart.services';
 import { MessagesUtilsService } from './../services/messages-utils.service';
 // angular
 import { CommonModule } from '@angular/common';
@@ -100,6 +100,7 @@ import {
     MessageService,
     MessageModule,
     CartServices,
+    SystemService,
     MessagesUtilsService
   ],
   entryComponents: [

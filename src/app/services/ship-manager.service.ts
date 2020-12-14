@@ -10,13 +10,13 @@ export class ShipManagerService extends ApiService {
         super(ApiApplication.shipManager.controller, http, _router);
     }
     
-    getAllOrders(userId: number, page: number) {
-        return this.get(this.apiBaseController
-            + ApiApplication.shipManager.allOrder + '?'
-            + ApiApplication.userId + '= '+userId + '&'
-            + ApiApplication.perPage +'= ' + 10 + '&'
-            + ApiApplication.page + '= ' + page);
-    }
+    // getAllOrders(userId: number, page: number) {
+    //     return this.get(this.apiBaseController
+    //         + ApiApplication.shipManager.allOrder + '?'
+    //         + ApiApplication.userId + '= '+userId + '&'
+    //         + ApiApplication.perPage +'= ' + 10 + '&'
+    //         + ApiApplication.page + '= ' + page);
+    // }
 
     cancelOrder(orderId: number) {
         return this.put(this.apiBaseController + ApiApplication.shipManager.cancelOrder

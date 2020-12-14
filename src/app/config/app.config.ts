@@ -146,7 +146,7 @@ export const ApiApplication = {
     },
     shipManager: {
         controller: ApiBaseUrl + 'order',
-        allOrder: 'allorder/',
+        // allOrder: 'allorder/',
         cancelOrder: 'customerCancelOrder',
         searchOrderManager: 'searchOrderManager',
         searchOrder: 'searchOrder',

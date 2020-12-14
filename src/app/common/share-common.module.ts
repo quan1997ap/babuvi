@@ -1,9 +1,7 @@
 import {
   NgModule
 } from '@angular/core';
-import {
-  CurrencyFormat
-} from './pipe-format-money.component';
+import { CurrencyFormat } from './pipe-format-money.component';
 import { NumberFormatPipe } from './number.pipe';
 import { InfiniteScrollDirective } from './InfiniteScrollDirective.directive';
 import { CurrencyFormatChina } from './pipe-china-money.component';

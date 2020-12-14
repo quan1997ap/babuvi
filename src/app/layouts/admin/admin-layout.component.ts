@@ -111,7 +111,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   infoRating: InfoRating;
   rating: string = null;
   itemCartCount: number = null;
-  balance: string = null
+  balance: string = null;
+  symbolsLocation: string = null;
+  symbolsDisplay: string = null;
   notificationCount: number = null;
   loading: boolean = false;
 
@@ -125,8 +127,12 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
       _self.infoRating = JSON.parse(localStorage.getItem("ratingInfo"));
       if (_self.infoRating) {
         clearInterval(refreshId);
-        _self.rating = _self._dataParse.formatMoney(_self.infoRating.exchangeRate);
-        _self.balance = _self._dataParse.formatMoney(_self.infoRating.cashBalance);
+        console.log(_self.infoRating);
+        //_self.rating = _self._dataParse.formatMoney(_self.infoRating.exchangeRate);
+        _self.rating = _self.infoRating.exchangeRate;
+        _self.balance = _self.infoRating.cashBalance;
+        _self.symbolsLocation = _self.infoRating.symbolsLocation;
+        _self.symbolsDisplay = _self.infoRating.symbolsDisplay;
         _self.notificationCount = _self.infoRating.notificationCount;
         _self.itemCartCount = _self.infoRating.cartItemCount;
         _self.showNotify = _self.notificationCount !== 0;

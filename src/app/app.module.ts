@@ -33,8 +33,12 @@ import {MatCardModule} from '@angular/material/card';
 
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
+
+//Component
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
+import { ShareCommonModule } from './common/share-common.module';
+
 import { SharedModule } from './shared/shared.module';
 import { LstClientService } from './services/lstClient.service';
 import { CommonService } from './services/common.service';
@@ -100,6 +104,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HttpModule,
     NgxDatatableModule,
     ConfirmDialogModule,
+    ShareCommonModule
   ],
   providers: [
     ConfirmationService,

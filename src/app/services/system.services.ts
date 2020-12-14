@@ -157,5 +157,32 @@ export class SystemService extends ApiService {
         }));
     }
 
+    getListConsignmentWarehouse() {
+        // kho kí gửi
+        return this.get(this.apiBaseController +  'getConsignmentWarehouse').pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
+
+    getShippingType() {
+        // danh sách thông tin khai báo
+        return this.get(this.apiBaseController + 'getShippingType').pipe(map((res: any) => {
+            if (res.message === 'successful') {
+                // success -->
+                return res.result.data;
+            } else {
+                return throwError('cant get');
+            }
+        }), catchError(error => {
+            return throwError(error);
+        }));
+    }
 }
 
