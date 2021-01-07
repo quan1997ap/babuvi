@@ -20,7 +20,9 @@ import { SystemService } from 'app/services/system.services';
 import { OrderService } from 'app/services/order.service';
 //component
 import {ComplaintOrderComponent} from '../complaint/complaint-order/complaint-order.component';
+import {HandleComplaintComponent} from '../complaint/handle-complaint/handle-complaint.component';
 import {ListComplaintComponent} from '../complaint/list-complaint/list-complaint.component';
+import {ListComplaintManagerComponent} from '../complaint/list-complaint-manager/list-complaint-manager.component';
 
 //primeng Service
 import { MessageService } from 'primeng/api';
@@ -28,6 +30,8 @@ import { ConfirmationService } from 'primeng/api';
 //primeng
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -48,11 +52,15 @@ import { CheckboxModule } from 'primeng/checkbox';
     TableModule,
     CheckboxModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    OverlayPanelModule,
+    ConfirmDialogModule
    ],
   declarations: [
     ComplaintOrderComponent,
-    ListComplaintComponent
+    HandleComplaintComponent,
+    ListComplaintComponent,
+    ListComplaintManagerComponent
   ],
   providers: [
     MessagesUtilsService,

@@ -7,8 +7,14 @@
                 <form [formGroup]="orderComplaintForm" *ngIf="orderComplaintForm" class="w-100">
                     <div class="p-grid">
                         <div class="p-col-12 p-md-6 p-col-8">
-                            <p class="dr-title">Mã đơn hàng: <strong>{{currentOrder.orderCode}}</strong></p>
-                            <p-dropdown placeholder="Chọn Sản phẩm" [options]="itemsOfCurrentOrderOptions" filter="true"
+                            <p style="cursor: pointer;">
+                                <span class="title"> Mã đơn hàng:</span> 
+                                <a (mousedown)="goToOrder(currentOrder.orderId)" target="_blank" href="{{returnLinkOrder}}">
+                                    {{currentOrder.orderCode}}
+                                 </a>
+                            </p>
+                           
+                            <p-dropdown [disabled]="true" placeholder="Chọn Sản phẩm" [options]="itemsOfCurrentOrderOptions" filter="true"
                                 [style]="{'width': '100%'}" formControlName="orderSelected"
                                 [dropdownIcon]="'pi pi-sort-down'">
                                 <ng-template let-item pTemplate="selectedItem">
@@ -46,13 +52,13 @@
                         </div>
                         <div class="p-col-12 p-md-6 p-col-4">
                             <p class="dr-title">Loại khiếu nại</p>
-                            <p-dropdown [options]="complainTypesOptions" [style]="{'width': '100%'}"
+                            <p-dropdown [disabled]="true" [options]="complainTypesOptions" [style]="{'width': '100%'}"
                                 placeholder="Chọn loại khiếu nại" formControlName="complainType"
                                 [dropdownIcon]="'pi pi-sort-down'">
                             </p-dropdown>
                             <p></p>
                             <p class="dr-title">Trạng thái</p>
-                            <p-dropdown [disabled]="true" placeholder="Chọn trạng thái"
+                            <p-dropdown placeholder="Chọn trạng thái"
                                 [options]="complainStatusOptions" [style]="{'width': '100%'}"
                                 formControlName="complainStatus" [dropdownIcon]="'pi pi-sort-down'">
                             </p-dropdown>
@@ -62,12 +68,12 @@
                     <div class="p-grid">
                         <div class="p-col-12 p-md-6 p-col-6">
                             <p class="dr-title">Khiếu nại</p>
-                            <textarea [rows]="10" formControlName="complainContent" pInputTextarea
+                            <textarea disabled=true readonly=true [rows]="10" formControlName="complainContent" pInputTextarea
                                 autoResize="autoResize" class="input-group input-textarea"></textarea>
                         </div>
                         <div class="p-col-12 p-md-6 p-col-6">
                             <p class="dr-title">Giải quyết</p>
-                            <textarea disabled=true readonly=true [rows]="10" formControlName="complainSettle"
+                            <textarea  [rows]="10" formControlName="complainSettle"
                                 pInputTextarea autoResize="autoResize" class="input-group input-textarea"></textarea>
                         </div>
                     </div>
@@ -79,9 +85,9 @@
                             (click)="confirm()">
                             Hủy khiếu nại
                         </div>
-                        <div *ngIf="orderDetailPage == false" class="content-inline w20 bor txt-alignCen ml-per10 mr-per10 bor-ra3 pb5 pt5 cur-point bgF44335 corffffff complaintBtn"
+                        <div class="content-inline w20 bor txt-alignCen ml-per10 mr-per10 bor-ra3 pb5 pt5 cur-point bgF44335 corffffff complaintBtn"
                             (click)="submitComplaintForm()">
-                            Khiếu nại
+                            Cập nhật
                         </div>
                     </div>
                 </form>

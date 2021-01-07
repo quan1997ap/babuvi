@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {ClientProfile} from "../../model/client-profile.model";
 import {WarehouseImp} from "../../model/warehouse-imp.model";
 import {WarehouseImpDetail} from "../../model/warehouse-imp-detail.model";
@@ -35,7 +36,6 @@ export class AddWarehouseImpComponent implements OnInit {
     userId;
 
     // Something
-    messages = [];
     isEditWarehouseImpDetails = false;
     warehouseExpCode: string;
     isLoadByImpId = false;
@@ -65,6 +65,8 @@ export class AddWarehouseImpComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private activeRoute: ActivatedRoute,
         private location: Location,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
     ) {
     }
 
@@ -94,19 +96,19 @@ export class AddWarehouseImpComponent implements OnInit {
                 .then((res) => {
                     this.loading = false;
                     if (res.result.success) {
-                        this.showMessage('alert-success', 'Bạn đã lưu thành công phiếu nhập hàng');
+                        this.messageService.add({ key: 'notificationPopup', severity: 'success', summary: 'Thông báo', detail: 'Bạn đã lưu thành công phiếu nhập hàng' });
                         this.mapResData(res.result.data);
                         this.isLoadByImpId = true;
                         this.location.go(this.location.path().split('?')[0],"warehouseImpId="+this.warehouseImp.warehouseImpId)
                     } else {
                         this.location.go(this.location.path() .split('?')[0])
-                        this.showMessage('alert-danger', res.result.message);
+                        this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: res.result.message});
                     }
                 })
                 .catch(() => {
                     this.loading = false;
                     this.location.go(this.location.path() .split('?')[0])
-                    this.showMessage('alert-danger', 'Lưu kiện hàng không thành công');
+                    this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Lưu kiện hàng không thành công'});
                 })
         }
     }
@@ -118,7 +120,7 @@ export class AddWarehouseImpComponent implements OnInit {
      */
     saveWarehouseImpDetail(form, event) {
         if (this.checkEditExistingMerchandise()) {
-            this.showMessage('alert-danger', 'Kiện hàng đã tồn tại trong danh sách');
+            this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Kiện hàng đã tồn tại trong danh sách'});
             return;
         }
         const selfPosition = this.warehouseImpDetail.shelfPosition;
@@ -151,20 +153,17 @@ export class AddWarehouseImpComponent implements OnInit {
                 .then((res) => {
                     this.loading = false;
                     if (res.result.success) {
-                        this.showMessage(
-                            'alert-success',
-                            'Bạn đã hoàn tất thành công phiếu nhập hàng'
-                        );
+                        this.messageService.add({ key: 'notificationPopup', severity: 'success', summary: 'Thông báo', detail: 'Bạn đã hoàn tất thành công phiếu nhập hàng' });
                         this.mapResData(res.result.data);
                         this.isLoadByImpId = true;
                         this.location.go(this.location.path().split('?')[0],"warehouseImpId="+this.warehouseImp.warehouseImpId)
                     } else {
-                        this.showMessage('alert-danger', res.result.message);
+                        this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: res.result.message });
                     }
                 })
                 .catch(() => {
                     this.loading = false;
-                    this.showMessage('alert-danger', 'Hoàn tất kiện hàng không thành công');
+                    this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Hoàn tất kiện hàng không thành công' });
                 })
         }
     }
@@ -184,18 +183,18 @@ export class AddWarehouseImpComponent implements OnInit {
                         .then((res) => {
                             this.loading = false;
                             if (res.result.success) {
-                                this.showMessage('alert-success', 'Đã xóa kiện hàng');
+                                this.messageService.add({ key: 'notificationPopup', severity: 'success', summary: 'Thông báo', detail: 'Đã xóa kiện hàng'});
                                 const filtered = this.warehouseImpDetailList.filter(element => !this.selected.includes(element));
                                 this.warehouseImpDetailList = [...filtered];
                             } else {
-                                this.showMessage('alert-danger', 'Xóa kiện hàng không thành công');
+                                this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Xóa kiện hàng không thành công'});
                             }
                         }).catch(() => {
                         this.loading = false;
-                        this.showMessage('alert-danger', 'Xóa kiện hàng không thành công');
+                        this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Xóa kiện hàng không thành công'});
                     });
                 } else {
-                    this.showMessage('alert-success', 'Đã xóa kiện hàng');
+                    this.messageService.add({ key: 'notificationPopup', severity: 'success', summary: 'Thông báo', detail: 'Đã xóa kiện hàng'});
                     const filtered = this.warehouseImpDetailList.filter(element => !this.selected.includes(element));
                     this.warehouseImpDetailList = [...filtered];
                 }
@@ -301,13 +300,13 @@ export class AddWarehouseImpComponent implements OnInit {
                     } else {
                         this.warehouseImpDetailList = [];
                         this.warehouseImp = new WarehouseImp();
-                        this.showMessage('alert-danger', res.result.message);
+                        this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: res.result.message});
                     }
                 }).catch(() => {
                 this.loading = false;
                 this.warehouseImp = new WarehouseImp();
                 this.warehouseImpDetailList = [];
-                this.showMessage('alert-success', 'Không lấy được thông tin');
+                this.messageService.add({ key: 'notificationPopup', severity: 'error', summary: 'Thông báo', detail: 'Không lấy được thông tin'});
             });
         }
     }
@@ -355,19 +354,6 @@ export class AddWarehouseImpComponent implements OnInit {
         if (input.nodeName === 'INPUT') {
             input.select();
         }
-    }
-
-    /**
-     * Show message
-     * @param messageClass = bootstrap alert class
-     * @param detail
-     */
-    showMessage(messageClass: string, detail: string): void {
-        // this.messages = [];
-        this.messages.push({messageClass: messageClass, detail});
-        setTimeout(() => {
-            this.messages = [];
-        }, 3000);
     }
 
     /**

@@ -7,6 +7,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+//primeng service
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+//primeng
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 //service
 import {WarehouseImpService} from "app/services/warehouse-imp.service";
 import { SystemService } from 'app/services/system.services';
@@ -22,11 +28,15 @@ import { UserService } from 'app/services/user.service';
         NgxDatatableModule,
         MatDialogModule,
         MatProgressSpinnerModule,
+        ConfirmDialogModule,
+        ToastModule,
     ],
     providers: [
         WarehouseImpService,
         SystemService,
-        UserService
+        UserService,
+        ConfirmationService,
+        MessageService
     ]
 })
 export class WarehouseImpModule {

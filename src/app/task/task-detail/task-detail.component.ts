@@ -438,7 +438,6 @@ export class TaskDetailComponent implements OnInit {
   attackImage:any;
   isImage:boolean = false;
   previewLink(link,type){
-    console.log(link)
     let catchLink = '';
     if (link.indexOf("https://") != -1) { catchLink = link }
     else { catchLink = "https://" + link };

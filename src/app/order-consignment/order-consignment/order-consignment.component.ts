@@ -109,13 +109,14 @@ export class OrderConsignmentComponent implements OnInit {
         if (res[0] && res[0].length > 0) {
           this.consignmentWarehouses = res[0];
           this.consignmentWarehouseOptions = res[0].map(
-            (consignmentWarehouse: Warehouse) => ({ label: consignmentWarehouse.name, value: consignmentWarehouse })
+            (consignmentWarehouse: Warehouse) => ({ label: consignmentWarehouse.consignmentName, value: consignmentWarehouse })
           );
         }
         if (res[1] && res[1].length > 0) {
           this.warehouseVNs = res[1];
+          console.log(res[1]);
           this.getWarehouseVNOptions = res[1].map(
-            (consignmentWarehouse: Warehouse) => ({ label: consignmentWarehouse.name, value: consignmentWarehouse })
+            (consignmentWarehouse: Warehouse) => ({ label: consignmentWarehouse.customerName, value: consignmentWarehouse })
           );
         }
         if (res[2] && res[2].length > 0) {

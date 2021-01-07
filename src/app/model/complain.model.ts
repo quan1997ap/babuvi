@@ -21,6 +21,7 @@ export class ComplainStatusModel {
 }
 
 export class ComplainModel {
+    ComplainId: number;
     OrderId: number | string;
     OrderCode: string;
     OrderDetailId: number;

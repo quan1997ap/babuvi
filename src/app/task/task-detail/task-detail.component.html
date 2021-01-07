@@ -266,11 +266,21 @@
   <div>Số tiền nhập: {{money_format(tongtien,'','1')}}</div>
 </p-dialog>
 
+<!--
 <p-dialog [showHeader]="false" [modal]="true" [(visible)]="isOpenLargeImg" appendTo="body" [dismissableMask]="true"
-  [contentStyle]="{'height':'500px','width':'500px'}" [style]="{width: '500px', height: '500px'}">
+  [contentStyle]="{'height':'500px','width':'500px'}" [style]="{width: '1240px', height: '768px'}">
   <div>
-    <iframe [src]="linkAttackUrl" name="chitiet" style="border:none;width:450px; height:400px;"
+    <iframe [src]="linkAttackUrl" name="chitiet" style="border:none;width:1240px; height:768px;"
       *ngIf="!isImage"></iframe>
-    <img [src]="linkAttackUrl" name="hinhanh" style="width:450px; height:400px;" *ngIf="isImage">
+    <img [src]="linkAttackUrl" name="hinhanh" style="width:1240px; height:768px;" *ngIf="isImage">
+  </div>
+</p-dialog> -->
+
+<p-dialog [showHeader]="false" [modal]="true" [(visible)]="isOpenLargeImg" appendTo="body" [dismissableMask]="true" 
+height="100%" width="100%">
+  <div>
+    <iframe [src]="linkAttackUrl" name="chitiet" height="100%" width="100%" frameborder="0" seamless="seamless"
+      *ngIf="!isImage"></iframe>
+    <img [src]="linkAttackUrl" name="hinhanh" *ngIf="isImage">
   </div>
 </p-dialog>

@@ -1,4 +1,4 @@
-import { MessagesUtilsService } from './../../services/messages-utils.service';
+import { MessagesUtilsService } from '../../services/messages-utils.service';
 import { AfterViewInit, Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ComplaintServices } from 'app/services/complaint.services';
 import { ClientProfile } from 'app/model/client-profile.model';
@@ -10,11 +10,11 @@ import { Message } from 'primeng/api';
 
 
 @Component({
-  selector: 'app-list-complaint',
-  templateUrl: './list-complaint.component.html',
-  styleUrls: ['./list-complaint.component.scss']
+  selector: 'app-list-complaint-manager',
+  templateUrl: './list-complaint-manager.component.html',
+  styleUrls: ['./list-complaint-manager.component.scss']
 })
-export class ListComplaintComponent implements OnInit, AfterViewInit {
+export class ListComplaintManagerComponent implements OnInit, AfterViewInit {
 
   pageEvent:any;
   filterConditions = {
@@ -74,7 +74,7 @@ export class ListComplaintComponent implements OnInit, AfterViewInit {
     this.complaintList = [];
     this._passData.loading(true);
     this.clear();
-    this.complaintServices.getComplaints(pageIndex, pageSize, filterConditions).subscribe(res => {
+    this.complaintServices.getComplaintsManager(pageIndex, pageSize, filterConditions).subscribe(res => {
       if (res.result.success && res.result.data && res.result.data.lsData) {
         this.complaintList = res.result.data.lsData;
         // page
@@ -136,7 +136,6 @@ export class ListComplaintComponent implements OnInit, AfterViewInit {
     console.log(this.returnOrderUrl);
   }
 
-
   cancelComplaint() {
     this.messagesUtilsService.showCustomConfirm(
       () => {
@@ -164,7 +163,7 @@ export class ListComplaintComponent implements OnInit, AfterViewInit {
 
   toDetailSelectedComplaint() {
     const lastId = this.complaintIdSelecteds.pop();
-    this.router.navigateByUrl(`complaint/complaint-order/${lastId}`);
+    this.router.navigateByUrl(`complaint/handle-complaint/${lastId}`);
   }
 
   checkAllComplaints(checked) {

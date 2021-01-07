@@ -15,16 +15,11 @@ export class ComplaintServices extends ApiService {
 
 
     getCompainById(compainId) {
-        return this.get(this.apiBaseController + `getCompainById?compainId=${compainId}`).pipe(map((res: any) => {
-            if (res.message === 'successful') {
-                // success -->
-                return res.result.data;
-            } else {
-                return throwError('cant get');
-            }
-        }), catchError(error => {
-            return throwError(error);
-        }));
+        return this.get(this.apiBaseController + `getCompainById?compainId=${compainId}`);
+    }
+
+    getCompainByIdManager(compainId) {
+        return this.get(this.apiBaseController + `getCompainByIdManager?compainId=${compainId}`);
     }
 
     getComplaintByOrderId(orderId) {
@@ -61,6 +56,38 @@ export class ComplaintServices extends ApiService {
             })
         }
         return this.post(this.apiBaseController + `searchCompain?page=${pageIndex}&perPage=${pageSize}`, params);
+    }
+
+    getComplaintsManager(pageIndex, pageSize, filter?) {
+        /*
+            const filter = {
+                ComplainCode: complainCode,
+                OrderCode: orderCode,
+                ItemCode: itemCode,
+                StartDate: startDate,
+                EndDate: endDate,
+                ComplainStatus: complainStatus
+            };
+        */
+        const params = new Object({});
+        if (filter) {
+            Object.keys(filter).forEach(key => {
+                if (filter[key] !== '' && filter[key] !== null && filter[key] !== undefined) {
+                    params[key] = filter[key];
+                }
+                // ISO 8601 Extended format + Z is not present, it’ll be Local Time.
+                if (key === 'StartDate' && filter[key]) {
+                    params[key] = moment(filter[key]).format('YYYY-MM-DDT00:00:00');
+                    console.log( params[key])
+                }
+                if (key === 'EndDate' && filter[key]) {
+                    params[key] = moment(filter[key]).format('YYYY-MM-DDT23:59:59');
+                    console.log( params[key])
+
+                }
+            })
+        }
+        return this.post(this.apiBaseController + `searchCompainManager?page=${pageIndex}&perPage=${pageSize}`, params);
     }
 
     sendComplaint(complaintData) {

@@ -258,6 +258,8 @@ export class ListTaskComponent implements OnInit {
       case "12": return "btnThatLac"; break;
       case "13": return "btnThatLac"; break;
       case "14": return "btnThatLac"; break;
+      case "15": return "btnDoiTacHoanTien"; break;
+      case "16": return "btnDoiTacHoanTien"; break;
     }
   }
   buttonStatus(status) { //function trả lại kiểu class cho loại trạng thái 

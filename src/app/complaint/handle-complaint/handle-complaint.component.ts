@@ -26,18 +26,17 @@ import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-complaint-order',
-  templateUrl: './complaint-order.component.html',
-  styleUrls: ['./complaint-order.component.scss']
+  selector: 'app-handle-complaint',
+  templateUrl: './handle-complaint.component.html',
+  styleUrls: ['./handle-complaint.component.scss']
 })
-export class ComplaintOrderComponent implements OnInit {
+export class HandleComplaintComponent implements OnInit {
 
   msgs = [];
   orderComplaintForm: FormGroup;
   currentOrder: ShipOrders = new ShipOrders();
-  currentComplain: any = {
-    complainCode: ''
-  };
+  currentComplain: any;
+  
 
   itemsOfCurrentOrder: any = [];
   itemsOfCurrentOrderOptions: any = [];
@@ -57,7 +56,7 @@ export class ComplaintOrderComponent implements OnInit {
   constructor(
     public messagesUtilsService: MessagesUtilsService,
     private confirmationService: ConfirmationService,
-    public messageService: MessageService,
+    private messageService: MessageService,
     private router: Router,
     private formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute,
@@ -84,7 +83,7 @@ export class ComplaintOrderComponent implements OnInit {
       //this.currentComplain.complainId = params.complainId;
       //let detailComplaint;
       if (params.complainId) {
-        this.complaintServices.getCompainById(params.complainId).subscribe(res => {
+        this.complaintServices.getCompainByIdManager(params.complainId).subscribe(res => {
           if (res.result.success) {
             let complainRes = res.result.data;
             // mapping value for form detail
@@ -105,14 +104,13 @@ export class ComplaintOrderComponent implements OnInit {
         this.currentOrder.orderId = params.orderId;
         this.currentOrder.orderCode = params.orderCode;
         this.orderDetailPage = false;
-
         this.getAllFormData(this.currentOrder.orderId, this.currentComplain);
       }
-
+      this._passData.loading(false);
     })
   }
 
-  getAllFormData(orderId, detailComplaint?) {
+  getAllFormData(orderId, currentComplain?) {
     this._passData.loading(true);
     forkJoin(
       // as of RxJS 6.5+ we can use a dictionary of sources
@@ -133,14 +131,12 @@ export class ComplaintOrderComponent implements OnInit {
         if (res[2] && res[2].length > 0) {
           this.itemsOfCurrentOrder = res[2];
           this.itemsOfCurrentOrderOptions = res[2].map((item: any) => ({ label: item, value: item.orderDetailId }));
-          console.log(this.itemsOfCurrentOrder);
-          console.log(this.itemsOfCurrentOrderOptions);
         }
         if (res[3] && res[3].length > 0) {
           this.complaintList = res[3];
         }
-        if (detailComplaint) {
-          this.orderComplaintForm.patchValue(detailComplaint);
+        if (currentComplain) {
+          this.orderComplaintForm.patchValue(currentComplain);
         } else {
           this.orderComplaintForm.patchValue({
             complainStatus: this.complainStatusOptions[0].value,
@@ -189,11 +185,11 @@ export class ComplaintOrderComponent implements OnInit {
             this._passData.loading(false);
             this.messageService.add({ key: 'khieunai', severity: 'success', summary: 'Thông báo', detail: 'Tạo khiếu nại thành công' });
             setTimeout(() => {
-              this.router.navigateByUrl('/complaint/list-complaint')
+              this.router.navigateByUrl('/complaint/list-complaint-manager')
             }, 1000)
           } else {
-            this.messageService.add({ key: 'khieunai', severity: 'error', summary: 'Thông báo', detail: res.result.message });
-            this._passData.loading(false);
+              this.messageService.add({ key: 'khieunai', severity: 'error', summary: 'Thông báo', detail: res.result.message });
+              this._passData.loading(false);
           }
         },
         errAddCoplaint => {
@@ -232,6 +228,11 @@ export class ComplaintOrderComponent implements OnInit {
     this.messageService.add({ severity: type, summary: summary, detail: detail, life: 4000 });
   }
 
+  returnLinkOrder:string;
+  goToOrder(orderId) {
+    this.returnLinkOrder = window.location.href.replace(this.router.url,`/ship-manager/detail-orders?orderId=${orderId}`);
+  }
+
   toDetailComplaint(complainId) {
     this.router.navigateByUrl(`complaint/complaint-order/${complainId}`)
   }
@@ -243,7 +244,7 @@ export class ComplaintOrderComponent implements OnInit {
         if (resCancel && resCancel.result && resCancel.result.success === true) {
           this.messageService.add({ key: 'khieunai', severity: 'success', summary: 'Thông báo', detail: 'Hủy khiếu nại thành công' });
           setTimeout( () => {
-            this.router.navigateByUrl(`/complaint/list-complaint`)
+            this.router.navigateByUrl(`/complaint/list-complaint-manager`)
           }, 300)
         } else {
           this._passData.loading(false);

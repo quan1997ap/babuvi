@@ -98,7 +98,6 @@ export class OrdersComponent implements OnInit {
   getDataFromServer() {
     this._passData.loading(true);
     this._shipManager.getListOrders(this.nullForm, 1, 5).subscribe(res => {
-      console.log(res)
       if (res.result.success) {
         this.dataItem = res.result.data;
         // page
@@ -118,7 +117,7 @@ export class OrdersComponent implements OnInit {
           return a.ord - b.ord;
         });
       } else {
-        // this.showMessage('Hủy đơn hàng thành công', 'success');
+        this.showMessage(res.result.message, 'danger');
       }
       this._passData.loading(false);
     }, error => {
@@ -301,7 +300,6 @@ export class OrdersComponent implements OnInit {
   async loadDataFromServerPerPage(numb) {
     this._passData.loading(true);
     await this._shipManager.getListOrders(this.nullForm, numb, 5).subscribe( async res => {
-      console.log(res)
       if (res.result.success) {
         this.dataItem = res.result.data;
         // page
@@ -317,7 +315,7 @@ export class OrdersComponent implements OnInit {
           return a.ord - b.ord;
         });
       } else {
-        // this.showMessage('Hủy đơn hàng thành công', 'success');
+        this.showMessage(res.result.message, 'danger');
       }
       this._passData.loading(false);
     }, error => {
