@@ -4,7 +4,6 @@ import { ClientProfile } from 'app/model/client-profile.model';
 import { ShipOrders } from 'app/model/ship-orders.model';
 import { MatDialog, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router, ActivatedRoute, NavigationStart } from '@angular/router';
-import { PaymentOrdersComponent } from '../../payment-orders/payment-orders.component';
 import { PassDataService } from 'app/services/pass-data.services';
 import { Message } from 'primeng/api';
 import { ConfirmDialogModel } from 'app/model/confirm-dialog.model';
@@ -170,18 +169,18 @@ export class ConsignmentOrdersComponent implements OnInit {
     * Payment order
     */
    paymentOrders(id) {
-      const data = {
-         orderIds: [id],
-      };
-      this.dialog.open(PaymentOrdersComponent, {
-         data: data,
-         panelClass: 'payment-order-dialog',
-      }).afterClosed().subscribe((res) => {
-         if (res) {
-            this.showMessage('Thanh toán thành công', 'success');
-            this.loadDataFromServerPerPage(this.numbPage);
-         }
-      });
+      // const data = {
+      //    orderIds: [id],
+      // };
+      // this.dialog.open(PaymentOrdersComponent, {
+      //    data: data,
+      //    panelClass: 'payment-order-dialog',
+      // }).afterClosed().subscribe((res) => {
+      //    if (res) {
+      //       this.showMessage('Thanh toán thành công', 'success');
+      //       this.loadDataFromServerPerPage(this.numbPage);
+      //    }
+      // });
    }
 
    cancelOrder(item: any, inx: number) {

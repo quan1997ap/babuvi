@@ -78,7 +78,7 @@
                                     <input type="text" class="form-control" id="merchandiseCode" name="merchandiseCode"
                                            required #merchandiseCode="ngModel" ngModel
                                            [(ngModel)]="warehouseImpDetail.merchandiseCode"
-                                           (keyup.enter)="nextFocus($event)" #inputToFocus tabindex="1">
+                                           (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value) " #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
                                          class="alert-no-bg">
                                         <small *ngIf="merchandiseCode.errors.required" role="alert">Trường "Mã kiện
@@ -195,3 +195,17 @@
 <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="notificationPopup" appendTo="body">
 </p-confirmDialog>
 <p-toast key="notificationPopup"></p-toast>
+
+<p-confirmDialog #cd key="comfirmOrder" icon="pi pi-exclamation-triangle" appendTo="body">
+  <p-footer>
+    <div>
+        <label>Nhập mã đơn hàng để khai báo.</label>
+        <input type="text" class="form-control" id="orderCode" name="orderCode" placeholder ="Mã đơn hàng"
+               ngModel
+               [(ngModel)]="warehouseImpDetail.shelfPosition">
+      <br><br>
+    </div>
+    <button type="button" pButton icon="pi pi-check" label="Khai báo" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="pi pi-times" label="Bỏ qua" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

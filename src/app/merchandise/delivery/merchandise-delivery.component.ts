@@ -5,7 +5,6 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {ClientProfile} from 'app/model/client-profile.model';
 import {WarehouseExpService} from 'app/services/warehouse-exp.service';
-import {PaymentOrdersComponent} from "../../payment-orders/payment-orders.component";
 import {MatDialog} from "@angular/material/dialog";
 import {PrintBillComponent} from "./print-bill/print-bill.component";
 
@@ -134,19 +133,19 @@ export class MerchandiseDeliveryComponent implements OnInit {
      * Payment order
      */
     paymentOrders() {
-        const orderIds = Array.from(new Set(this.deliveryRequest.lsDetail.map(e => e.orderId)));
-        const data = {
-            orderIds :  orderIds,
-        };
-        this.dialog.open(PaymentOrdersComponent, {
-            data: data,
-            panelClass: 'payment-order-dialog',
-        }).afterClosed().subscribe((res) => {
-            if (res) {
-                this.showMessage('alert-success', 'Thanh toán thành công');
-                this.getDeliveryRequestByCode(this.deliveryRequestCode);
-            }
-        });
+        // const orderIds = Array.from(new Set(this.deliveryRequest.lsDetail.map(e => e.orderId)));
+        // const data = {
+        //     orderIds :  orderIds,
+        // };
+        // this.dialog.open(PaymentOrdersComponent, {
+        //     data: data,
+        //     panelClass: 'payment-order-dialog',
+        // }).afterClosed().subscribe((res) => {
+        //     if (res) {
+        //         this.showMessage('alert-success', 'Thanh toán thành công');
+        //         this.getDeliveryRequestByCode(this.deliveryRequestCode);
+        //     }
+        // });
     }
 
     /**

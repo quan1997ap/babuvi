@@ -23,15 +23,6 @@ export const AppRoutes: Routes = [{
         loadChildren: './dashboard/admin-manager.module#AdminManagerModule'
     },
     {
-        path: 'wallet-manager',
-        canActivate: [AuthGuard],
-        loadChildren: './wallet-manager/wallet-manager.module#WalletManagerModule'
-    },
-    {
-        path: 'wallet-topup',
-        canActivate: [AuthGuard],
-        loadChildren: './wallet/wallet.module#WalletModule'
-    }, {
         path: 'tables',
         canActivate: [AuthGuard],
         loadChildren: './support/tables.module#TablesModule'
@@ -51,10 +42,6 @@ export const AppRoutes: Routes = [{
         path: 'ecommerce',
         canActivate: [AuthGuard],
         loadChildren: './ecommerce/ecommerce.module#EcommerceDemoModule'
-    }, {
-        path: 'cart',
-        canActivate: [AuthGuard],
-        loadChildren: './cart/cart.module#CartModule'
     },
     {
         path: 'merchandise',
@@ -72,34 +59,9 @@ export const AppRoutes: Routes = [{
         loadChildren: './warehouseexp/warehouse-exp.module#WarehouseExpModule'
     },
     {
-        path: 'order',
-        canActivate: [AuthGuard],
-        loadChildren: './order/order.module#OrderModule'
-    },
-    {
         path: 'order-consignment',
         canActivate: [AuthGuard],
         loadChildren: './order-consignment/order-consignment.module#OrderConsignmentModule'
-    },
-    {
-        path: 'delivery',
-        canActivate: [AuthGuard],
-        loadChildren: './delivery/delivery.module#DeliveryModule'
-    },
-    {
-        path: 'task',
-        canActivate: [AuthGuard],
-        loadChildren: './task/task.module#TaskModule'
-    },
-    {
-        path: 'receipt',
-        canActivate: [AuthGuard],
-        loadChildren: './receipt/receipt.module#ReceiptModule'
-    },
-    {
-        path: 'complaint',
-        canActivate: [AuthGuard],
-        loadChildren: './complaint/complaint.module#ComplaintModule'
     }
 ]
 }, {

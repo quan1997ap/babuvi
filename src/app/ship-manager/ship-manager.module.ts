@@ -22,12 +22,8 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShipManagerRoutes } from './ship-manager.routing';
 import { OrdersComponent } from './orders/orders.component';
-import { OrdersManagerComponent } from './orders-manager/orders-manager.component';
 import { ShipManagerService } from 'app/services/ship-manager.service';
-import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { OrderDetailService } from 'app/services/order-detail.service';
-import {PaymentOrdersModule} from '../payment-orders/payment-orders.module';
-import {PaymentOrdersComponent} from '../payment-orders/payment-orders.component';
 import { CurrencyFormat } from '../common/pipe-format-money.component';
 import { ShareCommonModule } from '../common/share-common.module';
 import {DialogModule} from 'primeng/dialog';
@@ -36,7 +32,6 @@ import {CalendarModule} from 'primeng/calendar';
 import { MessagesModule } from 'primeng/primeng';
 import { MessageService } from 'primeng/api';
 import {DropdownModule} from 'primeng/dropdown';
-import {DeliveryModule} from "../delivery/delivery.module";
 import { ConfirmDialogComponent } from 'app/common-view/confirm-dialog/confirm-dialog.component';
 import { CommonViewModule } from 'app/common-view/common-view.module';
 import { CustomUrlSerializer } from './custom-url-serializer';
@@ -63,11 +58,9 @@ import { ConsignmentOrdersComponent } from './consignment-orders/consignment-ord
     MatToolbarModule,
     MatListModule,
     MatDialogModule,
-    PaymentOrdersModule,
     ShareCommonModule,
     MessagesModule,
     MatProgressSpinnerModule,
-    DeliveryModule,
     MatPaginatorModule,
     CommonViewModule,
     DialogModule,
@@ -77,9 +70,7 @@ import { ConsignmentOrdersComponent } from './consignment-orders/consignment-ord
    ],
   declarations: [
     OrdersComponent,
-    OrdersManagerComponent,
     ConsignmentOrdersComponent,
-    OrderDetailComponent
   ],
   providers: [
     ShipManagerService,
@@ -87,7 +78,6 @@ import { ConsignmentOrdersComponent } from './consignment-orders/consignment-ord
     MessageService,
     { provide: UrlSerializer, useClass: CustomUrlSerializer },
   ],
-    entryComponents: [PaymentOrdersComponent]
 })
 
 export class ShipManagerModule {}

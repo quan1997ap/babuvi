@@ -87,6 +87,12 @@ export class MerchandiseServices extends ApiService {
         return this.get(this.apiBaseController + ApiApplication.merchandise.getDeliveryAddressDefault);
     }
 
+    getMerchandiseByCode(merchandiseCode) {
+        const param = '?merchandiseCode=' + merchandiseCode;
+        return this.get(this.apiBaseController + ApiApplication.merchandise.getMerchandiseByCode + param);
+    }
+
+
     getLsMerchandiseInWhByOrderId(orderId) {
         const param = '?orderId=' + orderId;
         return this.get(this.apiBaseController + ApiApplication.merchandise.getLsMerchandiseInWhByOrderId + param);

@@ -17,13 +17,7 @@ import {WarehouseExpService} from 'app/services/warehouse-exp.service';
 import {MerchandiseServices} from 'app/services/merchandise.services';
 import { SystemService } from 'app/services/system.services';
 //component
-import {ListMerchandiseComponent} from './list-merchandise/list-merchandise.component';
-import {ListMerchandiseManagerComponent} from './list-merchandise-manager/list-merchandise-manager.component';
-import {PaymentOrdersComponent} from '../payment-orders/payment-orders.component';
-import {PaymentOrdersModule} from '../payment-orders/payment-orders.module';
 import { MerchandiseDeliveryComponent } from './delivery/merchandise-delivery.component';
-import { HistoryDialogComponent } from './add/history-dialog/history-dialog.component';
-import {AddMerchandiseComponent} from './add/add-merchandise.component';
 import { PrintBillComponent } from './delivery/print-bill/print-bill.component';
 //primeng service
 import { ConfirmationService } from 'primeng/api';
@@ -49,7 +43,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         MatProgressSpinnerModule,
         MatTableModule,
         MatPaginatorModule,
-        PaymentOrdersModule,
         NgxPrintModule,
         NgxBarcodeModule,
         CalendarModule,
@@ -61,12 +54,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         ProgressSpinnerModule
     ],
     declarations: [
-        AddMerchandiseComponent,
-        HistoryDialogComponent,
         MerchandiseDeliveryComponent,
         PrintBillComponent,
-        ListMerchandiseComponent,
-        ListMerchandiseManagerComponent
     ],
     providers: [
         MerchandiseServices,
@@ -77,8 +66,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         MessageService
     ],
     entryComponents: [
-        HistoryDialogComponent,
-        PaymentOrdersComponent,
         PrintBillComponent
     ]
 })

@@ -1,3 +1,4 @@
+import { MerchandiseServices } from 'app/services/merchandise.services';
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -9,7 +10,7 @@ import {Warehouse} from "../../model/warehouse.model";
 import {Storekeeper} from "../../model/storekeeper.model";
 import { ColumnMode, SelectionType } from "@swimlane/ngx-datatable";
 import { ActivatedRoute } from "@angular/router";
-import {Location} from "@angular/common"
+import {Location} from "@angular/common";
 //Service
 import {WarehouseImpService} from "app/services/warehouse-imp.service";
 import { SystemService } from 'app/services/system.services';
@@ -60,6 +61,7 @@ export class AddWarehouseImpComponent implements OnInit {
 
     constructor(
         private warehouseImpService: WarehouseImpService,
+        private merchandiseServices: MerchandiseServices,
         private systemService: SystemService,
         private userService: UserService,
         private changeDetectorRef: ChangeDetectorRef,
@@ -337,6 +339,71 @@ export class AddWarehouseImpComponent implements OnInit {
             this.warehouseImp = new WarehouseImp();
             this.warehouseImpDetailList = [];
         });
+    }
+
+
+    async checkMerchandiseCode(event,merchandiseCode)
+    {
+        if(merchandiseCode != null)
+        {
+            await this.merchandiseServices.getMerchandiseByCode(merchandiseCode).toPromise()
+            .then(async res => {
+                if (res.result.success) {
+                    if(res.result.data != null)
+                    {
+                        //hiển thị dữ liệu đơn hàng của kiện hàng
+                        //Next sang control tiếp theo
+                        this.nextFocus(event);
+                    }
+                    else
+                    {
+                        //hiển thị thông báo đơn hàng chưa được map vào kiện hàng
+                        await this.confirmationService.confirm({
+                            key: "comfirmOrder",
+                            header: "Xác nhận",
+                            message: `Kiện hàng chưa được khai báo.`,
+                            acceptLabel: "Khai báo",
+                            rejectLabel: "Bỏ qua",
+                            accept: () => {
+                            //   this.loading = true;
+                            //   this.taskServices.updateTaskStatus({
+                            //     TaskId: this.currentTaskId,
+                            //     Content: this.data.content,
+                            //     DueDate: this.data.dueDate,
+                            //     Type: this.data.type,
+                            //     Status: this.currentStatus,
+                            //     taskReasionId: this.currentLyDo,
+                            //     Amount: this.data.amount
+                            //   }).toPromise().then((data) => {
+                            //     if (data.result.success) {
+                            //       console.log(data)
+                            //       this.oldStatus = this.currentStatus;
+                            //       this.currentLyDo = null;
+                            //       this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
+                            //       this.loading = false;
+                            //     } else {
+                            //       this.currentStatus = this.oldStatus;
+                            //       this.loading = false;
+                            //       this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
+                            //     }
+                            //   })
+                            },
+                            reject: () => {
+                            //   this.currentStatus = this.oldStatus;
+                            }
+                          });
+                    }
+                } else {
+                    
+                }
+            }).catch(() => {
+               
+            });
+        }
+        else{
+            //Hiển thị thông báo bắt buộc phải nhập mã vận đơn
+        }
+        
     }
 
     /**

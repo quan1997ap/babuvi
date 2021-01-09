@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import {WarehouseImpService} from "app/services/warehouse-imp.service";
 import { SystemService } from 'app/services/system.services';
 import { UserService } from 'app/services/user.service';
+import { MerchandiseServices } from 'app/services/merchandise.services';
 
 @NgModule({
     declarations: [AddWarehouseImpComponent],
@@ -36,7 +37,8 @@ import { UserService } from 'app/services/user.service';
         SystemService,
         UserService,
         ConfirmationService,
-        MessageService
+        MessageService,
+        MerchandiseServices
     ]
 })
 export class WarehouseImpModule {
