@@ -9,8 +9,9 @@ $c_border: #e8e8e8;
 $c_alert: #d90000;
 $col-left-md-width: 35%;
 
+
 .form-row {
-  align-items: center;
+  align-items: flex-start;
 }
 .col-left,
 .col-right {
@@ -18,8 +19,8 @@ $col-left-md-width: 35%;
 }
 
 .capture {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   text-align: initial;
   line-height: 50px;
   border: 1px solid #ddd;
@@ -30,12 +31,24 @@ $col-left-md-width: 35%;
   justify-content: center;
   align-items: center;
   text-align: center;
-  &:hover{
+  &:hover {
     border: none;
     background-color: #ddd !important;
   }
 }
 
+.highlight-txt {
+  color: $c_primary-color;
+}
+.remove-warehouseImp {
+  background-color: $c_primary-color;
+}
+
+.table-statistic {
+  background: $c_primary-color;
+  color: #fff;
+  padding: 8px;
+}
 @media (min-width: 768px) {
   .col-left {
     width: $col-left-md-width;

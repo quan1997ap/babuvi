@@ -3,11 +3,26 @@
   justify-content: center;
   min-height: 380px;
   position: relative;
-  .toggle-webcam{
+  .toggle-webcam {
     z-index: 1;
     position: absolute;
     right: 0;
     top: 0;
+  }
+}
+.view-img {
+  display: flex;
+  justify-content: center;
+  min-height: 380px;
+  position: relative;
+  .continue-capture {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .zoom-img {
+    height: 480px;
   }
 }
 
@@ -23,4 +38,31 @@
   margin-top: 20px;
   border-top: 1px solid #dddddd;
   padding-top: 12px;
+  display: flex;
+  .imgs {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    .snapshot {
+      cursor: pointer;
+      margin-right: 4px;
+      position: relative;
+      .remove-btn {
+        position: absolute;
+        right: 0;
+        top: 0px;
+        cursor: pointer;
+        display: block;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border: 1px solid red;
+        border-radius: 50%;
+        i {
+          color: red;
+          font-size: 14px;
+        }
+      }
+    }
+  }
 }

@@ -179,6 +179,19 @@ export class AddWarehouseImpComponent implements OnInit {
     this.nextFocus(event);
   }
 
+  deleteAllWarehouseImpDetail(){
+    this.warehouseImpDetailList.length = 0;
+  }
+
+  deleteOneWarehouseImpDetail(index){
+    this.warehouseImpDetailList.splice(index, 11)
+  }
+
+  // sumWeight(){
+  //   let sum = this.warehouseImpDetailList.reduce(function (accumulator, current) {
+  //     return accumulator + current;
+  // })
+
   /**
    * Complete warehouse import
    * @param form
@@ -455,8 +468,8 @@ export class AddWarehouseImpComponent implements OnInit {
 
   async captureMerchandise() {
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
-      header: "Choose a Car",
-      width: "70%"
+      header: "Chụp ảnh kiện hàng",
+      width: "700px"
     });
   }
 

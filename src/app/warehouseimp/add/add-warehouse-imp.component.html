@@ -88,10 +88,14 @@
                                             trống</small>
                                     </div>
                                 </div>
-                                <button class="capture" pButton pRipple (click)="captureMerchandise()" type="button">
-                                    <i class="pi pi-image"
-                                        style="font-size: 44px; margin-left: 8px;color: #848484; text-align: center;"></i>
-                                </button>
+                                <div class="form-group" *ngIf="warehouseImpDetail.merchandiseCode">
+                                    <label for="shelfPosition">&nbsp;</label>
+                                    <button class="capture" pButton pRipple (click)="captureMerchandise()"
+                                        type="button">
+                                        <i class="pi pi-image"
+                                            style="font-size: 44px; margin-left: 8px;color: #848484; text-align: center;"></i>
+                                    </button>
+                                </div>
                                 <div class="form-group col-sm">
                                     <label for="shelfPosition">Mã vị trí</label>
                                     <input type="text" class="form-control" id="shelfPosition" name="shelfPosition"
@@ -137,38 +141,54 @@
                             </div>
                         </form>
                     </div>
-                    <!--<div class="warehouse-imp-detail p-sm-3">-->
                     <div class="warehouse-imp-detail">
+                        <!-- <div class="warehouse-imp-action d-flex">
+                            <div class="delete action" (click)="delete()">Xóa tất cả</div>
+                        </div> -->
                         <div class="warehouse-imp-action d-flex">
-                            <div class="delete action" (click)="delete()">Xóa</div>
+                            <div class="delete action" (click)="deleteAllWarehouseImpDetail()">Xóa tất cả</div>
+                        </div>
+                        <div class="table-statistic">
+                            Tổng kiện: {{warehouseImpDetailList.length}} | Tổng cân nặng
                         </div>
                         <ngx-datatable class="material" rowHeight="auto" [rows]="warehouseImpDetailList"
-                            [messages]="tableMessage" [columnMode]="columnMode.force" [headerHeight]="45"
-                            [footerHeight]="45" [limit]="5" [selected]="selected"
+                            [headerHeight]="0" [messages]="tableMessage" [columnMode]="columnMode.force"
+                            [headerHeight]="45" [footerHeight]="45" [limit]="5" [selected]="selected"
                             [selectionType]="selectionType.checkbox" [selectAllRowsOnPage]="false"
                             (select)="onSelect($event)">
-                            <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false"
-                                [draggable]="false" [resizeable]="false" [headerCheckboxable]="true"
-                                [checkboxable]="true">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column prop="merchandiseCode" name="Mã kiện"></ngx-datatable-column>
-                            <ngx-datatable-column prop="netWeight" name="Cân nặng">
-                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span *ngIf="value">{{value}} kg</span>
-                                </ng-template>
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Thể tích">
+                            <ngx-datatable-column [minWidth]="120">
                                 <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span *ngIf="row.length && row.width && row.height">{{row.length}} x {{row.width}}
-                                        x {{row.height}}</span>
+                                    <img [src]="">
                                 </ng-template>
                             </ngx-datatable-column>
-                            <ngx-datatable-column prop="chargedWeight" name="Quy đổi">
-                                <ng-template let-value="value" ngx-datatable-cell-template>
-                                    <span *ngIf="value">{{value}} kg</span>
+                            <ngx-datatable-column [minWidth]="200">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div *ngIf="row.merchandiseCode" pTooltip={{row.merchandiseCode}}>
+                                        {{row.merchandiseCode}}</div>
+                                    <div *ngIf="row.shelfPosition" pTooltip={{row.shelfPosition}}>{{row.shelfPosition}}
+                                    </div>
+                                    <div></div>
                                 </ng-template>
                             </ngx-datatable-column>
-                            <ngx-datatable-column prop="shelfPosition" name="Mã vị trí">
+                            <ngx-datatable-column [minWidth]="270">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div>Cân nặng: <span class="highlight-txt">{{row.netWeight}}</span></div>
+                                    <div>Thể tích:
+                                        <span class="highlight-txt" *ngIf="row.length && row.width && row.height">
+                                            {{row.length}} x
+                                            {{row.width}} x
+                                            {{row.height}}
+                                            ( {{row.length && row.width && row.height}} kg )
+                                        </span>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [minWidth]="120">
+                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex" >
+                                    <button class="btn remove-warehouseImp" (click)="deleteOneWarehouseImpDetail(rowIndex)">
+                                        Xóa
+                                    </button>
+                                </ng-template>
                             </ngx-datatable-column>
                         </ngx-datatable>
                     </div>
