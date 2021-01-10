@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {HttpService} from './common/http.service';
 import {ApiApplication} from 'app/config/app.config';
 import {ApiService} from './common/api.service';
-import {Merchandise} from '../model/merchandise.model';
+import {Merchandise, MerchandiseAddPrams} from '../model/merchandise.model';
 import {DeliveryRequest} from '../model/body/delivery-request.model';
 
 @Injectable()
@@ -22,6 +22,10 @@ export class MerchandiseServices extends ApiService {
     }
 
     saveMerchandise(data: Merchandise) {
+        return this.post(this.apiBaseController + ApiApplication.merchandise.addMerchandise, data);
+    }
+
+    addMerchandise(data: MerchandiseAddPrams) {
         return this.post(this.apiBaseController + ApiApplication.merchandise.addMerchandise, data);
     }
 

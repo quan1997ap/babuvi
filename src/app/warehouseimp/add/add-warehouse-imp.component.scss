@@ -6,11 +6,34 @@ $c_status-1-background: green;
 $c_status_default: blue;
 $c_white: #fff;
 $c_border: #e8e8e8;
-$c_alert:#d90000;
+$c_alert: #d90000;
 $col-left-md-width: 35%;
 
-.col-left, .col-right {
+.form-row {
+  align-items: center;
+}
+.col-left,
+.col-right {
   width: 100%;
+}
+
+.capture {
+  width: 50px;
+  height: 50px;
+  text-align: initial;
+  line-height: 50px;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+  background: #e9ecef;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  &:hover{
+    border: none;
+    background-color: #ddd !important;
+  }
 }
 
 @media (min-width: 768px) {
@@ -34,7 +57,6 @@ $col-left-md-width: 35%;
   border-top: 2px solid $c_primary-color;
   display: table;
 }
-
 
 .btn-primary {
   background-color: $c_primary-color;
@@ -101,14 +123,13 @@ $col-left-md-width: 35%;
   }
 }
 
-
 @media (min-width: 576px) {
   .label-hide {
     visibility: hidden;
   }
 }
 
-@media(max-width: 580px) {
+@media (max-width: 580px) {
   /deep/ {
     .ngx-datatable.material {
       .datatable-header {
@@ -129,8 +150,6 @@ $col-left-md-width: 35%;
     }
   }
 }
-
-
 
 //Status
 /deep/ {
@@ -156,7 +175,7 @@ $col-left-md-width: 35%;
 }
 
 [data-icon]:before {
-  font-family: 'data-table' !important;
+  font-family: "data-table" !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -169,9 +188,9 @@ $col-left-md-width: 35%;
 }
 
 /deep/ {
-  [class^='datatable-icon-']:before,
-  [class*=' datatable-icon-']:before {
-    font-family: 'data-table' !important;
+  [class^="datatable-icon-"]:before,
+  [class*=" datatable-icon-"]:before {
+    font-family: "data-table" !important;
     font-style: normal !important;
     font-weight: normal !important;
     font-variant: normal !important;
@@ -183,67 +202,67 @@ $col-left-md-width: 35%;
   }
 
   .datatable-icon-filter:before {
-    content: '\62';
+    content: "\62";
   }
 
   .datatable-icon-collapse:before {
-    content: '\61';
+    content: "\61";
   }
 
   .datatable-icon-expand:before {
-    content: '\63';
+    content: "\63";
   }
 
   .datatable-icon-close:before {
-    content: '\64';
+    content: "\64";
   }
 
   .datatable-icon-up:before {
-    content: '\65';
+    content: "\65";
   }
 
   .datatable-icon-down:before {
-    content: '\66';
+    content: "\66";
   }
 
   .datatable-icon-sort:before {
-    content: '\67';
+    content: "\67";
   }
 
   .datatable-icon-done:before {
-    content: '\68';
+    content: "\68";
   }
 
   .datatable-icon-done-all:before {
-    content: '\69';
+    content: "\69";
   }
 
   .datatable-icon-search:before {
-    content: '\6a';
+    content: "\6a";
   }
 
   .datatable-icon-pin:before {
-    content: '\6b';
+    content: "\6b";
   }
 
   .datatable-icon-add:before {
-    content: '\6d';
+    content: "\6d";
   }
 
   .datatable-icon-left:before {
-    content: '\6f';
+    content: "\6f";
   }
 
   .datatable-icon-right:before {
-    content: '\70';
+    content: "\70";
   }
 
   .datatable-icon-skip:before {
-    content: '\71';
+    content: "\71";
   }
 
   .datatable-icon-prev:before {
-    content: '\72';
+    content: "\72";
   }
 }
 
@@ -286,7 +305,7 @@ $col-left-md-width: 35%;
 }
 
 /deep/ {
-  .alert-no-bg{
+  .alert-no-bg {
     border: none !important;
     background: transparent;
     color: $c_alert;
@@ -294,7 +313,7 @@ $col-left-md-width: 35%;
 }
 
 /deep/ .spinner-wrapper {
-  background-color: rgba(0, 0, 0, .1);
+  background-color: rgba(0, 0, 0, 0.1);
   position: fixed;
   width: 100%;
   height: 100%;

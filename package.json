@@ -61,6 +61,7 @@
     "ngx-perfect-scrollbar": "5.0.0-7",
     "ngx-print": "^1.2.0-beta.4",
     "ngx-spinner": "^9.0.1",
+    "ngx-webcam": "^0.2.6",
     "node-sass": "^4.13.1",
     "perfect-scrollbar": "^1.4.0",
     "primeflex": "^1.0.0",

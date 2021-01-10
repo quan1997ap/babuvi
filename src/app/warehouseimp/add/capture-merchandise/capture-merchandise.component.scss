@@ -1,0 +1,26 @@
+.webcam {
+  display: flex;
+  justify-content: center;
+  min-height: 380px;
+  position: relative;
+  .toggle-webcam{
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.allow-switch {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.gr-action-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  border-top: 1px solid #dddddd;
+  padding-top: 12px;
+}

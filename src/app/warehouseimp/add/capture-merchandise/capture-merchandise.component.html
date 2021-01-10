@@ -1,0 +1,52 @@
+<div>
+  <div class="webcam">
+    <p-button class="toggle-webcam" icon="pi pi-refresh" (click)="toggleWebcam()"></p-button>
+    <webcam [height]="500" [width]="600" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+      *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+      [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)">
+    </webcam>
+  </div>
+  <br />
+  <div class="gr-action-btn">
+
+    <!-- <p-carousel [value]="products" [numVisible]="3" [numScroll]="3" [circular]="false"
+      [responsiveOptions]="responsiveOptions">
+      <ng-template pTemplate="header">
+        <h5>Basic</h5>
+      </ng-template>
+      <ng-template let-product pTemplate="item">
+        <div class="product-item">
+          <div class="product-item-content">
+            <div class="p-mb-3">
+              <img src="assets/showcase/images/demo/product/{{product.image}}" [alt]="product.name"
+                class="product-image" />
+            </div>
+            <div>
+              <h4 class="p-mb-1">{{product.name}}</h4>
+              <h6 class="p-mt-0 p-mb-3">${{product.price}}</h6>
+              <span
+                [class]="'product-badge status-'+product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span>
+              <div class="car-buttons p-mt-5">
+                <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search"></p-button>
+                <p-button type="button" styleClass="p-button-success p-button-rounded p-mr-2" icon="pi pi-star">
+                </p-button>
+                <p-button type="button" styleClass="p-button-help p-button-rounded" icon="pi pi-cog"></p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel> -->
+
+    <p-button label="Chụp ảnh" class="p-button-secondary" icon="pi pi-camera" (click)="triggerSnapshot();"></p-button>
+    <span>&nbsp;&nbsp;</span>
+    <p-button label="Dừng chụp" class="p-button-secondary" (click)="close();"></p-button>
+  </div>
+  <br />
+</div>
+<div *ngIf="errors.length > 0">
+  <h4>CAMERA ERROR:</h4>
+  <ul *ngFor="let error of errors">
+    <li>{{error | json}}</li>
+  </ul>
+</div>
