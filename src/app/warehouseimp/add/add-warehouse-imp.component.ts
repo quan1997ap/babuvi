@@ -150,47 +150,72 @@ export class AddWarehouseImpComponent implements OnInit {
    * @param event
    */
   saveWarehouseImpDetail(form, event) {
-    if (this.checkEditExistingMerchandise()) {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "error",
-        summary: "Thông báo",
-        detail: "Kiện hàng đã tồn tại trong danh sách",
+    console.log(form.value);
+    this.merchandiseServices
+      .getMerchandiseByCode(form.value.merchandiseCode)
+      .subscribe((resCheck) => {
+        if (resCheck.result.success) {
+          // check tồn tại trong danh list chưa
+          if (this.checkEditExistingMerchandise()) {
+            this.messageService.add({
+              key: "notificationPopup",
+              severity: "error",
+              summary: "Thông báo",
+              detail: "Kiện hàng đã tồn tại trong danh sách",
+            });
+            return;
+          }
+          const selfPosition = this.warehouseImpDetail.shelfPosition;
+          if (this.isEditWarehouseImpDetails) {
+            // Because warehouse import detail data is pass by reference to form data, just refresh list with this way
+            this.warehouseImpDetailList = [...this.warehouseImpDetailList];
+          } else {
+            // Push new warehouse import detail data to list and refresh list
+            this.warehouseImpDetailList = [
+              this.warehouseImpDetail,
+              ...this.warehouseImpDetailList,
+            ];
+          }
+          // Because warehouse import detail data is pass by reference to form data, need to init new warehouse import detail and reset form
+          this.warehouseImpDetail = new WarehouseImpDetail();
+          // form.resetForm();
+          this.warehouseImpDetail.shelfPosition = selfPosition;
+          this.isEditWarehouseImpDetails = false;
+          this.selected = [];
+          this.nextFocus(event);
+        } else {
+          this.messageService.add({
+            key: "notificationPopup",
+            severity: "error",
+            summary: "Thông báo",
+            detail: "Kiện hàng chưa được khai báo",
+          });
+        }
       });
-      return;
-    }
-    const selfPosition = this.warehouseImpDetail.shelfPosition;
-    if (this.isEditWarehouseImpDetails) {
-      // Because warehouse import detail data is pass by reference to form data, just refresh list with this way
-      this.warehouseImpDetailList = [...this.warehouseImpDetailList];
+  }
+
+  deleteAllWarehouseImpDetail() {
+    this.delete(this.warehouseImpDetailList);
+  }
+
+  deleteOneWarehouseImpDetail(warehouseImp, index) {
+    console.log(warehouseImp);
+    if (warehouseImp && warehouseImp.warehouseImpDetailId) {
+      this.delete([warehouseImp]);
     } else {
-      // Push new warehouse import detail data to list and refresh list
-      this.warehouseImpDetailList = [
-        this.warehouseImpDetail,
-        ...this.warehouseImpDetailList,
-      ];
+      this.warehouseImpDetailList.splice(index, 1);
     }
-    // Because warehouse import detail data is pass by reference to form data, need to init new warehouse import detail and reset form
-    this.warehouseImpDetail = new WarehouseImpDetail();
-    // form.resetForm();
-    this.warehouseImpDetail.shelfPosition = selfPosition;
-    this.isEditWarehouseImpDetails = false;
-    this.selected = [];
-    this.nextFocus(event);
   }
 
-  deleteAllWarehouseImpDetail(){
-    this.warehouseImpDetailList.length = 0;
+  sumWeight() {
+    let sum = 0;
+    this.warehouseImpDetailList.forEach((warehouseImp) => {
+      if (warehouseImp.netWeight && warehouseImp.netWeight > 0) {
+        sum += warehouseImp.netWeight;
+      }
+    });
+    return sum;
   }
-
-  deleteOneWarehouseImpDetail(index){
-    this.warehouseImpDetailList.splice(index, 11)
-  }
-
-  // sumWeight(){
-  //   let sum = this.warehouseImpDetailList.reduce(function (accumulator, current) {
-  //     return accumulator + current;
-  // })
 
   /**
    * Complete warehouse import
@@ -198,6 +223,7 @@ export class AddWarehouseImpComponent implements OnInit {
    */
   completeWarehouseImp(form) {
     if (form.valid) {
+      console.log(this.warehouseImp);
       this.warehouseImp.lsDetail = this.warehouseImpDetailList;
       this.warehouseImp.changeUserId = this.userId;
       this.loading = true;
@@ -243,7 +269,8 @@ export class AddWarehouseImpComponent implements OnInit {
   /**
    * Delete warehouse import details
    */
-  delete() {
+  delete(warehouseImpDetailList) {
+    this.selected = Object.assign([], warehouseImpDetailList);
     if (this.selected.length > 0) {
       if (confirm("Bạn có chắc chắn muốn xóa?")) {
         let deleteApiIds = this.selected
@@ -469,7 +496,7 @@ export class AddWarehouseImpComponent implements OnInit {
   async captureMerchandise() {
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
       header: "Chụp ảnh kiện hàng",
-      width: "700px"
+      width: "700px",
     });
   }
 
@@ -481,11 +508,12 @@ export class AddWarehouseImpComponent implements OnInit {
         .then(async (res) => {
           if (res.result.success) {
             if (res.result.data != null) {
-              //hiển thị dữ liệu đơn hàng của kiện hàng
-              //Next sang control tiếp theo
+              // hiển thị dữ liệu đơn hàng của kiện hàng
+              // Next sang control tiếp theo
               this.nextFocus(event);
             } else {
               //hiển thị thông báo đơn hàng chưa được map vào kiện hàng
+              this.newMerchandiseCode = '';
               await this.confirmationService.confirm({
                 key: "comfirmOrder",
                 header: "Xác nhận",
@@ -495,40 +523,38 @@ export class AddWarehouseImpComponent implements OnInit {
                 accept: () => {
                   const params: MerchandiseAddPrams = {
                     merchandiseCode: this.newMerchandiseCode,
-                    orderId: 16,
                     createdUserId: this.userId,
                   };
+                  this.loading = true;
                   this.merchandiseServices
                     .addMerchandise(params)
                     .subscribe((resAddAddMerchandise) => {
-                      console.log(resAddAddMerchandise);
+                      if (resAddAddMerchandise.result.success) {
+                        this.messageService.add({
+                          key: "notificationPopup",
+                          severity: "success",
+                          summary: "Thông báo",
+                          detail: "Cập nhật thành công!",
+                        });
+                      } else {
+                        this.messageService.add({
+                          key: "notificationPopup",
+                          severity: "error",
+                          summary: "Thông báo",
+                          detail: resAddAddMerchandise.result.message,
+                        });
+                      }
+                      this.loading = false;
                     });
-                  //   this.loading = true;
-                  //   this.taskServices.updateTaskStatus({
-                  //     TaskId: this.currentTaskId,
-                  //     Content: this.data.content,
-                  //     DueDate: this.data.dueDate,
-                  //     Type: this.data.type,
-                  //     Status: this.currentStatus,
-                  //     taskReasionId: this.currentLyDo,
-                  //     Amount: this.data.amount
-                  //   }).toPromise().then((data) => {
-                  //     if (data.result.success) {
-                  //       console.log(data)
-                  //       this.oldStatus = this.currentStatus;
-                  //       this.currentLyDo = null;
-                  //       this.messageService.add({ key: 'chitietcv', severity: 'success', summary: 'Thông báo', detail: "Cập nhật thành công!" });
-                  //       this.loading = false;
-                  //     } else {
-                  //       this.currentStatus = this.oldStatus;
-                  //       this.loading = false;
-                  //       this.messageService.add({ key: 'chitietcv', severity: 'error', summary: 'Thông báo', detail: data.result.message });
-                  //     }
-                  //   })
                 },
                 reject: () => {
-                  //   this.currentStatus = this.oldStatus;
-                  this.newMerchandiseCode = "";
+                  this.loading = false;
+                  this.messageService.add({
+                    key: "notificationPopup",
+                    severity: "error",
+                    summary: "Thông báo",
+                    detail: "Có lỗi xảy ra",
+                  });
                 },
               });
             }
@@ -599,6 +625,7 @@ export class AddWarehouseImpComponent implements OnInit {
         return warehouseImpDetail;
       });
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   /**

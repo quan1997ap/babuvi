@@ -99,7 +99,7 @@
                                 <div class="form-group col-sm">
                                     <label for="shelfPosition">Mã vị trí</label>
                                     <input type="text" class="form-control" id="shelfPosition" name="shelfPosition"
-                                        disabled="true" ngModel [(ngModel)]="warehouseImpDetail.shelfPosition">
+                                        ngModel [(ngModel)]="warehouseImpDetail.shelfPosition">
                                 </div>
                             </div>
 
@@ -142,14 +142,11 @@
                         </form>
                     </div>
                     <div class="warehouse-imp-detail">
-                        <!-- <div class="warehouse-imp-action d-flex">
-                            <div class="delete action" (click)="delete()">Xóa tất cả</div>
-                        </div> -->
                         <div class="warehouse-imp-action d-flex">
                             <div class="delete action" (click)="deleteAllWarehouseImpDetail()">Xóa tất cả</div>
                         </div>
                         <div class="table-statistic">
-                            Tổng kiện: {{warehouseImpDetailList.length}} | Tổng cân nặng
+                            Tổng kiện: {{warehouseImpDetailList.length}} | Tổng cân nặng {{sumWeight()}} kg
                         </div>
                         <ngx-datatable class="material" rowHeight="auto" [rows]="warehouseImpDetailList"
                             [headerHeight]="0" [messages]="tableMessage" [columnMode]="columnMode.force"
@@ -164,8 +161,12 @@
                             <ngx-datatable-column [minWidth]="200">
                                 <ng-template let-row="row" ngx-datatable-cell-template>
                                     <div *ngIf="row.merchandiseCode" pTooltip={{row.merchandiseCode}}>
-                                        {{row.merchandiseCode}}</div>
-                                    <div *ngIf="row.shelfPosition" pTooltip={{row.shelfPosition}}>{{row.shelfPosition}}
+                                        <strong>{{row.merchandiseCode}}</strong>
+                                        <span>{{row.warehouseImpDetailId}}</span>
+                                        
+                                    </div>
+                                    <div *ngIf="row.shelfPosition" pTooltip={{row.shelfPosition}}>
+                                        Vị trí: {{row.shelfPosition}}
                                     </div>
                                     <div></div>
                                 </ng-template>
@@ -184,8 +185,9 @@
                                 </ng-template>
                             </ngx-datatable-column>
                             <ngx-datatable-column [minWidth]="120">
-                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex" >
-                                    <button class="btn remove-warehouseImp" (click)="deleteOneWarehouseImpDetail(rowIndex)">
+                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                                    <button class="btn remove-warehouseImp"
+                                        (click)="deleteOneWarehouseImpDetail(row)">
                                         Xóa
                                     </button>
                                 </ng-template>
@@ -211,7 +213,7 @@
     <p-footer>
         <div>
             <label style="display: block; text-align: left;">Nhập mã đơn hàng để khai báo.</label>
-            <input type="text" class="form-control" id="orderCode" name="orderCode" placeholder="Mã đơn hàng" ngModel
+            <input type="text" autocomplete="off" class="form-control" id="orderCode" name="orderCode" placeholder="Mã đơn hàng" ngModel
                 [(ngModel)]="newMerchandiseCode">
             <br><br>
         </div>

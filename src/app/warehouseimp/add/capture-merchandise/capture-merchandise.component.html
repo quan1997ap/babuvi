@@ -1,21 +1,15 @@
 <div style="width: 100%;margin: 0 auto; max-width: 700px;">
   <div class="webcam" *ngIf="currentAction == 'capture' ">
-    <p-button class="toggle-webcam" pTooltip="Chuyển Camera" icon="pi pi-refresh" (click)="toggleWebcam()"></p-button>
     <webcam [height]="500" [width]="640" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
       *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
       [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)">
     </webcam>
   </div>
   <div class="view-img" *ngIf="currentAction !== 'capture'">
-    <p-button class="continue-capture" pTooltip="Tiếp tục chụp" label="Tiếp tục chụp" (click)="changeAction('capture')">
-    </p-button>
-    <img *ngIf="currentZoomImg && currentZoomImg.imageAsDataUrl" [src]="currentZoomImg.imageAsDataUrl" class="zoom-img"/>
+    <img *ngIf="currentZoomImg && currentZoomImg.imageAsDataUrl" [src]="currentZoomImg.imageAsDataUrl"
+      class="zoom-img" />
   </div>
   <br />
-
-  <input type="file" name="file" id="file" (change)="onFileChanged($event)" />
-
-
   <div class="gr-action-btn">
     <div class="imgs">
       <div class="snapshot" *ngFor="let webcamImage of webcamImages; let i = index;">
@@ -26,10 +20,14 @@
         </span>
       </div>
     </div>
-    <p-button label="Chụp ảnh" class="p-button-secondary" icon="pi pi-camera" (click)="triggerSnapshot();"></p-button>
+    <p-button class="continue-capture" *ngIf="currentAction !== 'capture' " pTooltip="Tiếp tục" label="Tiếp tục chụp" (click)="changeAction('capture')">
+    </p-button>
     <span>&nbsp;&nbsp;</span>
-    <p-button label="onUpload" class="p-button-secondary" (click)="onUpload()"></p-button>
-    <p-button label="onUpload webcamwebcam" class="p-button-secondary" (click)="close()"></p-button>
+    <p-button class="toggle-webcam" *ngIf="currentAction == 'capture' " pTooltip="Chuyển Camera" icon="pi pi-refresh" (click)="toggleWebcam()"></p-button>
+    <span>&nbsp;&nbsp;</span>
+    <p-button label="Chụp" class="p-button-secondary" icon="pi pi-camera" (click)="triggerSnapshot();"></p-button>
+    <span>&nbsp;&nbsp;</span>
+    <p-button label="onUpload" class="p-button-secondary" (click)="close()"></p-button>
   </div>
   <br />
 </div>

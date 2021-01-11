@@ -78,13 +78,14 @@ export class CaptureMerchandiseComponent implements OnInit {
   removeImg(i) {
     this.webcamImages.splice(i, 1);
   }
+
   // close
   close() {
     const formData = new FormData();
     for (const file of this.webcamImages) {
-      // var imgBlob = new Blob([file.imageAsDataUrl], { type: "image/jpg" });
       const imgBlob = this.DataURIToBlob(file.imageAsDataUrl);
-      formData.append("file", imgBlob, "image.jpg");
+      const fileName = new Date().getTime()
+      formData.append("file", imgBlob, fileName.toString());
     }
 
     this.fileManagerServices.uploadImg(formData).subscribe((res) => {

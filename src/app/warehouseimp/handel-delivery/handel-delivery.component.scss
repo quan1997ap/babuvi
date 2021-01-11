@@ -1,0 +1,23 @@
+$c_primary-color: #f15922;
+$c_status-16-background: #e10d0c;
+$c_status-15-background: orange;
+$c_status-14-background: yellow;
+$c_status-1-background: green;
+$c_status_default: blue;
+$c_white: #fff;
+$c_border: #e8e8e8;
+$c_alert: #d90000;
+$col-left-md-width: 35%;
+
+.gr-btn {
+    display: flex;
+    .btn{
+        background: $c_primary-color;
+    }
+}
+
+.handel-delivery{
+    .title{
+        border-top: 2px solid $c_primary-color;
+    }
+}

@@ -1,0 +1,31 @@
+<div autoscroll="true" class="ng-scope">
+  <div class="gr-btn">
+    <button type="button" (click)="print()" class="btn">
+      In phiếu
+    </button>
+    <button type="button" (click)="start()" class="btn">
+      Bắt đầu
+    </button>
+    <button type="button" (click)="finish()" class="btn">
+      Hoàn thành
+    </button>
+    <button type="button" (click)="stop()" class="btn">
+      Ngừng chuẩn bị
+    </button>
+  </div>
+  <div class="handel-delivery">
+    <h3 class="title">
+      XỬ LÝ YÊU CẦU GIAO HÀNG
+    </h3>
+    <form [formGroup]="filterForm">
+      <input type="text" pInputText formControlName="id" />
+      <p-dropdown [options]="filterByOptions" formControlName="filterBy" optionLabel="name"></p-dropdown>
+    </form>
+    <div class="row">
+      <div class="col-left pr-2 pl-2 mb-3 mb-md-0">
+      </div>
+      <div class="col-left pr-2 pl-2 mb-3 mb-md-0">
+      </div>
+    </div>
+  </div>
+</div>
