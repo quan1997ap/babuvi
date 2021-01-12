@@ -127,7 +127,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
       _self.infoRating = JSON.parse(localStorage.getItem("ratingInfo"));
       if (_self.infoRating) {
         clearInterval(refreshId);
-        console.log(_self.infoRating);
         //_self.rating = _self._dataParse.formatMoney(_self.infoRating.exchangeRate);
         _self.rating = _self.infoRating.exchangeRate;
         _self.balance = _self.infoRating.cashBalance;
@@ -217,7 +216,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this._menu.push(child);
       }
-    };console.log(this._menu)
+    };
   }
 
   goToExternalUrl(url){

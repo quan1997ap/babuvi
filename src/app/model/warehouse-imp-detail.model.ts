@@ -10,4 +10,5 @@ export class WarehouseImpDetail {
     width;
     height;
     shelfPosition;
+    lsImage;
 }

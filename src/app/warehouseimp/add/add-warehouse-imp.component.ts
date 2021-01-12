@@ -53,7 +53,7 @@ export class AddWarehouseImpComponent implements OnInit {
   // Data
   warehouseImp: WarehouseImp = new WarehouseImp();
   warehouseImpDetail: WarehouseImpDetail = new WarehouseImpDetail();
-  newMerchandiseCode = ""; // using for declare new Merchandise
+  orderCodeMapping = ""; // using for declare new Merchandise
   warehouseImpDetailList: WarehouseImpDetail[] = [];
   warehouseImpStatusList: ApDomain[] = [];
   warehouseList: Warehouse[];
@@ -493,10 +493,41 @@ export class AddWarehouseImpComponent implements OnInit {
       });
   }
 
+  merchandiseCodeChange(event, merchandiseCode) {
+    if( merchandiseCode.indexOf("BBV-") == 0 ){
+      this.warehouseImpDetail.shelfPosition = merchandiseCode;
+      this.warehouseImpDetail.merchandiseCode = '';
+      document.getElementById("merchandiseCode").focus();
+    }
+  }
+
   async captureMerchandise() {
+    // add ảnh
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
       header: "Chụp ảnh kiện hàng",
       width: "700px",
+      data: {
+        imgLinks: this.warehouseImpDetail.lsImage
+          ? this.warehouseImpDetail.lsImage
+          : [],
+      },
+    });
+
+    ref.onClose.subscribe((imgUploadeds: any[]) => {
+      if (imgUploadeds) {
+        this.warehouseImpDetail.lsImage = imgUploadeds;
+      }
+    });
+  }
+
+  openCaptureImages(imgs) {
+    // edit from gird
+    const ref = this.dialogService.open(CaptureMerchandiseComponent, {
+      header: "Ảnh kiện hàng",
+      width: "700px",
+      data: {
+        imgLinks: imgs,
+      },
     });
   }
 
@@ -513,7 +544,7 @@ export class AddWarehouseImpComponent implements OnInit {
               this.nextFocus(event);
             } else {
               //hiển thị thông báo đơn hàng chưa được map vào kiện hàng
-              this.newMerchandiseCode = '';
+              this.orderCodeMapping = "";
               await this.confirmationService.confirm({
                 key: "comfirmOrder",
                 header: "Xác nhận",
@@ -522,7 +553,8 @@ export class AddWarehouseImpComponent implements OnInit {
                 rejectLabel: "Bỏ qua",
                 accept: () => {
                   const params: MerchandiseAddPrams = {
-                    merchandiseCode: this.newMerchandiseCode,
+                    merchandiseCode: merchandiseCode,
+                    OrderCode: this.orderCodeMapping,
                     createdUserId: this.userId,
                   };
                   this.loading = true;
@@ -622,6 +654,10 @@ export class AddWarehouseImpComponent implements OnInit {
         warehouseImpDetail.width = item.width;
         warehouseImpDetail.height = item.height;
         warehouseImpDetail.shelfPosition = this.warehouseImpDetail.shelfPosition;
+        warehouseImpDetail.lsImage = item.lsImage.map((warehouseImpImg) => {
+          warehouseImpImg["RefId"] = warehouseImpDetail.merchandiseCode;
+          return warehouseImpImg;
+        });
         return warehouseImpDetail;
       });
     }

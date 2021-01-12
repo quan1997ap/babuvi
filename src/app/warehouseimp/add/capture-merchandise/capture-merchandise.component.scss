@@ -1,3 +1,8 @@
+.spinner-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .webcam {
   display: flex;
   justify-content: center;
@@ -44,9 +49,16 @@
     display: flex;
     overflow: auto;
     .snapshot {
+      width: 70px;
       cursor: pointer;
       margin-right: 4px;
       position: relative;
+      .img{
+        width: 70px;
+        min-width: 70px;
+        background: #ddd;
+        min-height: 50px;
+      }
       .remove-btn {
         position: absolute;
         right: 0;

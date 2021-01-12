@@ -24,5 +24,6 @@ export class Merchandise {
 
 export class MerchandiseAddPrams {
   createdUserId: number;
+  OrderCode: string;
   merchandiseCode: string;
 }
