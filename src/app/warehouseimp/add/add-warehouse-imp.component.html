@@ -81,6 +81,7 @@
                                         [(ngModel)]="warehouseImpDetail.merchandiseCode"
                                         (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value) "
                                         (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
+                                        (focusout)="merchandiseCodeCheckExist($event, merchandiseCode.value)"
                                         #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
                                         class="alert-no-bg">
@@ -89,14 +90,17 @@
                                             trống</small>
                                     </div>
                                 </div>
-                                <div class="form-group upload-img-section" *ngIf="warehouseImpDetail.merchandiseCode">
+                                <div class="form-group upload-img-section" *ngIf="warehouseImpDetail.merchandiseCode && !checkEditExistingMerchandise()">
                                     <label for="shelfPosition">&nbsp;</label>
-                                    <button *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img" class="capture" pButton pRipple (click)="captureMerchandise()"
-                                        type="button">
+                                    <button
+                                        *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img"
+                                        class="capture" pButton pRipple (click)="captureMerchandise()" type="button" pTooltip="Thêm ảnh" >
                                         <i class="pi pi-image" id="icon-upload-img"></i>
                                     </button>
                                     <ng-template #has_img>
-                                        <img class="img-uploaded" (click)="captureMerchandise()" [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'" [src]="warehouseImpDetail.lsImage[0].attachLink">
+                                        <img class="img-uploaded" (click)="captureMerchandise()"
+                                            [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
+                                            [src]="warehouseImpDetail.lsImage[0].attachLink">
                                     </ng-template>
                                 </div>
                                 <div class="form-group col-sm">
@@ -145,7 +149,7 @@
                         </form>
                     </div>
                     <div class="warehouse-imp-detail">
-                        <div class="warehouse-imp-action d-flex"  style="margin-left: 10px;">
+                        <div class="warehouse-imp-action d-flex" style="margin-left: 10px;">
                             <div class="delete action" (click)="deleteAllWarehouseImpDetail()">Xóa tất cả</div>
                         </div>
                         <div class="table-statistic">
@@ -157,10 +161,12 @@
                             [selectionType]="selectionType.checkbox" [selectAllRowsOnPage]="false"
                             (select)="onSelect($event)">
                             <ngx-datatable-column [minWidth]="120">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <img class="first-img-of-pack" *ngIf="row.lsImage && row.lsImage[0] && row.lsImage[0].attachLink; else noImg" [src]="row.lsImage[0]?.attachLink" (click)="openCaptureImages(row.lsImage)">
+                                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                    <img class="first-img-of-pack"
+                                        *ngIf="row.lsImage && row.lsImage[0] && row.lsImage[0].attachLink; else noImg"
+                                        [src]="row.lsImage[0]?.attachLink" (click)="editListImgOfMerchandise(row.lsImage)">
                                     <ng-template #noImg>
-                                        No Image
+                                        <img class="first-img-of-pack" src="assets/images/no-img.jpg" (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
                                     </ng-template>
                                 </ng-template>
                             </ngx-datatable-column>
@@ -168,10 +174,10 @@
                                 <ng-template let-row="row" ngx-datatable-cell-template>
                                     <div *ngIf="row.merchandiseCode" pTooltip={{row.merchandiseCode}}>
                                         <strong>{{row.merchandiseCode}}</strong>
-                                        <span>{{row.warehouseImpDetailId}}</span>
+                                        <!-- <span>{{row.warehouseImpDetailId}}</span> -->
                                     </div>
                                     <div *ngIf="row.shelfPosition" pTooltip={{row.shelfPosition}}>
-                                        Vị trí: {{row.shelfPosition}}
+                                        Vị trí: <strong>{{row.shelfPosition}}</strong>
                                     </div>
                                     <div></div>
                                 </ng-template>
@@ -191,13 +197,16 @@
                             </ngx-datatable-column>
                             <ngx-datatable-column [minWidth]="120">
                                 <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <button class="btn remove-warehouseImp"
-                                        (click)="deleteOneWarehouseImpDetail(row)">
+                                    <button class="btn remove-warehouseImp" (click)="deleteOneWarehouseImpDetail(row)">
                                         Xóa
                                     </button>
                                 </ng-template>
                             </ngx-datatable-column>
                         </ngx-datatable>
+
+                        <div (click)="show()">
+                            show
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,13 +227,12 @@
     <p-footer>
         <div>
             <label style="display: block; text-align: left;">Nhập mã đơn hàng để khai báo.</label>
-            <input type="text" autocomplete="off" class="form-control" id="orderCode" name="orderCode" placeholder="Mã đơn hàng" ngModel
-                [(ngModel)]="orderCodeMapping">
+            <input type="text" autocomplete="off" class="form-control" id="orderCode" name="orderCode"
+                placeholder="Mã đơn hàng" ngModel [(ngModel)]="orderCodeMapping">
             <br><br>
         </div>
         <button type="button" pButton icon="pi pi-check" label="Khai báo"
             (click)="cd.accept(orderCodeMapping)"></button>
-        <button type="button" pButton icon="pi pi-times" label="Bỏ qua"
-            (click)="cd.reject(orderCodeMapping)"></button>
+        <button type="button" pButton icon="pi pi-times" label="Bỏ qua" (click)="cd.reject(orderCodeMapping)"></button>
     </p-footer>
 </p-confirmDialog>

@@ -4,6 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { WebcamImage } from "ngx-webcam";
 import { Component, OnInit } from "@angular/core";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/api";
+import * as _ from 'lodash';
 
 @Component({
   selector: "app-capture-merchandise",
@@ -14,6 +15,7 @@ export class CaptureMerchandiseComponent implements OnInit {
   currentAction = "capture"; // "capture" , 'viewImg' , 'viewHistoryImg'
   currentZoomImg = null;
   loading = false;
+  imgUploadType = 'image/jpeg';
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -38,10 +40,8 @@ export class CaptureMerchandiseComponent implements OnInit {
   >();
 
   ngOnInit() {
-    console.log(this.config);
     if (this.config && this.config.data && this.config.data.imgLinks) {
-      this.webcamImages = this.config.data.imgLinks;
-      console.log(this.webcamImages)
+      this.webcamImages = _.cloneDeep(this.config.data.imgLinks);
     }
   }
 
@@ -121,7 +121,7 @@ export class CaptureMerchandiseComponent implements OnInit {
     if (uploadAllImgSuccess) {
       this.messageService.add({
         key: "notificationPopup",
-        severity: "successsuccess",
+        severity: "success",
         summary: "Thông báo",
         detail: "Upload image thành công.",
       });
@@ -170,13 +170,12 @@ export class CaptureMerchandiseComponent implements OnInit {
       splitDataURI[0].indexOf("base64") >= 0
         ? atob(splitDataURI[1])
         : decodeURI(splitDataURI[1]);
-    const mimeString = splitDataURI[0].split(":")[1].split(";")[0];
 
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++)
       ia[i] = byteString.charCodeAt(i);
-
-    return new Blob([ia], { type: mimeString });
+      // { type: mimeString }
+    return new Blob([ia], { type: this.imgUploadType });
   }
 
   public files: any[];

@@ -494,10 +494,22 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   merchandiseCodeChange(event, merchandiseCode) {
-    if( merchandiseCode.indexOf("BBV-") == 0 ){
+    if (merchandiseCode.indexOf("BBV-") == 0) {
       this.warehouseImpDetail.shelfPosition = merchandiseCode;
-      this.warehouseImpDetail.merchandiseCode = '';
+      this.warehouseImpDetail.merchandiseCode = "";
       document.getElementById("merchandiseCode").focus();
+    }
+  }
+
+  merchandiseCodeCheckExist(event, merchandiseCode){
+    if (this.checkEditExistingMerchandise()) {
+      this.messageService.add({
+        key: "notificationPopup",
+        severity: "error",
+        summary: "Thông báo",
+        detail: "Kiện hàng đã tồn tại trong danh sách",
+      });
+      return;
     }
   }
 
@@ -515,12 +527,17 @@ export class AddWarehouseImpComponent implements OnInit {
 
     ref.onClose.subscribe((imgUploadeds: any[]) => {
       if (imgUploadeds) {
-        this.warehouseImpDetail.lsImage = imgUploadeds;
+        // Chỉ lấy các image đã upload
+        this.warehouseImpDetail.lsImage = imgUploadeds.filter( img =>  (img.attachLink && img.attachLink.includes("https://") ) );
       }
     });
   }
 
-  openCaptureImages(imgs) {
+  show(){
+    console.log( this.warehouseImpDetailList )
+  }
+
+  editListImgOfMerchandise(imgs, indexMerchandise) {
     // edit from gird
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
       header: "Ảnh kiện hàng",
@@ -528,6 +545,14 @@ export class AddWarehouseImpComponent implements OnInit {
       data: {
         imgLinks: imgs,
       },
+    });
+
+    ref.onClose.subscribe((imgUploadeds: any[]) => {
+      if (imgUploadeds) {
+         // Chỉ lấy các image đã upload
+         console.log(imgUploadeds)
+        this.warehouseImpDetailList[indexMerchandise].lsImage = imgUploadeds.filter( img =>  (img.attachLink && img.attachLink.includes("https://") ) );
+      }
     });
   }
 
@@ -621,11 +646,15 @@ export class AddWarehouseImpComponent implements OnInit {
    * If merchandise code just entered is existing Merchandise list => edit
    */
   checkEditExistingMerchandise() {
-    const mCode = this.warehouseImpDetail.merchandiseCode.trim().toLowerCase();
-    const editingM = this.warehouseImpDetailList.find(
-      (e) => e.merchandiseCode.toLowerCase() === mCode
-    );
-    return !!editingM;
+    if(this.warehouseImpDetail.merchandiseCode){
+      const mCode = this.warehouseImpDetail.merchandiseCode.trim().toLowerCase();
+      const editingM = this.warehouseImpDetailList.find(
+        (e) => e.merchandiseCode.toLowerCase() === mCode
+      );
+      return !!editingM;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -654,10 +683,7 @@ export class AddWarehouseImpComponent implements OnInit {
         warehouseImpDetail.width = item.width;
         warehouseImpDetail.height = item.height;
         warehouseImpDetail.shelfPosition = this.warehouseImpDetail.shelfPosition;
-        warehouseImpDetail.lsImage = item.lsImage.map((warehouseImpImg) => {
-          warehouseImpImg["RefId"] = warehouseImpDetail.merchandiseCode;
-          return warehouseImpImg;
-        });
+        warehouseImpDetail.lsImage = item.lsImage;
         return warehouseImpDetail;
       });
     }
