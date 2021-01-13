@@ -94,11 +94,11 @@
                                     <label for="shelfPosition">&nbsp;</label>
                                     <button
                                         *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img"
-                                        class="capture" pButton pRipple (click)="captureMerchandise()" type="button" pTooltip="Thêm ảnh" >
+                                        class="capture" pButton pRipple (click)="captureMerchandise()" type="button" pTooltip="Thêm ảnh ( Bạn cần up tối thiểu 1 ảnh )">
                                         <i class="pi pi-image" id="icon-upload-img"></i>
                                     </button>
                                     <ng-template #has_img>
-                                        <img class="img-uploaded" (click)="captureMerchandise()"
+                                        <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="captureMerchandise()"
                                             [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
                                             [src]="warehouseImpDetail.lsImage[0].attachLink">
                                     </ng-template>
@@ -164,7 +164,7 @@
                                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                                     <img class="first-img-of-pack"
                                         *ngIf="row.lsImage && row.lsImage[0] && row.lsImage[0].attachLink; else noImg"
-                                        [src]="row.lsImage[0]?.attachLink" (click)="editListImgOfMerchandise(row.lsImage)">
+                                        [src]="row.lsImage[0]?.attachLink" (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
                                     <ng-template #noImg>
                                         <img class="first-img-of-pack" src="assets/images/no-img.jpg" (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
                                     </ng-template>
@@ -204,9 +204,9 @@
                             </ngx-datatable-column>
                         </ngx-datatable>
 
-                        <div (click)="show()">
+                        <!-- <div (click)="show()">
                             show
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

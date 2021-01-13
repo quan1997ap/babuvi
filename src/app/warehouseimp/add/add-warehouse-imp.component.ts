@@ -199,11 +199,12 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   deleteOneWarehouseImpDetail(warehouseImp, index) {
-    console.log(warehouseImp);
-    if (warehouseImp && warehouseImp.warehouseImpDetailId) {
-      this.delete([warehouseImp]);
-    } else {
-      this.warehouseImpDetailList.splice(index, 1);
+    if (confirm("Bạn có chắc chắn muốn xóa?")) {
+      if (warehouseImp && warehouseImp.warehouseImpDetailId) {
+        this.delete([warehouseImp]);
+      } else {
+        this.warehouseImpDetailList.splice(index, 1);
+      }
     }
   }
 
@@ -501,7 +502,7 @@ export class AddWarehouseImpComponent implements OnInit {
     }
   }
 
-  merchandiseCodeCheckExist(event, merchandiseCode){
+  merchandiseCodeCheckExist(event, merchandiseCode) {
     if (this.checkEditExistingMerchandise()) {
       this.messageService.add({
         key: "notificationPopup",
@@ -528,13 +529,15 @@ export class AddWarehouseImpComponent implements OnInit {
     ref.onClose.subscribe((imgUploadeds: any[]) => {
       if (imgUploadeds) {
         // Chỉ lấy các image đã upload
-        this.warehouseImpDetail.lsImage = imgUploadeds.filter( img =>  (img.attachLink && img.attachLink.includes("https://") ) );
+        this.warehouseImpDetail.lsImage = imgUploadeds.filter(
+          (img) => img.attachLink && img.attachLink.includes("https:")
+        );
       }
     });
   }
 
-  show(){
-    console.log( this.warehouseImpDetailList )
+  show() {
+    console.log(this.warehouseImpDetailList);
   }
 
   editListImgOfMerchandise(imgs, indexMerchandise) {
@@ -546,12 +549,20 @@ export class AddWarehouseImpComponent implements OnInit {
         imgLinks: imgs,
       },
     });
-
     ref.onClose.subscribe((imgUploadeds: any[]) => {
       if (imgUploadeds) {
-         // Chỉ lấy các image đã upload
-         console.log(imgUploadeds)
-        this.warehouseImpDetailList[indexMerchandise].lsImage = imgUploadeds.filter( img =>  (img.attachLink && img.attachLink.includes("https://") ) );
+        // Chỉ lấy các image đã upload
+        console.log(
+          imgUploadeds,
+          indexMerchandise,
+          this.warehouseImpDetailList,
+          this.warehouseImpDetailList[indexMerchandise]
+        );
+        this.warehouseImpDetailList[
+          indexMerchandise
+        ].lsImage = imgUploadeds.filter(
+          (img) => img.attachLink && img.attachLink.includes("https:")
+        );
       }
     });
   }
@@ -646,8 +657,10 @@ export class AddWarehouseImpComponent implements OnInit {
    * If merchandise code just entered is existing Merchandise list => edit
    */
   checkEditExistingMerchandise() {
-    if(this.warehouseImpDetail.merchandiseCode){
-      const mCode = this.warehouseImpDetail.merchandiseCode.trim().toLowerCase();
+    if (this.warehouseImpDetail.merchandiseCode) {
+      const mCode = this.warehouseImpDetail.merchandiseCode
+        .trim()
+        .toLowerCase();
       const editingM = this.warehouseImpDetailList.find(
         (e) => e.merchandiseCode.toLowerCase() === mCode
       );

@@ -38,7 +38,7 @@
     <p-button label="Chụp" class="p-button-secondary" *ngIf="currentAction=='capture'" icon="pi pi-camera"
       (click)="triggerSnapshot();"></p-button>
     <span>&nbsp;&nbsp;</span>
-    <p-button label="onUpload" [disabled]="webcamImages.length == 0" class="p-button-secondary" (click)="uploadImgAndClose()"></p-button>
+    <p-button label="Dừng chụp" [disabled]="webcamImages.length == 0" class="p-button-secondary" (click)="uploadImgAndClose()"></p-button>
   </div>
   <br />
 </div>

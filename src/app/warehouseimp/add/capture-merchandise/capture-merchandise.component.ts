@@ -97,7 +97,7 @@ export class CaptureMerchandiseComponent implements OnInit {
     let fileDontNeedUpload = [];
     let fileNeedUpload = [];
     this.webcamImages.forEach((img: any) => {
-      if (img.attachLink && img.attachLink.includes("https://")) {
+      if (img.attachLink && img.attachLink.includes("https:")) {
         fileDontNeedUpload.push(img);
       } else {
         fileNeedUpload.push(img);
