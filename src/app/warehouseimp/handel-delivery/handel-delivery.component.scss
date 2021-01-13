@@ -9,29 +9,89 @@ $c_border: #e8e8e8;
 $c_alert: #d90000;
 $col-left-md-width: 35%;
 
+.d-none{
+  display: none;
+}
 .gr-btn {
-    display: flex;
-    .btn{
-        background: $c_primary-color;
-    }
+  display: flex;
+  .btn {
+    background: $c_primary-color;
+    margin-right: 8px;
+  }
 }
 
-.handel-delivery{
-    padding: 0 10px 10px 0;
-    background: #fff;
-    min-height: calc( 100vh - 100px );
-    .title{
-        border-top: 2px solid $c_primary-color;
-        margin-top: 12px;
+.handel-delivery {
+  padding: 0 10px 10px 0;
+  background: #fff;
+  min-height: calc(100vh - 100px);
+  .title {
+    border-top: 2px solid $c_primary-color;
+    margin-top: 12px;
+    width: fit-content;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .filter-form {
+    padding: 0 0 10px 10px;
+    width: 420px;
+    display: flex;
+    justify-content: space-around;
+    margin-left: -8px;
+  }
+  .statistic-all {
+    margin: 0px 20px 16px 20px;
+  }
+  .table-detail {
+    max-width: 1000px;
+    margin-left: 18px;
+    .row {
+      margin: 0 0 !important ;
+      .col-table {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border: 1px solid #ddd;
+      }
+    }
+    .row-statistic {
+      color: #fff;
+      background: #f15922;
+      padding: 8px;
+      cursor: pointer;
+      border: 1px solid #fff;
+    }
+    .img {
+      max-width: 90%;
+      display: block;
+    }
+    .main-infor {
+      div {
+        .id-infor {
+          color: #007ad9;
+          font-weight: bold;
+        }
+        .text-infor {
+          font-weight: bold;
+        }
+      }
+    }
+    .sub-infor {
+      .status {
         width: fit-content;
-        padding: 10px;
-        font-size: 16px;
+        padding: 4px 12px;
+        color: #fff;
+        margin-top: 4px;
+        border-radius: 4px;
+        &.found {
+          background: #007ad9;
+        }
+        &.not-found {
+          background: #f15922;
+        }
+      }
+      .text-infor {
         font-weight: bold;
+      }
     }
-    .filter-form{
-        padding: 0 0 10px 10px;
-        width: 420px;
-        display: flex;
-        justify-content: space-around;
-    }
+  }
 }

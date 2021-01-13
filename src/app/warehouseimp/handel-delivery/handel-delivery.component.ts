@@ -14,6 +14,46 @@ import {
 export class HandelDeliveryComponent implements OnInit {
   filterByOptions = [{ label: "Theo mã phiếu", value: 1 }];
   filterForm: FormGroup;
+  currentPage = 0;
+  numOfItemOnPage = 5;
+  requestList = [
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+    {
+      checked: false,isCollapse: true
+    },
+  ];
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -22,8 +62,16 @@ export class HandelDeliveryComponent implements OnInit {
       filterBy: new FormControl("", [Validators.required]),
     });
   }
+  filterData(){
+    console.log(this.filterForm.getRawValue())
+  }
   print() {}
   start() {}
   finish() {}
   stop() {}
+
+  onPageChange($event){
+    this.currentPage = $event.page;
+    window.scrollTo(0, 0);
+  }
 }

@@ -17,15 +17,54 @@
     <h3 class="title">
       XỬ LÝ YÊU CẦU GIAO HÀNG
     </h3>
-    <form [formGroup]="filterForm" class="filter-form">
+    <div class="statistic-all">
+      <span>Tổng kiện: </span>
+      <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+      <span>Chưa thấythấy: </span>
+    </div>
+    <form [formGroup]="filterForm" class="filter-form" (submit)="filterData()">
       <input type="text" pInputText formControlName="id" />
       <p-dropdown [options]="filterByOptions" formControlName="filterBy" optionLabel="name"></p-dropdown>
     </form>
-    <div class="row">
-      <div class="col-left pr-2 pl-2 mb-3 mb-md-0">
+    <div class="table-detail">
+      <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết"
+        (click)="request.isCollapse = !request.isCollapse">
+        <div [ngClass]="{'d-none': (i < currentPage*numOfItemOnPage) || (i >= (currentPage + 1)*numOfItemOnPage)  }">
+          <div class="row-statistic">
+            {{i}}
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <p-checkbox [binary]="true"></p-checkbox>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span>Mã phiếu: <strong>111111</strong></span>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span>Số kiện: <strong>111111</strong></span>
+            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+            <span>Chưa thấythấy:<strong>111111</strong> </span>
+          </div>
+          <div class="row" *ngIf="request['isCollapse'] === true">
+            <div class="col-table col-sm-4">
+              <img class="img"
+                src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
+            </div>
+            <div class="col-table col-sm-4 main-infor">
+              <div class="detail-info">Mã vận đơn: <span class="id-infor">1111111111</span></div>
+              <div class="detail-info">Vị trí: <span class="text-infor">1111111111</span></div>
+              <div class="detail-info">Đơn hàng:<span class="text-infor">1111111111</span></div>
+              <div class="detail-info">Mã phiếu:<span class="text-infor">1111111111</span> </div>
+            </div>
+            <div class="col-table col-sm-4  sub-infor">
+              <div class="detail-info">Cân nặng:<span class="text-infor">1111111111</span> </div>
+              <div class="detail-info">Thể tích:<span class="text-infor">1111111111</span></div>
+              <div class="detail-info">Khách hàng:<span class="text-infor">1111111111</span></div>
+              <div class="detail-info" class="status" [ngClass]="{'found': true}">
+                Đã thấy
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-left pr-2 pl-2 mb-3 mb-md-0">
-      </div>
+      <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
+      </p-paginator>
     </div>
   </div>
 </div>

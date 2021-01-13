@@ -18,6 +18,8 @@ import { DynamicDialogModule } from "primeng/dynamicdialog";
 import { TooltipModule } from "primeng/tooltip";
 import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
+import { CheckboxModule } from "primeng/checkbox";
+import { PaginatorModule } from "primeng/paginator";
 
 //service
 import { WarehouseImpService } from "app/services/warehouse-imp.service";
@@ -34,6 +36,7 @@ import { HandelDeliveryComponent } from "./handel-delivery/handel-delivery.compo
     HandelDeliveryComponent,
   ],
   imports: [
+    CheckboxModule,
     InputTextModule,
     DropdownModule,
     RouterModule.forChild(WarehouseImpRoutes),
@@ -48,6 +51,7 @@ import { HandelDeliveryComponent } from "./handel-delivery/handel-delivery.compo
     WebcamModule,
     DynamicDialogModule,
     TooltipModule,
+    PaginatorModule
   ],
   providers: [
     WarehouseImpService,
