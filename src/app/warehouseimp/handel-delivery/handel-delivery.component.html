@@ -22,40 +22,72 @@
       <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
       <span>Chưa thấythấy: </span>
     </div>
-    <form [formGroup]="filterForm" class="filter-form" (submit)="filterData()">
-      <input type="text" pInputText formControlName="id" />
-      <p-dropdown [options]="filterByOptions" formControlName="filterBy" optionLabel="name"></p-dropdown>
+    <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
+      <div class="controls">
+        <input type="text" pInputText formControlName="code" class="input-code" />
+        <p-dropdown [options]="filterByOptions" formControlName="filterBy"></p-dropdown>
+      </div>
+      <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()" [disabled]="!filterForm.valid"></button>
     </form>
     <div class="table-detail">
-      <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết"
-        (click)="request.isCollapse = !request.isCollapse">
+      <div *ngIf="!requestList || requestList.length == 0">
+        <strong> 0 request </strong>
+      </div>
+      <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết">
         <div [ngClass]="{'d-none': (i < currentPage*numOfItemOnPage) || (i >= (currentPage + 1)*numOfItemOnPage)  }">
-          <div class="row-statistic">
-            {{i}}
+          <div class="row-statistic screen">
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
             <p-checkbox [binary]="true"></p-checkbox>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Mã phiếu: <strong>111111</strong></span>
+            <span>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></span>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Số kiện: <strong>111111</strong></span>
+            <span>Số kiện: <strong>{{request.totalPackage}}</strong></span>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Chưa thấythấy:<strong>111111</strong> </span>
+            <span>Chưa thấy: <strong>{{request.missingAmount}}</strong> </span>
+            <i class="pi" (click)="request.isCollapse = !request.isCollapse"
+              [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
+              style="float: right; margin: 4px;"></i>
           </div>
-          <div class="row" *ngIf="request['isCollapse'] === true">
-            <div class="col-table col-sm-4">
+          <div class="row-statistic mobile">
+            <div class="request-infor">
+              <p-checkbox [binary]="true"></p-checkbox>
+              <div>
+                <div>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></div>
+                <div>Số kiện: <strong>{{request.totalPackage}}</strong></div>
+                <div>Chưa thấy: <strong>{{request.missingAmount}}</strong> </div>
+              </div>
+            </div>
+            <i class="pi" (click)="request.isCollapse = !request.isCollapse"
+              [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
+              style="float: right; margin: 4px;"></i>
+          </div>
+
+          <div class="row" *ngFor="let requestDetail of request.lsDetail" [ngClass]="{'d-none': request['isCollapse']}">
+            <div class="col-table col-sm-12 col-md-6 col-lg-6">
               <img class="img"
                 src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
             </div>
-            <div class="col-table col-sm-4 main-infor">
-              <div class="detail-info">Mã vận đơn: <span class="id-infor">1111111111</span></div>
-              <div class="detail-info">Vị trí: <span class="text-infor">1111111111</span></div>
-              <div class="detail-info">Đơn hàng:<span class="text-infor">1111111111</span></div>
-              <div class="detail-info">Mã phiếu:<span class="text-infor">1111111111</span> </div>
+            <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
+              <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?
+                  requestDetail.merchandiseCode : '' }} </span></div>
+              <div class="detail-info">Vị trí: <span class="text-infor"> {{ requestDetail.ShelfPosition ?
+                  requestDetail.ShelfPosition: '' }}</span></div>
+              <div class="detail-info">Đơn hàng:<span class="text-infor"> {{ requestDetail.orderCode ?
+                  requestDetail.orderCode: '' }}</span></div>
+              <div class="detail-info">Mã phiếu:<span class="text-infor"> {{ requestDetail.deliveryRequestCode ?
+                  requestDetail.deliveryRequestCode: '' }}</span> </div>
             </div>
-            <div class="col-table col-sm-4  sub-infor">
-              <div class="detail-info">Cân nặng:<span class="text-infor">1111111111</span> </div>
-              <div class="detail-info">Thể tích:<span class="text-infor">1111111111</span></div>
-              <div class="detail-info">Khách hàng:<span class="text-infor">1111111111</span></div>
+            <div class="col-table col-sm-12 col-md-3 col-lg-3 sub-infor  sub-infor-mobile">
+              <div>
+                <div class="detail-info">Cân nặng:<span class="text-infor"> {{ requestDetail.netWeight ?
+                    requestDetail.netWeight:
+                    ''}}</span> kg </div>
+                <div class="detail-info">Thể tích:<span class="text-infor"
+                    *ngIf="requestDetail.height !== undefined && requestDetail.width !== undefined && requestDetail.length !== undefined">
+                    {{ requestDetail.height && requestDetail.width && requestDetail.length }}</span></div>
+                <div class="detail-info">Mã khách hàng:<span class="text-infor"> {{ requestDetail.userCode ?
+                    requestDetail.userCode: '' }}</span></div>
+              </div>
               <div class="detail-info" class="status" [ngClass]="{'found': true}">
                 Đã thấy
               </div>
@@ -63,8 +95,10 @@
           </div>
         </div>
       </div>
-      <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
-      </p-paginator>
+      <div *ngIf="!requestList || requestList.length == 0">
+        <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
+        </p-paginator>
+      </div>
     </div>
   </div>
 </div>

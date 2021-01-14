@@ -9,7 +9,7 @@ $c_border: #e8e8e8;
 $c_alert: #d90000;
 $col-left-md-width: 35%;
 
-.d-none{
+.d-none {
   display: none;
 }
 .gr-btn {
@@ -34,17 +34,22 @@ $col-left-md-width: 35%;
   }
   .filter-form {
     padding: 0 0 10px 10px;
-    width: 420px;
+    width: 450px;
     display: flex;
     justify-content: space-around;
     margin-left: -8px;
+    .controls {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+    }
   }
   .statistic-all {
     margin: 0px 20px 16px 20px;
   }
   .table-detail {
     max-width: 1000px;
-    margin-left: 18px;
+    margin-left: 10px;
     .row {
       margin: 0 0 !important ;
       .col-table {
@@ -59,10 +64,19 @@ $col-left-md-width: 35%;
       padding: 8px;
       cursor: pointer;
       border: 1px solid #fff;
+      &.mobile {
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+      }
+      &.screen {
+        display: block;
+      }
     }
     .img {
-      max-width: 90%;
+      max-width: 100%;
       display: block;
+      color: pointer;
     }
     .main-infor {
       div {
@@ -92,6 +106,52 @@ $col-left-md-width: 35%;
       .text-infor {
         font-weight: bold;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .row-statistic {
+    &.mobile {
+      display: flex !important;
+      .request-infor {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p-checkbox {
+          margin-right: 10px;
+        }
+      }
+    }
+    &.screen {
+      display: none !important;
+    }
+  }
+  .filter-form {
+    width: 100% !important;
+  }
+  .sub-infor-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .status {
+      height: 40px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .filter-form {
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    .input-code{
+      margin-right: 10px;
+    }
+    .filter-btn{
+      margin-top: 10px;
+      width: 100px;
     }
   }
 }
