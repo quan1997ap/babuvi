@@ -33,19 +33,30 @@ $col-left-md-width: 35%;
     font-weight: bold;
   }
   .filter-form {
-    padding: 0 0 10px 10px;
+    padding: 0 10px 10px 10px;
     width: 450px;
     display: flex;
     justify-content: space-around;
-    margin-left: -8px;
     .controls {
       flex: 1;
       display: flex;
       justify-content: space-between;
     }
+    .filter-btn {
+      margin-left: 20px;
+    }
   }
   .statistic-all {
     margin: 0px 20px 16px 20px;
+  }
+  .clean-table {
+    cursor: pointer;
+    background: #f15922;
+    width: fit-content;
+    margin-left: 12px;
+    margin-bottom: 8px;
+    padding: 8px 4px;
+    color: #fff;
   }
   .table-detail {
     max-width: 1000px;
@@ -92,10 +103,13 @@ $col-left-md-width: 35%;
     .sub-infor {
       .status {
         width: fit-content;
-        padding: 4px 12px;
+        padding: 4px 20px;
         color: #fff;
         margin-top: 4px;
         border-radius: 4px;
+        background: #007ad9;
+        height: 58px;
+        line-height: 50px;
         &.found {
           background: #007ad9;
         }
@@ -129,6 +143,7 @@ $col-left-md-width: 35%;
   }
   .filter-form {
     width: 100% !important;
+    max-width: 450px;
   }
   .sub-infor-mobile {
     display: flex;
@@ -146,12 +161,17 @@ $col-left-md-width: 35%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    .input-code{
-      margin-right: 10px;
+    .controls {
+      width: 100%;
+      .input-code {
+        margin-right: 10px;
+        flex: 1;
+      }
     }
-    .filter-btn{
+    .filter-btn {
       margin-top: 10px;
       width: 100px;
+      margin-bottom: 20px;
     }
   }
 }

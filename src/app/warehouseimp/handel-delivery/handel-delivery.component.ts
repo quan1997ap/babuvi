@@ -1,7 +1,9 @@
-import { PrintBillComponent } from "./../../merchandise/delivery/print-bill/print-bill.component";
+import { ChangeDetectorRef } from "@angular/core";
+// import { PrintBillComponent } from "./../../merchandise/delivery/print-bill/print-bill.component";
 import { DialogService, MessageService } from "primeng/api";
 import { MerchandiseServices } from "app/services/merchandise.services";
 import { Component, OnInit } from "@angular/core";
+
 import {
   FormBuilder,
   FormGroup,
@@ -26,7 +28,8 @@ export class HandelDeliveryComponent implements OnInit {
     private fb: FormBuilder,
     public messageService: MessageService,
     private merchandiseServices: MerchandiseServices,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -36,12 +39,19 @@ export class HandelDeliveryComponent implements OnInit {
     });
   }
 
+  cleanList() {
+    if (confirm("Bạn có chắc chắn muốn xóa?")) {
+      this.requestList.length = 0;
+    }
+  }
+
   filterRequest() {
-    this.requestList.length = 0;
     const code = this.filterForm.getRawValue().code.trim();
     const filterType = this.filterForm.getRawValue().filterBy;
     if (
-      this.requestList.map((request) => request.merchandiseCode).includes(code)
+      this.requestList
+        .map((request) => request.deliveryRequestCode)
+        .includes(code)
     ) {
       this.showMessage("error", "Mã đã tồn tại", "Thông báo");
     } else {
@@ -54,14 +64,9 @@ export class HandelDeliveryComponent implements OnInit {
                   res.result.data && res.result.data.lsDetail
                     ? res.result.data.lsDetail
                     : [];
-                listRequest = listRequest.map((request) => {
-                  request.checked = false;
-                  request.isCollapse = true;
-                  return request;
-                });
-                res.result.data.lsDetail = listRequest;
-                console.log(res.result.data)
-                this.requestList.push( res.result.data )
+                res.result.data.checked = false;
+                res.result.data.isCollapse = false;
+                this.requestList.push(res.result.data);
               }
             },
             (err) => {
@@ -78,64 +83,126 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   print() {}
-  start() {}
-  finish() {}
-  stop() {}
+
+  changeStatusDeliveryRequestDetail(
+    requestDetail,
+    deliveryRequestDetailId,
+    oldStatus
+  ) {
+    if (confirm("Bạn có muốn thay đổi trạng thái bản ghi này?")) {
+      this.loading = true;
+      this.merchandiseServices
+        .changeStatusDeliveryRequestDetail(deliveryRequestDetailId)
+        .subscribe(
+          (resChangeStatus) => {
+            console.log(resChangeStatus);
+            if (
+              resChangeStatus &&
+              resChangeStatus.result &&
+              resChangeStatus.result.success == true
+            ) {
+              this.showMessage(
+                "success",
+                "Đổi trạng thái thành công",
+                "Thông báo"
+              );
+              requestDetail.status = oldStatus == 1 ? 2 : 1;
+              this.loading = false;
+              this.cdr.detectChanges();
+            } else {
+              this.showMessage(
+                "error",
+                "Đổi trạng thái không thành công",
+                "Thông báo"
+              );
+              this.loading = false;
+            }
+          },
+          (errChangeStatus) => {
+            this.showMessage(
+              "error",
+              "Đổi trạng thái không thành công",
+              "Thông báo"
+            );
+            this.loading = false;
+          }
+        );
+    }
+  }
+  start() {
+    this.loading = true;
+    const deliveryRequestIds = this.requestList
+      .filter((request) => request.checked == true)
+      .map((request) => request.deliveryRequestId);
+    this.merchandiseServices
+      .startHandleDeliveryRequest(deliveryRequestIds)
+      .subscribe(
+        (resStart) => {
+          if (resStart && resStart.result && resStart.result.success == true) {
+            this.showMessage("success", "Bắt đầu thành công", "Thông báo");
+          } else {
+            this.showMessage("error", "Bắt đầu không thành công", "Thông báo");
+          }
+          this.loading = false;
+        },
+        (errStart) => {
+          this.showMessage("error", "Bắt đầu không thành công", "Thông báo");
+          this.loading = false;
+        }
+      );
+  }
+
+  finish() {
+    this.loading = true;
+    const deliveryRequestIds = this.requestList
+      .filter((request) => request.checked == true)
+      .map((request) => request.deliveryRequestId);
+    this.merchandiseServices
+      .finishHandleDeliveryRequest(deliveryRequestIds)
+      .subscribe(
+        (resFinish) => {
+          if (
+            resFinish &&
+            resFinish.result &&
+            resFinish.result.success == true
+          ) {
+            this.showMessage("success", "Đã hoàn thành", "Thông báo");
+          } else {
+            this.showMessage("error", "Có lỗi xảy ra", "Thông báo");
+          }
+          this.loading = false;
+        },
+        (errFinish) => {
+          this.showMessage("error", "Có lỗi xảy ra", "Thông báo");
+          this.loading = false;
+        }
+      );
+  }
 
   /**
    * Cancel delivery
    */
-  cancelDelivery(deliveryRequestCode) {
-    const body = {
-      DeliveryRequestCode: deliveryRequestCode,
-    };
+  cancelDelivery() {
     this.loading = true;
+    const deliveryRequestIds = this.requestList
+      .filter((request) => request.checked == true)
+      .map((request) => request.deliveryRequestId);
     this.merchandiseServices
-      .cancelDelivery(body)
+      .cancelHandleDeliveryRequest(deliveryRequestIds)
       .toPromise()
       .then((res) => {
-        this.loading = false;
         if (res.result.success) {
-          // TODO: reload data after success
           this.showMessage("success", "Hủy thành công", "Thông báo");
-
-          // this.getDeliveryRequestByCode(this.deliveryRequestCode);
         } else {
           this.showMessage("error", res.result.message, "Thông báo");
         }
+        this.loading = false;
       })
       .catch(() => {
         this.loading = false;
         this.showMessage("error", "Hủy thất bại", "Thông báo");
       });
   }
-
-  /**
-   * Cancel Export
-   */
-  // cancelExp(warehouseExpCode) {
-  //   const body = {
-  //     WarehouseExpCode: warehouseExpCode ? warehouseExpCode : null,
-  //   };
-  //   this.loading = true;
-  //   this.warehouseExpService
-  //     .cancelWarehouseExp(body)
-  //     .toPromise()
-  //     .then((res) => {
-  //       this.loading = false;
-  //       if (res.result.success) {
-  //         // TODO: reload data after success
-  //         this.showMessage("alert-success", "Hủy xuất hàng thành công");
-  //         this.getDeliveryRequestByCode(this.deliveryRequestCode);
-  //       } else {
-  //         this.showMessage("alert-danger", res.result.message);
-  //       }
-  //     })
-  //     .catch(() => {
-  //       this.loading = false;
-  //       this.showMessage("alert-danger", "Xuất hàng thất bại");
-  //     });
-  // }
 
   /**
    * Print bill
@@ -146,14 +213,14 @@ export class HandelDeliveryComponent implements OnInit {
       deliveryRequestCode: deliveryRequestCode,
       deliveryRequestId: deliveryRequestId,
     };
-    this.dialogService.open(PrintBillComponent, {
-      data: printData,
-    });
+    // this.dialogService.open(PrintBillComponent, {
+    //   data: printData,
+    // });
   }
 
   showMessage(type, message, summary) {
     this.messageService.add({
-      key: "notificationPopup",
+      key: "toast-message",
       severity: type,
       summary: summary,
       detail: message,

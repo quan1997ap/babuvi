@@ -29,6 +29,9 @@ import { MerchandiseServices } from "app/services/merchandise.services";
 import { CaptureMerchandiseComponent } from "./add/capture-merchandise/capture-merchandise.component";
 import { FileManagerServices } from "./../services/fileManager.services";
 import { HandelDeliveryComponent } from "./handel-delivery/handel-delivery.component";
+
+// component
+
 @NgModule({
   declarations: [
     AddWarehouseImpComponent,

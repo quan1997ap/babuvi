@@ -150,48 +150,55 @@ export class AddWarehouseImpComponent implements OnInit {
    * @param event
    */
   saveWarehouseImpDetail(form, event) {
-    console.log(form.value);
+    this.loading = true;
     this.merchandiseServices
       .getMerchandiseByCode(form.value.merchandiseCode)
-      .subscribe((resCheck) => {
-        if (resCheck.result.success) {
-          // check tồn tại trong danh list chưa
-          if (this.checkEditExistingMerchandise()) {
+      .subscribe(
+        (resCheck) => {
+          if (resCheck.result.success) {
+            // check tồn tại trong danh list chưa
+            if (this.checkEditExistingMerchandise()) {
+              this.messageService.add({
+                key: "notificationPopup",
+                severity: "error",
+                summary: "Thông báo",
+                detail: "Kiện hàng đã tồn tại trong danh sách",
+              });
+              return;
+            }
+            const selfPosition = this.warehouseImpDetail.shelfPosition;
+            if (this.isEditWarehouseImpDetails) {
+              // Because warehouse import detail data is pass by reference to form data, just refresh list with this way
+              this.warehouseImpDetailList = [...this.warehouseImpDetailList];
+            } else {
+              // Push new warehouse import detail data to list and refresh list
+              this.warehouseImpDetailList = [
+                this.warehouseImpDetail,
+                ...this.warehouseImpDetailList,
+              ];
+            }
+            // Because warehouse import detail data is pass by reference to form data, need to init new warehouse import detail and reset form
+            this.warehouseImpDetail = new WarehouseImpDetail();
+            // form.resetForm();
+            this.warehouseImpDetail.shelfPosition = selfPosition;
+            this.isEditWarehouseImpDetails = false;
+            this.selected = [];
+            this.nextFocus(event);
+            this.loading = false;
+          } else {
             this.messageService.add({
               key: "notificationPopup",
               severity: "error",
               summary: "Thông báo",
-              detail: "Kiện hàng đã tồn tại trong danh sách",
+              detail: "Kiện hàng chưa được khai báo",
             });
-            return;
+            this.loading = false;
           }
-          const selfPosition = this.warehouseImpDetail.shelfPosition;
-          if (this.isEditWarehouseImpDetails) {
-            // Because warehouse import detail data is pass by reference to form data, just refresh list with this way
-            this.warehouseImpDetailList = [...this.warehouseImpDetailList];
-          } else {
-            // Push new warehouse import detail data to list and refresh list
-            this.warehouseImpDetailList = [
-              this.warehouseImpDetail,
-              ...this.warehouseImpDetailList,
-            ];
-          }
-          // Because warehouse import detail data is pass by reference to form data, need to init new warehouse import detail and reset form
-          this.warehouseImpDetail = new WarehouseImpDetail();
-          // form.resetForm();
-          this.warehouseImpDetail.shelfPosition = selfPosition;
-          this.isEditWarehouseImpDetails = false;
-          this.selected = [];
-          this.nextFocus(event);
-        } else {
-          this.messageService.add({
-            key: "notificationPopup",
-            severity: "error",
-            summary: "Thông báo",
-            detail: "Kiện hàng chưa được khai báo",
-          });
+        },
+        (err) => {
+          this.loading = false;
         }
-      });
+      );
   }
 
   deleteAllWarehouseImpDetail() {
@@ -203,7 +210,10 @@ export class AddWarehouseImpComponent implements OnInit {
       if (warehouseImp && warehouseImp.warehouseImpDetailId) {
         this.delete([warehouseImp]);
       } else {
-        this.warehouseImpDetailList.splice(index, 1);
+        this.warehouseImpDetailList = this.warehouseImpDetailList.filter(
+          (item) => item.merchandiseCode !== warehouseImp.merchandiseCode
+        );
+        this.changeDetectorRef.detectChanges();
       }
     }
   }
@@ -224,7 +234,6 @@ export class AddWarehouseImpComponent implements OnInit {
    */
   completeWarehouseImp(form) {
     if (form.valid) {
-      console.log(this.warehouseImp);
       this.warehouseImp.lsDetail = this.warehouseImpDetailList;
       this.warehouseImp.changeUserId = this.userId;
       this.loading = true;
@@ -502,6 +511,9 @@ export class AddWarehouseImpComponent implements OnInit {
     }
   }
 
+  /*
+    event when input merchandiseCode lost focus
+  */
   merchandiseCodeCheckExist(event, merchandiseCode) {
     if (this.checkEditExistingMerchandise()) {
       this.messageService.add({
@@ -518,7 +530,8 @@ export class AddWarehouseImpComponent implements OnInit {
     // add ảnh
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
       header: "Chụp ảnh kiện hàng",
-      width: "700px",
+      width: "100vw",
+      style: { "max-width": "700px", "overflow-y": "auto" },
       data: {
         imgLinks: this.warehouseImpDetail.lsImage
           ? this.warehouseImpDetail.lsImage
@@ -533,18 +546,20 @@ export class AddWarehouseImpComponent implements OnInit {
           (img) => img.attachLink && img.attachLink.includes("https:")
         );
       }
+      const merchandiseCodeInput = document.getElementById(
+        "netWeight"
+      ) as HTMLInputElement;
+      merchandiseCodeInput.focus();
+      merchandiseCodeInput.select();
     });
-  }
-
-  show() {
-    console.log(this.warehouseImpDetailList);
   }
 
   editListImgOfMerchandise(imgs, indexMerchandise) {
     // edit from gird
     const ref = this.dialogService.open(CaptureMerchandiseComponent, {
       header: "Ảnh kiện hàng",
-      width: "700px",
+      width: "100vw",
+      style: { "max-width": "700px", "overflow-y": "auto" },
       data: {
         imgLinks: imgs,
       },
@@ -552,12 +567,6 @@ export class AddWarehouseImpComponent implements OnInit {
     ref.onClose.subscribe((imgUploadeds: any[]) => {
       if (imgUploadeds) {
         // Chỉ lấy các image đã upload
-        console.log(
-          imgUploadeds,
-          indexMerchandise,
-          this.warehouseImpDetailList,
-          this.warehouseImpDetailList[indexMerchandise]
-        );
         this.warehouseImpDetailList[
           indexMerchandise
         ].lsImage = imgUploadeds.filter(
@@ -568,7 +577,10 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   async checkMerchandiseCode(event, merchandiseCode) {
-    if (merchandiseCode != null) {
+    const merchandiseCodeInput = document.getElementById(
+      "merchandiseCode"
+    ) as HTMLInputElement;
+    if (merchandiseCode) {
       await this.merchandiseServices
         .getMerchandiseByCode(merchandiseCode)
         .toPromise()
@@ -577,7 +589,8 @@ export class AddWarehouseImpComponent implements OnInit {
             if (res.result.data != null) {
               // hiển thị dữ liệu đơn hàng của kiện hàng
               // Next sang control tiếp theo
-              this.nextFocus(event);
+              this.captureMerchandise();
+              merchandiseCodeInput.blur();
             } else {
               //hiển thị thông báo đơn hàng chưa được map vào kiện hàng
               this.orderCodeMapping = "";
@@ -604,6 +617,8 @@ export class AddWarehouseImpComponent implements OnInit {
                           summary: "Thông báo",
                           detail: "Cập nhật thành công!",
                         });
+                        this.captureMerchandise();
+                        merchandiseCodeInput.blur();
                       } else {
                         this.messageService.add({
                           key: "notificationPopup",
@@ -611,6 +626,8 @@ export class AddWarehouseImpComponent implements OnInit {
                           summary: "Thông báo",
                           detail: resAddAddMerchandise.result.message,
                         });
+                        merchandiseCodeInput.focus();
+                        merchandiseCodeInput.select();
                       }
                       this.loading = false;
                     });
@@ -623,6 +640,12 @@ export class AddWarehouseImpComponent implements OnInit {
                     summary: "Thông báo",
                     detail: "Có lỗi xảy ra",
                   });
+
+                  const merchandiseCodeInput = document.getElementById(
+                    "merchandiseCode"
+                  ) as HTMLInputElement;
+                  merchandiseCodeInput.focus();
+                  merchandiseCodeInput.select();
                 },
               });
             }
@@ -715,5 +738,34 @@ export class AddWarehouseImpComponent implements OnInit {
         this.warehouseImpDetail.width &&
         this.warehouseImpDetail.height)
     );
+  }
+
+  /*
+    prevent next tab when merchandiseCode = null || netWeight == null
+  */
+  checkNextControlMerchandiseCode($event, merchandiseCode) {
+    if (
+      merchandiseCode == undefined ||
+      merchandiseCode == null ||
+      merchandiseCode == ""
+    ) {
+      setTimeout(() => {
+        const merchandiseCodeInput = document.getElementById(
+          "merchandiseCode"
+        ) as HTMLInputElement;
+        merchandiseCodeInput.focus();
+      }, 200);
+    }
+  }
+
+  checkNextControlNNetWeight($event, netWeight) {
+    if (netWeight == undefined || netWeight == null || netWeight == "") {
+      setTimeout(() => {
+        const merchandiseCodeInput = document.getElementById(
+          "netWeight"
+        ) as HTMLInputElement;
+        merchandiseCodeInput.focus();
+      }, 200);
+    }
   }
 }

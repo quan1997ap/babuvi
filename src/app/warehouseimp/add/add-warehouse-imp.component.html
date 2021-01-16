@@ -82,6 +82,7 @@
                                         (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value) "
                                         (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
                                         (focusout)="merchandiseCodeCheckExist($event, merchandiseCode.value)"
+                                        (keydown.Tab)="checkNextControlMerchandiseCode($event, merchandiseCode.value)"
                                         #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
                                         class="alert-no-bg">
@@ -90,17 +91,22 @@
                                             trống</small>
                                     </div>
                                 </div>
-                                <div class="form-group upload-img-section" *ngIf="warehouseImpDetail.merchandiseCode && !checkEditExistingMerchandise()">
-                                    <label for="shelfPosition">&nbsp;</label>
-                                    <button
+                                <div class="form-group upload-img-section"
+                                    *ngIf="warehouseImpDetail.merchandiseCode && !checkEditExistingMerchandise()">
+                                    <label class="upload-img-padding" for="shelfPosition">&nbsp;</label>
+                                    <button tabindex="2"
                                         *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img"
-                                        class="capture" pButton pRipple (click)="captureMerchandise()" type="button" pTooltip="Thêm ảnh ( Bạn cần up tối thiểu 1 ảnh )">
+                                        class="capture" pButton pRipple (click)="captureMerchandise()"
+                                        (keyup.enter)="captureMerchandise()" type="button"
+                                        pTooltip="Thêm ảnh ( Bạn cần up tối thiểu 1 ảnh )">
                                         <i class="pi pi-image" id="icon-upload-img"></i>
                                     </button>
                                     <ng-template #has_img>
-                                        <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="captureMerchandise()"
-                                            [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
-                                            [src]="warehouseImpDetail.lsImage[0].attachLink">
+                                        <button pButton pRipple tabindex="2" class="btn-img-uploaded">
+                                            <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="captureMerchandise()"
+                                                [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
+                                                [src]="warehouseImpDetail.lsImage[0].attachLink" style="margin-right: 0;">
+                                        </button>
                                     </ng-template>
                                 </div>
                                 <div class="form-group col-sm">
@@ -114,32 +120,33 @@
                                 <div class="form-group col-sm">
                                     <label for="netWeight">Cân nặng</label>
                                     <input type="number" class="form-control" id="netWeight" name="netWeight" ngModel
-                                        [(ngModel)]="warehouseImpDetail.netWeight" #inputToFocus tabindex="2"
+                                        (keydown.Tab)="checkNextControlNNetWeight($event, warehouseImpDetail.netWeight)"
+                                        [(ngModel)]="warehouseImpDetail.netWeight" #inputToFocus tabindex="3"
                                         (keyup.enter)="nextFocus($event)">
                                 </div>
                                 <div class="form-group col-sm">
                                     <label for="length">Dài</label>
                                     <input type="number" class="form-control" id="length" name="length" ngModel
-                                        [(ngModel)]="warehouseImpDetail.length" #inputToFocus tabindex="3"
+                                        [(ngModel)]="warehouseImpDetail.length" #inputToFocus tabindex="4"
                                         (keyup.enter)="nextFocus($event)">
                                 </div>
                                 <div class="form-group col-sm">
                                     <label for="width">Rộng</label>
                                     <input type="number" class="form-control" id="width" name="width" ngModel
-                                        [(ngModel)]="warehouseImpDetail.width" #inputToFocus tabindex="4"
+                                        [(ngModel)]="warehouseImpDetail.width" #inputToFocus tabindex="5"
                                         (keyup.enter)="nextFocus($event)">
                                 </div>
                                 <div class="form-group col-sm">
                                     <label for="height">Cao</label>
                                     <input type="number" class="form-control" id="height" name="height" ngModel
-                                        [(ngModel)]="warehouseImpDetail.height" #inputToFocus tabindex="5"
+                                        [(ngModel)]="warehouseImpDetail.height" #inputToFocus tabindex="6"
                                         (keyup.enter)="nextFocus($event)">
                                 </div>
                                 <div class="form-group col-sm align-bottom align-self-end">
-                                    <button class="btn btn-primary w-100" #inputToFocus tabindex="6"
+                                    <button class="btn btn-primary w-100" #inputToFocus tabindex="7"
                                         (keyup.enter)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
                                         (click)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
-                                        [disabled]="!warehouseImpDetail.merchandiseCode || !isValidSize() || !warehouseImpDetail?.lsImage?.length">{{isEditWarehouseImpDetails
+                                        [disabled]="!warehouseImpDetail.merchandiseCode || !isValidSize() || !warehouseImpDetail?.lsImage?.length || loading">{{isEditWarehouseImpDetails
                                         ? 'Lưu' : 'Thêm'}}</button>
                                 </div>
                             </div>
@@ -164,9 +171,11 @@
                                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                                     <img class="first-img-of-pack"
                                         *ngIf="row.lsImage && row.lsImage[0] && row.lsImage[0].attachLink; else noImg"
-                                        [src]="row.lsImage[0]?.attachLink" (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
+                                        [src]="row.lsImage[0]?.attachLink"
+                                        (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
                                     <ng-template #noImg>
-                                        <img class="first-img-of-pack" src="assets/images/no-img.jpg" (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
+                                        <img class="first-img-of-pack" src="assets/images/no-img.jpg"
+                                            (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
                                     </ng-template>
                                 </ng-template>
                             </ngx-datatable-column>
@@ -197,7 +206,8 @@
                             </ngx-datatable-column>
                             <ngx-datatable-column [minWidth]="120">
                                 <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <button class="btn remove-warehouseImp" (click)="deleteOneWarehouseImpDetail(row)">
+                                    <button class="btn remove-warehouseImp"
+                                        (click)="deleteOneWarehouseImpDetail(row, rowIndex)">
                                         Xóa
                                     </button>
                                 </ng-template>
@@ -233,6 +243,7 @@
         </div>
         <button type="button" pButton icon="pi pi-check" label="Khai báo"
             (click)="cd.accept(orderCodeMapping)"></button>
-        <button type="button" pButton icon="pi pi-times" label="Bỏ qua" (click)="cd.reject(orderCodeMapping)"></button>
+        <button type="button" [disabled]="!orderCodeMapping" pButton icon="pi pi-times" label="Bỏ qua"
+            (click)="cd.reject(orderCodeMapping)"></button>
     </p-footer>
 </p-confirmDialog>

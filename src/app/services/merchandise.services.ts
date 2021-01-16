@@ -256,8 +256,7 @@ export class MerchandiseServices extends ApiService {
   changeStatusDeliveryRequestDetail(requestId) {
     return this.post(
       ApiApplication.merchandise.controller +
-        ApiApplication.merchandise.cancelHandleDeliveryRequest +
-        `?deliveryRequestDetailId=${requestId}`
+        `/changeStatusDeliveryRequestDetail?deliveryRequestDetailId=${requestId}`
     );
   }
 }

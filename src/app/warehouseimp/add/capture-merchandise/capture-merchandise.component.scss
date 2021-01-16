@@ -1,4 +1,4 @@
-.spinner-container{
+.spinner-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,11 +8,13 @@
   justify-content: center;
   min-height: 380px;
   position: relative;
+}
+@media only screen and (max-width: 600px) {
   .toggle-webcam {
-    z-index: 1;
     position: absolute;
-    right: 0;
-    top: 0;
+    top: 20px !important;
+    right: 10px !important;
+    z-index: 1;
   }
 }
 .view-img {
@@ -42,14 +44,24 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #f1f1f1;
 }
 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+#save-btn {
+  width: 0;
+  opacity: 0;
+}
+
+.style-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+}
 
 .gr-action-btn {
   display: flex;
@@ -62,18 +74,24 @@
     flex: 1;
     display: flex;
     overflow: auto;
-    .style-scrollbar{
-    }
     .snapshot {
       width: 70px;
       cursor: pointer;
       margin-right: 4px;
       position: relative;
-      .img{
+      .img {
         width: 70px;
         min-width: 70px;
         background: #ddd;
         min-height: 50px;
+      }
+      .img-index {
+        position: absolute;
+        left: 4px;
+        bottom: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
       }
       .remove-btn {
         position: absolute;

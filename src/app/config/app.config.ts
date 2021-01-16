@@ -204,10 +204,10 @@ export const ApiApplication = {
     getLsMerchandiseInWhByOrderId: "getLsMerchandiseInWhByOrderId/",
     getMerchandiseByCode: "getMerchandiseByCode/",
     //quandev
-    startHandleDeliveryRequest: "startHandleDeliveryRequest/",
-    finishHandleDeliveryRequest: "finishHandleDeliveryRequest/",
-    cancelHandleDeliveryRequest: "cancelHandleDeliveryRequest/",
-    changeStatusDeliveryRequestDetail: "changeStatusDeliveryRequestDetail",
+    startHandleDeliveryRequest: "/startHandleDeliveryRequest/",
+    finishHandleDeliveryRequest: "/finishHandleDeliveryRequest/",
+    cancelHandleDeliveryRequest: "/cancelHandleDeliveryRequest",
+    changeStatusDeliveryRequestDetail: "/changeStatusDeliveryRequestDetail",
   },
   system: {
     controller: ApiBaseUrl + "system",

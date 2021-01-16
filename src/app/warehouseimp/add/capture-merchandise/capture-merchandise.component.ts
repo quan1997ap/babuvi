@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { WebcamImage } from "ngx-webcam";
 import { Component, OnInit } from "@angular/core";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/api";
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
 @Component({
   selector: "app-capture-merchandise",
@@ -15,7 +15,7 @@ export class CaptureMerchandiseComponent implements OnInit {
   currentAction = "capture"; // "capture" , 'viewImg' , 'viewHistoryImg'
   currentZoomImg = null;
   loading = false;
-  imgUploadType = 'image/jpeg';
+  imgUploadType = "image/jpeg";
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -43,6 +43,7 @@ export class CaptureMerchandiseComponent implements OnInit {
     if (this.config && this.config.data && this.config.data.imgLinks) {
       this.webcamImages = _.cloneDeep(this.config.data.imgLinks);
     }
+    this.autoFocusBtnSubmit();
   }
 
   public handleInitError(error: any): void {
@@ -164,6 +165,25 @@ export class CaptureMerchandiseComponent implements OnInit {
       );
     });
   }
+
+  captureAndUpload() {
+    this.triggerSnapshot();
+    event.preventDefault();
+    if (this.webcamImages && this.webcamImages.length) {
+      this.uploadImgAndClose();
+    } else {
+      const saveBtn = document.getElementById("save-btn") as HTMLInputElement;
+      saveBtn.focus();
+    }
+  }
+
+  autoFocusBtnSubmit() {
+    const submitBtnId = "save-btn";
+    var input = document.getElementById(submitBtnId);
+    input.focus();
+  }
+
+
   DataURIToBlob(dataURI: string) {
     const splitDataURI = dataURI.split(",");
     const byteString =
@@ -174,7 +194,7 @@ export class CaptureMerchandiseComponent implements OnInit {
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++)
       ia[i] = byteString.charCodeAt(i);
-      // { type: mimeString }
+    // { type: mimeString }
     return new Blob([ia], { type: this.imgUploadType });
   }
 
