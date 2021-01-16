@@ -32,8 +32,7 @@
       (click)="changeAction('capture')">
     </p-button>
     <span>&nbsp;&nbsp;</span>
-    <p-button class="toggle-webcam" *ngIf="currentAction=='capture'" pTooltip="Chuyển Camera" icon="pi pi-refresh"
-      (click)="toggleWebcam()"></p-button>
+    <p-button class="toggle-webcam" *ngIf="currentAction=='capture'" (click)="showNextWebcam(true);" [disabled]="!multipleWebcamsAvailable" pTooltip="Chuyển Camera" icon="pi pi-refresh"></p-button>
     <span>&nbsp;&nbsp;</span>
     <p-button label="Chụp" autofocus class="p-button-secondary" *ngIf="currentAction=='capture'" icon="pi pi-camera"
       (click)="triggerSnapshot();"></p-button>

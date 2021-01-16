@@ -1,10 +1,10 @@
 import { MessageService } from "primeng/components/common/api";
 import { FileManagerServices } from "./../../../services/fileManager.services";
 import { Observable, Subject } from "rxjs";
-import { WebcamImage } from "ngx-webcam";
 import { Component, OnInit } from "@angular/core";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/api";
 import * as _ from "lodash";
+import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 
 @Component({
   selector: "app-capture-merchandise",
@@ -16,6 +16,7 @@ export class CaptureMerchandiseComponent implements OnInit {
   currentZoomImg = null;
   loading = false;
   imgUploadType = "image/jpeg";
+  public multipleWebcamsAvailable = false;
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -40,6 +41,11 @@ export class CaptureMerchandiseComponent implements OnInit {
   >();
 
   ngOnInit() {
+    WebcamUtil.getAvailableVideoInputs()
+    .then((mediaDevices: MediaDeviceInfo[]) => {
+      this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
+    });
+
     if (this.config && this.config.data && this.config.data.imgLinks) {
       this.webcamImages = _.cloneDeep(this.config.data.imgLinks);
     }
@@ -65,6 +71,14 @@ export class CaptureMerchandiseComponent implements OnInit {
   public toggleWebcam(): void {
     this.showWebcam = !this.showWebcam;
   }
+
+  public showNextWebcam(directionOrDeviceId: boolean|string): void {
+    // true => move forward through devices
+    // false => move backwards through devices
+    // string => move to device with given deviceId
+    this.nextWebcam.next(directionOrDeviceId);
+  }
+  
 
   public handleImage(webcamImage: WebcamImage): void {
     const img = { attachLink: webcamImage.imageAsDataUrl };
