@@ -384,3 +384,8 @@ $col-left-md-width: 35%;
     display: none;
   }
 }
+
+.ngx-datatable.material{
+  max-width: 100%;
+  overflow: auto;
+}

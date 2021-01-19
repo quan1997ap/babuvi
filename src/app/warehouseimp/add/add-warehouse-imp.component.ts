@@ -19,6 +19,8 @@ import { WarehouseImpService } from "app/services/warehouse-imp.service";
 import { SystemService } from "app/services/system.services";
 import { UserService } from "app/services/user.service";
 import { MerchandiseServices } from "app/services/merchandise.services";
+import { FileManagerServices } from "./../../services/fileManager.services";
+
 // Model
 import { MerchandiseAddPrams } from "./../../model/merchandise.model";
 // Component
@@ -31,6 +33,7 @@ import { CaptureMerchandiseComponent } from "./capture-merchandise/capture-merch
   providers: [DialogService],
 })
 export class AddWarehouseImpComponent implements OnInit {
+  imgUploadType = "image/jpeg";
   @ViewChild("warehouseImpDetailForm")
   warehouseImpDetailForm: NgForm;
   // Const
@@ -78,7 +81,8 @@ export class AddWarehouseImpComponent implements OnInit {
     private location: Location,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    public fileManagerServices: FileManagerServices
   ) {}
 
   async ngOnInit() {
@@ -98,52 +102,143 @@ export class AddWarehouseImpComponent implements OnInit {
    * Save ware house imp
    * @param form
    */
-  saveWarehouseImp(form) {
+  async saveWarehouseImp(form) {
     if (form.valid) {
       this.warehouseImp.lsDetail = this.warehouseImpDetailList;
       this.warehouseImp.createdUserId = this.warehouseImp.changeUserId = this.userId;
       this.loading = true;
-      this.warehouseImpService
-        .saveWarehouseImp(this.warehouseImp)
-        .toPromise()
-        .then((res) => {
+      const uploadSuccess = await this.uploadListImg();
+      if (uploadSuccess == true) {
+        console.log(this.warehouseImp);
+        this.saveWarehouseImpWithImgsUploaded();
+      } else {
+        // upload các img còn thiếu không?
+        if (
+          confirm(
+            "Một số ảnh đã bị upload lỗi. Tiếp tục và bỏ lưu các ảnh lỗi?"
+          )
+        ) {
+          this.saveWarehouseImpWithImgsUploaded();
+        } else {
+          this.saveWarehouseImp(form);
+        }
+      }
+    }
+  }
+
+  saveWarehouseImpWithImgsUploaded() {
+    this.warehouseImp.lsDetail.forEach((details) => {
+      details.lsImage = details.lsImage.filter(
+        (img) => img.attachLink && img.attachLink.includes("https:")
+      );
+    });
+    console.log(this.warehouseImp);
+
+    this.warehouseImpService
+      .saveWarehouseImp(this.warehouseImp)
+      .toPromise()
+      .then((res) => {
+        if (res.result.success) {
+          this.messageService.add({
+            key: "notificationPopup",
+            severity: "success",
+            summary: "Thông báo",
+            detail: "Bạn đã lưu thành công phiếu nhập hàng",
+          });
+          this.mapResData(res.result.data);
+          this.isLoadByImpId = true;
+          this.location.go(
+            this.location.path().split("?")[0],
+            "warehouseImpId=" + this.warehouseImp.warehouseImpId
+          );
           this.loading = false;
-          if (res.result.success) {
-            this.messageService.add({
-              key: "notificationPopup",
-              severity: "success",
-              summary: "Thông báo",
-              detail: "Bạn đã lưu thành công phiếu nhập hàng",
-            });
-            this.mapResData(res.result.data);
-            this.isLoadByImpId = true;
-            this.location.go(
-              this.location.path().split("?")[0],
-              "warehouseImpId=" + this.warehouseImp.warehouseImpId
-            );
-          } else {
-            this.location.go(this.location.path().split("?")[0]);
-            this.messageService.add({
-              key: "notificationPopup",
-              severity: "error",
-              summary: "Thông báo",
-              detail: res.result.message,
-            });
-          }
-        })
-        .catch(() => {
-          this.loading = false;
+        } else {
           this.location.go(this.location.path().split("?")[0]);
           this.messageService.add({
             key: "notificationPopup",
             severity: "error",
             summary: "Thông báo",
-            detail: "Lưu kiện hàng không thành công",
+            detail: res.result.message,
           });
+          this.loading = false;
+        }
+      })
+      .catch(() => {
+        this.loading = false;
+        this.location.go(this.location.path().split("?")[0]);
+        this.messageService.add({
+          key: "notificationPopup",
+          severity: "error",
+          summary: "Thông báo",
+          detail: "Lưu kiện hàng không thành công",
         });
-    }
+      });
   }
 
+  uploadOneImg(imageAsDataUrl) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      const imgBlob = this.DataURIToBlob(imageAsDataUrl);
+      const fileName = new Date().getTime();
+      formData.append("file", imgBlob, fileName.toString());
+      this.fileManagerServices.uploadImg(formData).subscribe(
+        (resultUploadImg) => {
+          if (
+            resultUploadImg &&
+            resultUploadImg.result &&
+            resultUploadImg.result.success &&
+            resultUploadImg.result.data
+          ) {
+            resolve(resultUploadImg.result.data);
+          } else {
+            resolve(false);
+          }
+        },
+        (uploadErr) => {
+          resolve(false);
+        }
+      );
+    });
+  }
+
+  uploadListImg() {
+    // upload and update img uploaded response to this.warehouseImpDetailList
+    let uploadSuccess = true;
+    return new Promise(async (resolve, reject) => {
+      for (
+        let warehouseImpIndex = 0;
+        warehouseImpIndex < this.warehouseImpDetailList.length;
+        warehouseImpIndex++
+      ) {
+        for (
+          let imgIndex = 0;
+          imgIndex <
+          this.warehouseImpDetailList[warehouseImpIndex].lsImage.length;
+          imgIndex++
+        ) {
+          const imgAttachLink = this.warehouseImpDetailList[warehouseImpIndex]
+            .lsImage[imgIndex].attachLink;
+          if (imgAttachLink && imgAttachLink.includes("https:") == false) {
+            const uploadImgStatus = await this.uploadOneImg(imgAttachLink);
+            if (uploadImgStatus) {
+              this.warehouseImpDetailList[warehouseImpIndex].lsImage[
+                imgIndex
+              ] = Object.assign({}, uploadImgStatus);
+              this.warehouseImpDetailList[warehouseImpIndex].lsImage[
+                imgIndex
+              ].uploadSuccess = true;
+            } else {
+              this.warehouseImpDetailList[warehouseImpIndex].lsImage[
+                imgIndex
+              ].uploadSuccess = false;
+              uploadSuccess = false;
+            }
+          }
+        }
+      }
+      resolve(uploadSuccess);
+    });
+  }
   /**
    * Save warehouse import info
    * @param form
@@ -165,6 +260,8 @@ export class AddWarehouseImpComponent implements OnInit {
                 detail: "Kiện hàng đã tồn tại trong danh sách",
               });
               return;
+            } else {
+              this.loading = false;
             }
             const selfPosition = this.warehouseImpDetail.shelfPosition;
             if (this.isEditWarehouseImpDetails) {
@@ -202,7 +299,9 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   deleteAllWarehouseImpDetail() {
-    this.delete(this.warehouseImpDetailList);
+    if (confirm("Bạn có chắc chắn muốn xóa?")) {
+      this.delete(this.warehouseImpDetailList);
+    }
   }
 
   deleteOneWarehouseImpDetail(warehouseImp, index) {
@@ -282,61 +381,59 @@ export class AddWarehouseImpComponent implements OnInit {
   delete(warehouseImpDetailList) {
     this.selected = Object.assign([], warehouseImpDetailList);
     if (this.selected.length > 0) {
-      if (confirm("Bạn có chắc chắn muốn xóa?")) {
-        let deleteApiIds = this.selected
-          .filter((item) => item.warehouseImpDetailId)
-          .map((itm) => itm.warehouseImpDetailId);
-        deleteApiIds = deleteApiIds.filter(
-          (v, i) => deleteApiIds.indexOf(v) === i
-        );
-        if (deleteApiIds.length > 0) {
-          this.loading = true;
-          this.warehouseImpService
-            .deleteLsImpDetail(deleteApiIds)
-            .toPromise()
-            .then((res) => {
-              this.loading = false;
-              if (res.result.success) {
-                this.messageService.add({
-                  key: "notificationPopup",
-                  severity: "success",
-                  summary: "Thông báo",
-                  detail: "Đã xóa kiện hàng",
-                });
-                const filtered = this.warehouseImpDetailList.filter(
-                  (element) => !this.selected.includes(element)
-                );
-                this.warehouseImpDetailList = [...filtered];
-              } else {
-                this.messageService.add({
-                  key: "notificationPopup",
-                  severity: "error",
-                  summary: "Thông báo",
-                  detail: "Xóa kiện hàng không thành công",
-                });
-              }
-            })
-            .catch(() => {
-              this.loading = false;
+      let deleteApiIds = this.selected
+        .filter((item) => item.warehouseImpDetailId)
+        .map((itm) => itm.warehouseImpDetailId);
+      deleteApiIds = deleteApiIds.filter(
+        (v, i) => deleteApiIds.indexOf(v) === i
+      );
+      if (deleteApiIds.length > 0) {
+        this.loading = true;
+        this.warehouseImpService
+          .deleteLsImpDetail(deleteApiIds)
+          .toPromise()
+          .then((res) => {
+            this.loading = false;
+            if (res.result.success) {
+              this.messageService.add({
+                key: "notificationPopup",
+                severity: "success",
+                summary: "Thông báo",
+                detail: "Đã xóa kiện hàng",
+              });
+              const filtered = this.warehouseImpDetailList.filter(
+                (element) => !this.selected.includes(element)
+              );
+              this.warehouseImpDetailList = [...filtered];
+            } else {
               this.messageService.add({
                 key: "notificationPopup",
                 severity: "error",
                 summary: "Thông báo",
                 detail: "Xóa kiện hàng không thành công",
               });
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+            this.messageService.add({
+              key: "notificationPopup",
+              severity: "error",
+              summary: "Thông báo",
+              detail: "Xóa kiện hàng không thành công",
             });
-        } else {
-          this.messageService.add({
-            key: "notificationPopup",
-            severity: "success",
-            summary: "Thông báo",
-            detail: "Đã xóa kiện hàng",
           });
-          const filtered = this.warehouseImpDetailList.filter(
-            (element) => !this.selected.includes(element)
-          );
-          this.warehouseImpDetailList = [...filtered];
-        }
+      } else {
+        this.messageService.add({
+          key: "notificationPopup",
+          severity: "success",
+          summary: "Thông báo",
+          detail: "Đã xóa kiện hàng",
+        });
+        const filtered = this.warehouseImpDetailList.filter(
+          (element) => !this.selected.includes(element)
+        );
+        this.warehouseImpDetailList = [...filtered];
       }
     }
   }
@@ -514,7 +611,7 @@ export class AddWarehouseImpComponent implements OnInit {
   /*
     event when input merchandiseCode lost focus
   */
-  merchandiseCodeCheckExist(event, merchandiseCode) {
+  merchandiseCodeCheckExist() {
     if (this.checkEditExistingMerchandise()) {
       this.messageService.add({
         key: "notificationPopup",
@@ -522,139 +619,198 @@ export class AddWarehouseImpComponent implements OnInit {
         summary: "Thông báo",
         detail: "Kiện hàng đã tồn tại trong danh sách",
       });
-      return;
+      document.getElementById("merchandiseCode").focus();
+      return false;
+    } else {
+      return true;
     }
+  }
+
+  /*
+    Capture img
+  */
+  createFormImgsData(imgs) {
+    const formData = new FormData();
+    if (imgs.length > 0) {
+      for (let i = 0; i < imgs.length; i++) {
+        const imgBlob = this.DataURIToBlob(imgs[i].attachLink);
+        const fileName = new Date().getTime().toString();
+        formData.append("file", imgBlob, fileName.toString());
+      }
+    }
+    return formData;
+  }
+
+  DataURIToBlob(dataURI: string) {
+    const splitDataURI = dataURI.split(",");
+    const byteString =
+      splitDataURI[0].indexOf("base64") >= 0
+        ? atob(splitDataURI[1])
+        : decodeURI(splitDataURI[1]);
+
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++)
+      ia[i] = byteString.charCodeAt(i);
+    // { type: mimeString }
+    return new Blob([ia], { type: this.imgUploadType });
   }
 
   async captureMerchandise() {
     // add ảnh
-    const ref = this.dialogService.open(CaptureMerchandiseComponent, {
-      header: "Chụp ảnh kiện hàng",
-      width: "100vw",
-      style: { "max-width": "700px", "overflow-y": "auto" },
-      data: {
-        imgLinks: this.warehouseImpDetail.lsImage
-          ? this.warehouseImpDetail.lsImage
-          : [],
-      },
-    });
 
-    ref.onClose.subscribe((imgUploadeds: any[]) => {
-      if (imgUploadeds) {
-        // Chỉ lấy các image đã upload
-        this.warehouseImpDetail.lsImage = imgUploadeds.filter(
-          (img) => img.attachLink && img.attachLink.includes("https:")
-        );
-      }
-      const merchandiseCodeInput = document.getElementById(
-        "netWeight"
-      ) as HTMLInputElement;
-      merchandiseCodeInput.focus();
-      merchandiseCodeInput.select();
-    });
+    if (this.loading == false) {
+      const ref = this.dialogService.open(CaptureMerchandiseComponent, {
+        header: "Chụp ảnh kiện hàng",
+        width: "100vw",
+        style: { "max-width": "700px", "overflow-y": "auto" },
+        data: {
+          imgLinks: this.warehouseImpDetail.lsImage
+            ? this.warehouseImpDetail.lsImage
+            : [],
+          action: "capture",
+        },
+      });
+
+      ref.onClose.subscribe((capturedImgs: any[]) => {
+        if (capturedImgs) {
+          this.warehouseImpDetail.lsImage = capturedImgs;
+        }
+        console.log(this.warehouseImpDetail);
+        const merchandiseCodeInput = document.getElementById(
+          "netWeight"
+        ) as HTMLInputElement;
+        merchandiseCodeInput.focus();
+        merchandiseCodeInput.select();
+      });
+    }
   }
 
   editListImgOfMerchandise(imgs, indexMerchandise) {
     // edit from gird
-    const ref = this.dialogService.open(CaptureMerchandiseComponent, {
-      header: "Ảnh kiện hàng",
-      width: "100vw",
-      style: { "max-width": "700px", "overflow-y": "auto" },
-      data: {
-        imgLinks: imgs,
-      },
-    });
-    ref.onClose.subscribe((imgUploadeds: any[]) => {
-      if (imgUploadeds) {
-        // Chỉ lấy các image đã upload
-        this.warehouseImpDetailList[
-          indexMerchandise
-        ].lsImage = imgUploadeds.filter(
-          (img) => img.attachLink && img.attachLink.includes("https:")
-        );
-      }
-    });
+    if (this.loading == false) {
+      const ref = this.dialogService.open(CaptureMerchandiseComponent, {
+        header: "Ảnh kiện hàng",
+        width: "100vw",
+        style: { "max-width": "700px", "overflow-y": "auto" },
+        data: {
+          imgLinks: imgs,
+          action: "viewImg",
+        },
+      });
+      ref.onClose.subscribe((capturedImgs: any[]) => {
+        if (capturedImgs) {
+          this.warehouseImpDetailList[indexMerchandise].lsImage = capturedImgs;
+        }
+      });
+    }
   }
 
   async checkMerchandiseCode(event, merchandiseCode) {
+    this.loading = true;
     const merchandiseCodeInput = document.getElementById(
       "merchandiseCode"
     ) as HTMLInputElement;
-    if (merchandiseCode) {
+    if (!merchandiseCode) {
+      this.messageService.add({
+        key: "notificationPopup",
+        severity: "error",
+        summary: "Thông báo",
+        detail: "Bắt buộc phải nhập mã vận đơn",
+      });
+      this.loading = false;
+    } else if (this.merchandiseCodeCheckExist() == false) {
+      this.loading = false;
+      // merchandiseCodeCheckExist
+    } else if (merchandiseCode && this.merchandiseCodeCheckExist() == true) {
       await this.merchandiseServices
         .getMerchandiseByCode(merchandiseCode)
         .toPromise()
         .then(async (res) => {
-          if (res.result.success) {
-            if (res.result.data != null) {
-              // hiển thị dữ liệu đơn hàng của kiện hàng
-              // Next sang control tiếp theo
-              this.captureMerchandise();
-              merchandiseCodeInput.blur();
-            } else {
-              //hiển thị thông báo đơn hàng chưa được map vào kiện hàng
-              this.orderCodeMapping = "";
-              await this.confirmationService.confirm({
-                key: "comfirmOrder",
-                header: "Xác nhận",
-                message: `Kiện hàng chưa được khai báo.`,
-                acceptLabel: "Khai báo",
-                rejectLabel: "Bỏ qua",
-                accept: () => {
-                  const params: MerchandiseAddPrams = {
-                    merchandiseCode: merchandiseCode,
-                    OrderCode: this.orderCodeMapping,
-                    createdUserId: this.userId,
-                  };
-                  this.loading = true;
-                  this.merchandiseServices
-                    .addMerchandise(params)
-                    .subscribe((resAddAddMerchandise) => {
-                      if (resAddAddMerchandise.result.success) {
-                        this.messageService.add({
-                          key: "notificationPopup",
-                          severity: "success",
-                          summary: "Thông báo",
-                          detail: "Cập nhật thành công!",
-                        });
-                        this.captureMerchandise();
-                        merchandiseCodeInput.blur();
-                      } else {
-                        this.messageService.add({
-                          key: "notificationPopup",
-                          severity: "error",
-                          summary: "Thông báo",
-                          detail: resAddAddMerchandise.result.message,
-                        });
-                        merchandiseCodeInput.focus();
-                        merchandiseCodeInput.select();
-                      }
-                      this.loading = false;
-                    });
-                },
-                reject: () => {
-                  this.loading = false;
-                  this.messageService.add({
-                    key: "notificationPopup",
-                    severity: "error",
-                    summary: "Thông báo",
-                    detail: "Có lỗi xảy ra",
-                  });
-
-                  const merchandiseCodeInput = document.getElementById(
-                    "merchandiseCode"
-                  ) as HTMLInputElement;
-                  merchandiseCodeInput.focus();
-                  merchandiseCodeInput.select();
-                },
-              });
-            }
+          if (res.result.success && res.result.data !== null) {
+            // hiển thị dữ liệu đơn hàng của kiện hàng
+            // Next sang control tiếp theo
+            this.loading = false;
+            this.captureMerchandise();
+            merchandiseCodeInput.blur();
           } else {
+            // hiển thị thông báo đơn hàng chưa được map vào kiện hàng
+            this.orderCodeMapping = "";
+            setTimeout(() => {
+              const orderCodeMappingInput = document.getElementById(
+                "orderCodeMapping"
+              ) as HTMLInputElement;
+              orderCodeMappingInput.focus();
+            }, 300);
+            this.loading = false;
+            await this.confirmationService.confirm({
+              key: "comfirmOrder",
+              header: "Xác nhận",
+              message: `Kiện hàng chưa được khai báo.`,
+              acceptLabel: "Khai báo",
+              rejectLabel: "Bỏ qua",
+              accept: () => {
+                const params: MerchandiseAddPrams = {
+                  merchandiseCode: merchandiseCode,
+                  OrderCode: this.orderCodeMapping,
+                  createdUserId: this.userId,
+                };
+                this.loading = true;
+                this.merchandiseServices.addMerchandise(params).subscribe(
+                  (resAddAddMerchandise) => {
+                    if (resAddAddMerchandise.result.success) {
+                      this.messageService.add({
+                        key: "notificationPopup",
+                        severity: "success",
+                        summary: "Thông báo",
+                        detail: "Cập nhật thành công!",
+                      });
+                      this.captureMerchandise();
+                      merchandiseCodeInput.blur();
+                    } else {
+                      this.messageService.add({
+                        key: "notificationPopup",
+                        severity: "error",
+                        summary: "Thông báo",
+                        detail: resAddAddMerchandise.result.message,
+                      });
+                      merchandiseCodeInput.focus();
+                      merchandiseCodeInput.select();
+                    }
+                    this.loading = false;
+                  },
+                  (err) => {
+                    this.loading = false;
+                  }
+                );
+              },
+              reject: () => {
+                this.loading = false;
+                const merchandiseCodeInput = document.getElementById(
+                  "merchandiseCode"
+                ) as HTMLInputElement;
+                merchandiseCodeInput.focus();
+                merchandiseCodeInput.select();
+              },
+            });
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.loading = false;
+          this.messageService.add({
+            key: "notificationPopup",
+            severity: "error",
+            summary: "Thông báo",
+            detail: "Có lỗi xảy ra. Hãy thử lại",
+          });
+        });
     } else {
-      //Hiển thị thông báo bắt buộc phải nhập mã vận đơn
+      this.messageService.add({
+        key: "notificationPopup",
+        severity: "error",
+        summary: "Thông báo",
+        detail: "Có lỗi xảy ra",
+      });
+      this.loading = false;
     }
   }
 

@@ -81,7 +81,7 @@
                                         [(ngModel)]="warehouseImpDetail.merchandiseCode"
                                         (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value) "
                                         (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
-                                        (focusout)="merchandiseCodeCheckExist($event, merchandiseCode.value)"
+                                        (focusout)="merchandiseCodeCheckExist()"
                                         (keydown.Tab)="checkNextControlMerchandiseCode($event, merchandiseCode.value)"
                                         #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
@@ -96,14 +96,14 @@
                                     <label class="upload-img-padding" for="shelfPosition">&nbsp;</label>
                                     <button tabindex="2"
                                         *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img"
-                                        class="capture" pButton pRipple (click)="captureMerchandise()"
-                                        (keyup.enter)="captureMerchandise()" type="button"
+                                        class="capture" pButton pRipple (click)="checkMerchandiseCode(undefined,merchandiseCode.value)"
+                                        (keyup.enter)="checkMerchandiseCode(undefined, merchandiseCode.value)" type="button"
                                         pTooltip="Thêm ảnh ( Bạn cần up tối thiểu 1 ảnh )">
                                         <i class="pi pi-image" id="icon-upload-img"></i>
                                     </button>
                                     <ng-template #has_img>
                                         <button pButton pRipple tabindex="2" class="btn-img-uploaded">
-                                            <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="captureMerchandise()"
+                                            <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="checkMerchandiseCode(undefined, merchandiseCode.value)"
                                                 [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
                                                 [src]="warehouseImpDetail.lsImage[0].attachLink" style="margin-right: 0;">
                                         </button>
@@ -214,9 +214,6 @@
                             </ngx-datatable-column>
                         </ngx-datatable>
 
-                        <!-- <div (click)="show()">
-                            show
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -237,7 +234,7 @@
     <p-footer>
         <div>
             <label style="display: block; text-align: left;">Nhập mã đơn hàng để khai báo.</label>
-            <input type="text" autocomplete="off" class="form-control" id="orderCode" name="orderCode"
+            <input type="text" autocomplete="off" class="form-control" id="orderCodeMapping" name="orderCodeMapping"
                 placeholder="Mã đơn hàng" ngModel [(ngModel)]="orderCodeMapping">
             <br><br>
         </div>

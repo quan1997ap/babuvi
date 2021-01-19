@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { Component, OnInit } from "@angular/core";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/api";
 import * as _ from "lodash";
-import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
+import { WebcamImage, WebcamInitError, WebcamUtil } from "ngx-webcam";
 
 @Component({
   selector: "app-capture-merchandise",
@@ -41,13 +41,22 @@ export class CaptureMerchandiseComponent implements OnInit {
   >();
 
   ngOnInit() {
-    WebcamUtil.getAvailableVideoInputs()
-    .then((mediaDevices: MediaDeviceInfo[]) => {
-      this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
-    });
+    WebcamUtil.getAvailableVideoInputs().then(
+      (mediaDevices: MediaDeviceInfo[]) => {
+        this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
+      }
+    );
 
     if (this.config && this.config.data && this.config.data.imgLinks) {
       this.webcamImages = _.cloneDeep(this.config.data.imgLinks);
+    }
+    if (this.config && this.config.data && this.config.data.action) {
+      // 'viewImg'
+      this.currentAction = this.config.data.action;
+      console.log(this.config.data.action);
+      if (this.config.data.action == "viewImg") {
+        this.zoomImg(this.config.data.imgLinks[0]);
+      }
     }
     this.autoFocusBtnSubmit();
   }
@@ -72,13 +81,12 @@ export class CaptureMerchandiseComponent implements OnInit {
     this.showWebcam = !this.showWebcam;
   }
 
-  public showNextWebcam(directionOrDeviceId: boolean|string): void {
+  public showNextWebcam(directionOrDeviceId: boolean | string): void {
     // true => move forward through devices
     // false => move backwards through devices
     // string => move to device with given deviceId
     this.nextWebcam.next(directionOrDeviceId);
   }
-  
 
   public handleImage(webcamImage: WebcamImage): void {
     const img = { attachLink: webcamImage.imageAsDataUrl };
@@ -107,77 +115,8 @@ export class CaptureMerchandiseComponent implements OnInit {
   // close
   async uploadImgAndClose() {
     this.loading = true;
-    const formData = new FormData();
-    // fileNeedUpload check xem cần upload nhũng img nào. Những img đã upload thì chỉ cần lấy linklink
-    let fileDontNeedUpload = [];
-    let fileNeedUpload = [];
-    this.webcamImages.forEach((img: any) => {
-      if (img.attachLink && img.attachLink.includes("https:")) {
-        fileDontNeedUpload.push(img);
-      } else {
-        fileNeedUpload.push(img);
-      }
-    });
-
-    let uploadAllImgSuccess = true;
-    for (let i = 0; i < fileNeedUpload.length; i++) {
-      const uploadImgStatus = await this.uploadOneImg(
-        fileNeedUpload[i].attachLink
-      );
-      if (uploadImgStatus) {
-        fileNeedUpload[i] = Object.assign({}, uploadImgStatus);
-        fileNeedUpload[i].uploadSuccess = true;
-      } else {
-        fileNeedUpload[i].uploadSuccess = false;
-        uploadAllImgSuccess = false;
-      }
-    }
-    this.webcamImages = fileDontNeedUpload.concat(fileNeedUpload);
-    if (uploadAllImgSuccess) {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "success",
-        summary: "Thông báo",
-        detail: "Upload image thành công.",
-      });
-      this.ref.close(this.webcamImages);
-    } else {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "error",
-        summary: "Thông báo",
-        detail:
-          "Upload image không thành công. Click upload button để upload lại.",
-      });
-    }
-
+    this.ref.close(this.webcamImages);
     this.loading = false;
-  }
-
-  uploadOneImg(imageAsDataUrl) {
-    return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      const imgBlob = this.DataURIToBlob(imageAsDataUrl);
-      const fileName = new Date().getTime();
-      formData.append("file", imgBlob, fileName.toString());
-      this.fileManagerServices.uploadImg(formData).subscribe(
-        (resultUploadImg) => {
-          if (
-            resultUploadImg &&
-            resultUploadImg.result &&
-            resultUploadImg.result.success &&
-            resultUploadImg.result.data
-          ) {
-            resolve(resultUploadImg.result.data);
-          } else {
-            resolve(false);
-          }
-        },
-        (uploadErr) => {
-          resolve(false);
-        }
-      );
-    });
   }
 
   captureAndUpload() {
@@ -198,19 +137,4 @@ export class CaptureMerchandiseComponent implements OnInit {
   }
 
 
-  DataURIToBlob(dataURI: string) {
-    const splitDataURI = dataURI.split(",");
-    const byteString =
-      splitDataURI[0].indexOf("base64") >= 0
-        ? atob(splitDataURI[1])
-        : decodeURI(splitDataURI[1]);
-
-    const ia = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++)
-      ia[i] = byteString.charCodeAt(i);
-    // { type: mimeString }
-    return new Blob([ia], { type: this.imgUploadType });
-  }
-
-  public files: any[];
 }
