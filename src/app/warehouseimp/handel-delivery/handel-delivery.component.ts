@@ -3,6 +3,7 @@ import { ChangeDetectorRef } from "@angular/core";
 import { DialogService, MessageService } from "primeng/api";
 import { MerchandiseServices } from "app/services/merchandise.services";
 import { Component, OnInit } from "@angular/core";
+import { APP_NAME } from "app/config/app.config";
 
 import {
   FormBuilder,
@@ -18,12 +19,15 @@ import {
   providers: [DialogService],
 })
 export class HandelDeliveryComponent implements OnInit {
+  APP_NAME = APP_NAME;
+  styleSheetFiles = "/assets/styles/css/print-bill.css";
   loading = false;
   filterByOptions = [{ label: "Theo mã phiếu", value: 1 }];
   filterForm: FormGroup;
   currentPage = 0;
   numOfItemOnPage = 5;
   requestList = [];
+  requestListSelected = []; // for print
   constructor(
     private fb: FormBuilder,
     public messageService: MessageService,
@@ -34,14 +38,14 @@ export class HandelDeliveryComponent implements OnInit {
 
   ngOnInit() {
     this.filterForm = this.fb.group({
-      code: ["DlR20218", Validators.required],
+      code: ["", Validators.required],
       filterBy: [this.filterByOptions[0].value, Validators.required],
     });
   }
 
   cleanList() {
     if (confirm("Bạn có chắc chắn muốn xóa?")) {
-      this.requestList.length = 0;
+      this.requestList =  this.requestList.filter((request) => request.checked == false);
     }
   }
 
@@ -66,7 +70,10 @@ export class HandelDeliveryComponent implements OnInit {
                     : [];
                 res.result.data.checked = false;
                 res.result.data.isCollapse = false;
-                this.requestList.push(res.result.data);
+                // res.result.data.totalPackage = 5;
+                // res.result.data.missingAmount = 5;
+                res.result.sumRequestWeight = this.sumWeightOfRequestList(res.result.data.lsDetail);
+                this.requestList.unshift(res.result.data);
               }
             },
             (err) => {
@@ -82,7 +89,29 @@ export class HandelDeliveryComponent implements OnInit {
     }
   }
 
-  print() {}
+  sumWeightOfRequestList(requestList) {
+    if (requestList && requestList.length > 0) {
+      return requestList.reduce((a, b) => a + (parseInt(b['paymentWeight']) || 0), 0);
+    } else {
+      return 0;
+    }
+  }
+
+  totalPackageOfRequestList() {
+    if (this.requestList && this.requestList.length > 0) {
+      return this.requestList.reduce((a, b) => a + (parseInt(b['totalPackage']) || 0), 0);
+    } else {
+      return 0;
+    }
+  }
+
+  totalMissingAmountOfRequestList(lsDetail) {
+    if (this.requestList && this.requestList.length > 0) {
+      return this.requestList.reduce((a, b) => a + (parseInt(b['missingAmount']) || 0), 0);
+    } else {
+      return 0;
+    }
+  }
 
   changeStatusDeliveryRequestDetail(
     requestDetail,
@@ -95,7 +124,6 @@ export class HandelDeliveryComponent implements OnInit {
         .changeStatusDeliveryRequestDetail(deliveryRequestDetailId)
         .subscribe(
           (resChangeStatus) => {
-            console.log(resChangeStatus);
             if (
               resChangeStatus &&
               resChangeStatus.result &&
@@ -204,19 +232,11 @@ export class HandelDeliveryComponent implements OnInit {
       });
   }
 
-  /**
-   * Print bill
-   */
-  printExpBill(warehouseExpCode, deliveryRequestCode, deliveryRequestId) {
-    const printData = {
-      expCode: warehouseExpCode ? warehouseExpCode : null,
-      deliveryRequestCode: deliveryRequestCode,
-      deliveryRequestId: deliveryRequestId,
-    };
-    // this.dialogService.open(PrintBillComponent, {
-    //   data: printData,
-    // });
+  changeSelectedDeliveryRequest($event){
+    console.log($event, this.requestListSelected)
+    this.requestListSelected =  this.requestList.filter((request) => request.checked == true)
   }
+
 
   showMessage(type, message, summary) {
     this.messageService.add({

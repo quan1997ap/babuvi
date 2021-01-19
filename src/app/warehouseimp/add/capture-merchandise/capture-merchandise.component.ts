@@ -53,7 +53,6 @@ export class CaptureMerchandiseComponent implements OnInit {
     if (this.config && this.config.data && this.config.data.action) {
       // 'viewImg'
       this.currentAction = this.config.data.action;
-      console.log(this.config.data.action);
       if (this.config.data.action == "viewImg") {
         this.zoomImg(this.config.data.imgLinks[0]);
       }

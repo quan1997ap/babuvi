@@ -7,7 +7,8 @@
 </div>
 <div autoscroll="true" class="ng-scope">
   <div class="gr-btn">
-    <button type="button" (click)="print()" class="btn">
+    <button type="button" class="btn" printSectionId="print-delivery-request" [styleSheetFile]="styleSheetFiles"
+      ngxPrint>
       In phiếu
     </button>
     <button type="button" (click)="start()" class="btn">
@@ -25,9 +26,9 @@
       XỬ LÝ YÊU CẦU GIAO HÀNG
     </h3>
     <div class="statistic-all">
-      <span>Tổng kiện: </span>
+      <span>Tổng kiện: {{totalPackageOfRequestList()}} </span>
       <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-      <span>Chưa thấy: </span>
+      <span>Chưa thấy: {{totalMissingAmountOfRequestList()}}</span>
     </div>
     <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
       <div class="controls">
@@ -38,8 +39,12 @@
         [disabled]="!filterForm.valid"></button>
     </form>
 
+    <div class="lst-request-title">
+      Danh sách request
+    </div>
     <div (click)="cleanList()" class="clean-table" *ngIf="requestList && requestList.length > 0">
-      Clear danh sách
+      <i class="pi pi-times"></i>
+      <span style="padding-left: 4px;">Xóa khỏi danh sách</span>
     </div>
     <div class="table-detail">
       <div *ngIf="!requestList || requestList.length == 0" style="padding-left: 8px;">
@@ -48,7 +53,9 @@
       <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết">
         <div [ngClass]="{'d-none': (i < currentPage*numOfItemOnPage) || (i >= (currentPage + 1)*numOfItemOnPage)  }">
           <div class="row-statistic screen">
-            <p-checkbox [binary]="true" [(ngModel)]="request.checked"></p-checkbox>
+            <!-- for desktop -->
+            <p-checkbox binary="true" [(ngModel)]="request.checked" inputId="binary" (onChange)="changeSelectedDeliveryRequest($event)">
+            </p-checkbox>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
             <span>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></span>
             <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
@@ -61,7 +68,9 @@
           </div>
           <div class="row-statistic mobile">
             <div class="request-infor">
-              <p-checkbox [binary]="true" [(ngModel)]="request.checked"></p-checkbox>
+               <!-- for mobile -->
+              <p-checkbox binary="true" [(ngModel)]="request.checked" inputId="binary" (onChange)="changeSelectedDeliveryRequest($event)">
+              </p-checkbox>
               <div>
                 <div>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></div>
                 <div>Số kiện: <strong>{{request.totalPackage}}</strong></div>
@@ -99,7 +108,8 @@
                 <div class="detail-info">Mã khách hàng:<span class="text-infor"> {{ requestDetail.userCode ?
                     requestDetail.userCode: '' }}</span></div>
               </div>
-              <div class="detail-info status" class="status" (click)="changeStatusDeliveryRequestDetail(requestDetail, requestDetail.deliveryRequestDetailId, requestDetail.status)"
+              <div class="detail-info status" class="status"
+                (click)="changeStatusDeliveryRequestDetail(requestDetail, requestDetail.deliveryRequestDetailId, requestDetail.status)"
                 [ngClass]="{'not-found':  requestDetail.status == 1 , 'found':requestDetail.status == 2 }">
                 {{ requestDetail.status == 1 ? 'Chưa thấy' : 'Đã thấy'}}
               </div>
@@ -110,6 +120,63 @@
       <div *ngIf="requestList && requestList.length > 0">
         <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
         </p-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="print-delivery-request">
+  <div class="print-container" *ngFor="let deliveryRequest of requestListSelected; let i=index;">
+    <div class="page">
+      <div class="subpage">
+        <div class="form-3">
+          <h1 class="text-center text-uppercase"> Phiếu yêu cầu giao hàng </h1>
+          <ngx-barcode [bc-value]="deliveryRequest.deliveryRequestCode" bc-height="30" bc-font-size="15" bc-width="1.8"
+            [bc-display-value]="true"></ngx-barcode>
+          <div class="info">
+            <div><strong>Loại:</strong> {{deliveryRequest.typeDisplay}} </div>
+            <div><strong>Khách hàng:</strong> {{deliveryRequest.contactName}} </div>
+            <div><strong>Điện thoại:</strong> {{deliveryRequest.contactPhone}} </div>
+            <div><strong>Địa chỉ:</strong> {{deliveryRequest.address
+              + '-' + deliveryRequest.wardDisplay
+              + '-' + deliveryRequest.districtDisplay
+              + '-' + deliveryRequest.cityDisplay
+              + '-' + deliveryRequest.countryDisplay}}</div>
+            <div class="text-center">**************</div>
+            <div><strong>Nhà xe:</strong> {{deliveryRequest.vehicleName}} </div>
+            <div><strong>Điện thoại:</strong> {{deliveryRequest.vehiclePhone}}</div>
+            <div><strong>Địa chỉ:</strong> {{deliveryRequest.vehicleAddress}}</div>
+            <div class="text-center">**************</div>
+          </div>
+          <div class="list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mã hàng</th>
+                  <th>Vị trí</th>
+                  <th>Trọng lượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let mer of deliveryRequest.lsDetail">
+                  <td style="white-space: nowrap;">{{mer.merchandiseCode}}</td>
+                  <td style="min-width: 30px;">{{mer.shelfPosition}}</td>
+                  <td style="min-width: 30px;">{{mer.paymentWeight}}</td>
+                </tr>
+                <tr>
+                  <td class="no-border">{{deliveryRequest.lsDetail?.length}} kiện hàng</td>
+                  <td class="no-border"></td>
+                  <td class="no-border">{{deliveryRequest.sumRequestWeight}} kg</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="print-footer">
+            <div class="text-center">{{APP_NAME}} - Order </div>
+            <div class="text-center">Hotline: 03030203023 </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

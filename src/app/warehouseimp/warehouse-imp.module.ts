@@ -20,7 +20,9 @@ import { DropdownModule } from "primeng/dropdown";
 import { InputTextModule } from "primeng/inputtext";
 import { CheckboxModule } from "primeng/checkbox";
 import { PaginatorModule } from "primeng/paginator";
-
+// Other
+import { NgxBarcodeModule } from 'ngx-barcode';
+import { NgxPrintModule } from "ngx-print";
 //service
 import { WarehouseImpService } from "app/services/warehouse-imp.service";
 import { SystemService } from "app/services/system.services";
@@ -54,7 +56,9 @@ import { HandelDeliveryComponent } from "./handel-delivery/handel-delivery.compo
     WebcamModule,
     DynamicDialogModule,
     TooltipModule,
-    PaginatorModule
+    PaginatorModule,
+    NgxPrintModule,
+    NgxBarcodeModule
   ],
   providers: [
     WarehouseImpService,
