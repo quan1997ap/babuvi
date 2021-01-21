@@ -70,8 +70,6 @@ export class HandelDeliveryComponent implements OnInit {
                     : [];
                 res.result.data.checked = false;
                 res.result.data.isCollapse = false;
-                // res.result.data.totalPackage = 5;
-                // res.result.data.missingAmount = 5;
                 res.result.sumRequestWeight = this.sumWeightOfRequestList(res.result.data.lsDetail);
                 this.requestList.unshift(res.result.data);
               }

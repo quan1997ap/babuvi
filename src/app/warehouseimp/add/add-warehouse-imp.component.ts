@@ -259,6 +259,11 @@ export class AddWarehouseImpComponent implements OnInit {
                 summary: "Thông báo",
                 detail: "Kiện hàng đã tồn tại trong danh sách",
               });
+              const merchandiseCodeInput = document.getElementById(
+                "merchandiseCode"
+              ) as HTMLInputElement;
+              merchandiseCodeInput.focus();
+              merchandiseCodeInput.select();
               return;
             } else {
               this.loading = false;
@@ -619,7 +624,11 @@ export class AddWarehouseImpComponent implements OnInit {
         summary: "Thông báo",
         detail: "Kiện hàng đã tồn tại trong danh sách",
       });
-      document.getElementById("merchandiseCode").focus();
+      const merchandiseCodeInput = document.getElementById(
+        "merchandiseCode"
+      ) as HTMLInputElement;
+      merchandiseCodeInput.focus();
+      merchandiseCodeInput.select();
       return false;
     } else {
       return true;
@@ -675,12 +684,11 @@ export class AddWarehouseImpComponent implements OnInit {
         if (capturedImgs) {
           this.warehouseImpDetail.lsImage = capturedImgs;
         }
-        console.log(this.warehouseImpDetail);
-        const merchandiseCodeInput = document.getElementById(
+        const netWeightInput = document.getElementById(
           "netWeight"
         ) as HTMLInputElement;
-        merchandiseCodeInput.focus();
-        merchandiseCodeInput.select();
+        netWeightInput.focus();
+        netWeightInput.select();
       });
     }
   }
