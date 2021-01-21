@@ -249,6 +249,7 @@ export class AddWarehouseImpComponent implements OnInit {
               summary: "Thông báo",
               detail: "Bạn đã hoàn tất thành công phiếu nhập hàng",
             });
+            
             this.mapResData(res.result.data);
             this.isLoadByImpId = true;
             this.location.go(
