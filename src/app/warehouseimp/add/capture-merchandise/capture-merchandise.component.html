@@ -29,6 +29,7 @@
       </div>
     </div>
     <div class="btn-list">
+      <button id="save-btn" (keydown.enter)="captureAndUpload()" > </button>
       <p-button class="continue-capture" *ngIf="currentAction =='viewImg' " pTooltip="Tiếp tục chụp" label="Tiếp tục"
         (click)="changeAction('capture')">
       </p-button>
@@ -41,7 +42,6 @@
       <span>&nbsp;&nbsp;</span>
       <p-button label="Dừng chụp" type="submit" [disabled]="webcamImages.length == 0" class="p-button-secondary"
         (click)="uploadImgAndClose()"></p-button>
-      <input value='Save' id="save-btn" name='Save' (keydown.enter)="captureAndUpload()">
     </div>
   </div>
   <br />
