@@ -617,24 +617,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lockscreen_lockscreen_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lockscreen/lockscreen.component */ "./src/app/session/lockscreen/lockscreen.component.ts");
 /* harmony import */ var _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/material/checkbox */ "./node_modules/@angular/material/esm5/checkbox.es5.js");
 /* harmony import */ var _session_routing__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./session.routing */ "./src/app/session/session.routing.ts");
-/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
-/* harmony import */ var app_services_common_http_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! app/services/common/http.service */ "./src/app/services/common/http.service.ts");
-/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! primeng/toast */ "./node_modules/primeng/toast.js");
-/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(primeng_toast__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! primeng/api */ "./node_modules/primeng/api.js");
-/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(primeng_api__WEBPACK_IMPORTED_MODULE_15__);
-/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! primeng/primeng */ "./node_modules/primeng/primeng.js");
-/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(primeng_primeng__WEBPACK_IMPORTED_MODULE_16__);
-/* harmony import */ var app_services_login_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! app/services/login.service */ "./src/app/services/login.service.ts");
-/* harmony import */ var app_services_user_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! app/services/user.service */ "./src/app/services/user.service.ts");
-/* harmony import */ var app_services_system_services__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! app/services/system.services */ "./src/app/services/system.services.ts");
+/* harmony import */ var app_services_common_http_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! app/services/common/http.service */ "./src/app/services/common/http.service.ts");
+/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! primeng/toast */ "./node_modules/primeng/toast.js");
+/* harmony import */ var primeng_toast__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(primeng_toast__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! primeng/api */ "./node_modules/primeng/api.js");
+/* harmony import */ var primeng_api__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(primeng_api__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! primeng/primeng */ "./node_modules/primeng/primeng.js");
+/* harmony import */ var primeng_primeng__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(primeng_primeng__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var app_services_login_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! app/services/login.service */ "./src/app/services/login.service.ts");
+/* harmony import */ var app_services_user_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! app/services/user.service */ "./src/app/services/user.service.ts");
+/* harmony import */ var app_services_system_services__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! app/services/system.services */ "./src/app/services/system.services.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -677,13 +675,12 @@ var SessionModule = /** @class */ (function () {
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSelectModule"],
                 _angular_flex_layout__WEBPACK_IMPORTED_MODULE_5__["FlexLayoutModule"],
                 _angular_material_checkbox__WEBPACK_IMPORTED_MODULE_10__["MatCheckboxModule"],
-                _angular_http__WEBPACK_IMPORTED_MODULE_12__["HttpModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatProgressSpinnerModule"],
-                primeng_toast__WEBPACK_IMPORTED_MODULE_14__["ToastModule"],
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_16__["MessagesModule"],
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_16__["CheckboxModule"],
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_16__["CaptchaModule"],
-                primeng_primeng__WEBPACK_IMPORTED_MODULE_16__["DropdownModule"],
+                primeng_toast__WEBPACK_IMPORTED_MODULE_13__["ToastModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_15__["MessagesModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_15__["CheckboxModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_15__["CaptchaModule"],
+                primeng_primeng__WEBPACK_IMPORTED_MODULE_15__["DropdownModule"],
             ],
             declarations: [
                 _login_login_component__WEBPACK_IMPORTED_MODULE_6__["LoginComponent"],
@@ -692,11 +689,11 @@ var SessionModule = /** @class */ (function () {
                 _lockscreen_lockscreen_component__WEBPACK_IMPORTED_MODULE_9__["LockScreenComponent"],
             ],
             providers: [
-                app_services_common_http_service__WEBPACK_IMPORTED_MODULE_13__["HttpService"],
-                app_services_login_service__WEBPACK_IMPORTED_MODULE_17__["LoginService"],
-                primeng_api__WEBPACK_IMPORTED_MODULE_15__["MessageService"],
-                app_services_user_service__WEBPACK_IMPORTED_MODULE_18__["UserService"],
-                app_services_system_services__WEBPACK_IMPORTED_MODULE_19__["SystemService"]
+                app_services_common_http_service__WEBPACK_IMPORTED_MODULE_12__["HttpService"],
+                app_services_login_service__WEBPACK_IMPORTED_MODULE_16__["LoginService"],
+                primeng_api__WEBPACK_IMPORTED_MODULE_14__["MessageService"],
+                app_services_user_service__WEBPACK_IMPORTED_MODULE_17__["UserService"],
+                app_services_system_services__WEBPACK_IMPORTED_MODULE_18__["SystemService"]
             ],
         })
     ], SessionModule);
