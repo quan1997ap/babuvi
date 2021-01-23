@@ -103,7 +103,7 @@ export class HandelDeliveryComponent implements OnInit {
     }
   }
 
-  totalMissingAmountOfRequestList(lsDetail) {
+  totalMissingAmountOfRequestList() {
     if (this.requestList && this.requestList.length > 0) {
       return this.requestList.reduce((a, b) => a + (parseInt(b['missingAmount']) || 0), 0);
     } else {

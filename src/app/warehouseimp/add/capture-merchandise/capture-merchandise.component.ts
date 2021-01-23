@@ -1,7 +1,7 @@
 import { MessageService } from "primeng/components/common/api";
 import { FileManagerServices } from "./../../../services/fileManager.services";
 import { Observable, Subject } from "rxjs";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/api";
 import * as _ from "lodash";
 import { WebcamImage, WebcamInitError, WebcamUtil } from "ngx-webcam";
@@ -12,12 +12,15 @@ import { WebcamImage, WebcamInitError, WebcamUtil } from "ngx-webcam";
   styleUrls: ["./capture-merchandise.component.scss"],
 })
 export class CaptureMerchandiseComponent implements OnInit {
+  width = screen.width < 640 ? Number(screen.width): 640 ;
+  height = screen.height < 550 ? Number(screen.height) : 550 ;
   currentAction = "capture"; // "capture" , 'viewImg' , 'viewHistoryImg'
   currentZoomImg = null;
   loading = false;
   imgUploadType = "image/jpeg";
   public multipleWebcamsAvailable = false;
   constructor(
+    public cdr: ChangeDetectorRef,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     public messageService: MessageService,
@@ -41,6 +44,11 @@ export class CaptureMerchandiseComponent implements OnInit {
   >();
 
   ngOnInit() {
+    // let constraints = { video: true, audio: true };
+    // navigator.mediaDevices.getUserMedia(constraints)
+    //   .then(stream => { console.log('get perm success')} )
+    //   .catch(e => console.error(e));
+
     WebcamUtil.getAvailableVideoInputs().then(
       (mediaDevices: MediaDeviceInfo[]) => {
         this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
@@ -58,6 +66,8 @@ export class CaptureMerchandiseComponent implements OnInit {
       }
     }
     this.autoFocusBtnSubmit();
+    this.cdr.detectChanges();
+
   }
 
   public handleInitError(error: any): void {

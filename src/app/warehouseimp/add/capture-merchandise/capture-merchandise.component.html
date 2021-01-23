@@ -5,12 +5,12 @@
   </div>
 </div>
 
-<form style="width: 100%;margin: 0 auto; max-width: 700px;" >
-  <div class="webcam" *ngIf="currentAction=='capture' ">
-    <webcam [height]="500" [width]="640" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
-      *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
-      [imageType]="imgUploadType" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)"
-      (initError)="handleInitError($event)">
+<form style="width: 100%;margin: 0 auto; max-width: 700px;">
+  <!-- {{width}} - {{height}} -->
+  <div class="webcam" *ngIf="currentAction=='capture' && showWebcam">
+    <webcam [width]="width" [height]="height" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+      [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable" [imageType]="imgUploadType"
+      [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)" (initError)="handleInitError($event)">
     </webcam>
   </div>
   <div class="view-img" *ngIf="currentAction !== 'capture'">
@@ -19,7 +19,7 @@
   </div>
   <br />
   <div class="gr-action-btn">
-    <div class="imgs style-scrollbar">
+    <div class="imgs style-scrollbar" *ngIf="webcamImages && webcamImages.length">
       <div class="snapshot" *ngFor="let webcamImage of webcamImages; let i = index;">
         <img [src]="webcamImage.attachLink" class="img" pTooltip="Phóng to" (click)="zoomImg(webcamImage)" />
         <span class="remove-btn" pTooltip="Xóa ảnh" (click)="removeImg(i)">
@@ -28,18 +28,21 @@
         <span class="img-index">{{i + 1}}</span>
       </div>
     </div>
-    <p-button class="continue-capture" *ngIf="currentAction =='viewImg' " pTooltip="Tiếp tục" label="Tiếp tục chụp"
-      (click)="changeAction('capture')">
-    </p-button>
-    <span>&nbsp;&nbsp;</span>
-    <p-button class="toggle-webcam" *ngIf="currentAction=='capture'" (click)="showNextWebcam(true);" [disabled]="!multipleWebcamsAvailable" pTooltip="Chuyển Camera" icon="pi pi-refresh"></p-button>
-    <span>&nbsp;&nbsp;</span>
-    <p-button label="Chụp" autofocus class="p-button-secondary" *ngIf="currentAction=='capture'" icon="pi pi-camera"
-      (click)="triggerSnapshot();"></p-button>
-    <span>&nbsp;&nbsp;</span>
-    <p-button label="Dừng chụp" type="submit" [disabled]="webcamImages.length == 0" class="p-button-secondary"
-      (click)="uploadImgAndClose()"></p-button>
-    <input  value='Save' id="save-btn" name='Save' (keydown.enter)="captureAndUpload()"  >
+    <div class="btn-list">
+      <p-button class="continue-capture" *ngIf="currentAction =='viewImg' " pTooltip="Tiếp tục chụp" label="Tiếp tục"
+        (click)="changeAction('capture')">
+      </p-button>
+      <span>&nbsp;&nbsp;</span>
+      <p-button class="toggle-webcam" *ngIf="currentAction=='capture'" (click)="showNextWebcam(true);"
+        [disabled]="!multipleWebcamsAvailable" pTooltip="Chuyển Camera" icon="pi pi-refresh"></p-button>
+      <span>&nbsp;&nbsp;</span>
+      <p-button label="Chụp" autofocus class="p-button-secondary" *ngIf="currentAction=='capture'" icon="pi pi-camera"
+        (click)="triggerSnapshot();"></p-button>
+      <span>&nbsp;&nbsp;</span>
+      <p-button label="Dừng chụp" type="submit" [disabled]="webcamImages.length == 0" class="p-button-secondary"
+        (click)="uploadImgAndClose()"></p-button>
+      <input value='Save' id="save-btn" name='Save' (keydown.enter)="captureAndUpload()">
+    </div>
   </div>
   <br />
 </form>

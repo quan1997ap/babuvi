@@ -109,7 +109,6 @@ export class AddWarehouseImpComponent implements OnInit {
       this.loading = true;
       const uploadSuccess = await this.uploadListImg();
       if (uploadSuccess == true) {
-        console.log(this.warehouseImp);
         this.saveWarehouseImpWithImgsUploaded();
       } else {
         // upload các img còn thiếu không?
@@ -618,17 +617,6 @@ export class AddWarehouseImpComponent implements OnInit {
   */
   merchandiseCodeCheckExist() {
     if (this.checkEditExistingMerchandise()) {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "error",
-        summary: "Thông báo",
-        detail: "Kiện hàng đã tồn tại trong danh sách",
-      });
-      const merchandiseCodeInput = document.getElementById(
-        "merchandiseCode"
-      ) as HTMLInputElement;
-      merchandiseCodeInput.focus();
-      merchandiseCodeInput.select();
       return false;
     } else {
       return true;
@@ -699,7 +687,7 @@ export class AddWarehouseImpComponent implements OnInit {
       const ref = this.dialogService.open(CaptureMerchandiseComponent, {
         header: "Ảnh kiện hàng",
         width: "100vw",
-        style: { "max-width": "700px", "overflow-y": "auto" },
+        style: { "max-width": "700px", "overflow-y": "auto"},
         data: {
           imgLinks: imgs,
           action: "viewImg",
@@ -713,112 +701,126 @@ export class AddWarehouseImpComponent implements OnInit {
     }
   }
 
-  async checkMerchandiseCode(event, merchandiseCode) {
-    this.loading = true;
+  focusAndSelectMerchandiseCode(){
     const merchandiseCodeInput = document.getElementById(
       "merchandiseCode"
     ) as HTMLInputElement;
-    if (!merchandiseCode) {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "error",
-        summary: "Thông báo",
-        detail: "Bắt buộc phải nhập mã vận đơn",
-      });
-      this.loading = false;
-    } else if (this.merchandiseCodeCheckExist() == false) {
-      this.loading = false;
-      // merchandiseCodeCheckExist
-    } else if (merchandiseCode && this.merchandiseCodeCheckExist() == true) {
-      await this.merchandiseServices
-        .getMerchandiseByCode(merchandiseCode)
-        .toPromise()
-        .then(async (res) => {
-          if (res.result.success && res.result.data !== null) {
-            // hiển thị dữ liệu đơn hàng của kiện hàng
-            // Next sang control tiếp theo
-            this.loading = false;
-            this.captureMerchandise();
-            merchandiseCodeInput.blur();
-          } else {
-            // hiển thị thông báo đơn hàng chưa được map vào kiện hàng
-            this.orderCodeMapping = "";
-            setTimeout(() => {
-              const orderCodeMappingInput = document.getElementById(
-                "orderCodeMapping"
-              ) as HTMLInputElement;
-              orderCodeMappingInput.focus();
-            }, 300);
-            this.loading = false;
-            await this.confirmationService.confirm({
-              key: "comfirmOrder",
-              header: "Xác nhận",
-              message: `Kiện hàng chưa được khai báo.`,
-              acceptLabel: "Khai báo",
-              rejectLabel: "Bỏ qua",
-              accept: () => {
-                const params: MerchandiseAddPrams = {
-                  merchandiseCode: merchandiseCode,
-                  OrderCode: this.orderCodeMapping,
-                  createdUserId: this.userId,
-                };
-                this.loading = true;
-                this.merchandiseServices.addMerchandise(params).subscribe(
-                  (resAddAddMerchandise) => {
-                    if (resAddAddMerchandise.result.success) {
-                      this.messageService.add({
-                        key: "notificationPopup",
-                        severity: "success",
-                        summary: "Thông báo",
-                        detail: "Cập nhật thành công!",
-                      });
-                      this.captureMerchandise();
-                      merchandiseCodeInput.blur();
-                    } else {
-                      this.messageService.add({
-                        key: "notificationPopup",
-                        severity: "error",
-                        summary: "Thông báo",
-                        detail: resAddAddMerchandise.result.message,
-                      });
-                      merchandiseCodeInput.focus();
-                      merchandiseCodeInput.select();
-                    }
-                    this.loading = false;
-                  },
-                  (err) => {
-                    this.loading = false;
-                  }
-                );
-              },
-              reject: () => {
-                this.loading = false;
-                const merchandiseCodeInput = document.getElementById(
-                  "merchandiseCode"
-                ) as HTMLInputElement;
-                merchandiseCodeInput.focus();
-                merchandiseCodeInput.select();
-              },
-            });
-          }
-        })
-        .catch(() => {
-          this.loading = false;
-          this.messageService.add({
-            key: "notificationPopup",
-            severity: "error",
-            summary: "Thông báo",
-            detail: "Có lỗi xảy ra. Hãy thử lại",
-          });
+    merchandiseCodeInput.focus();
+    merchandiseCodeInput.select();
+  }
+
+  async checkMerchandiseCode(event, merchandiseCode, type) {
+    this.messageService.clear();
+    if(!this.loading){
+      this.loading = true;
+      const merchandiseCodeInput = document.getElementById(
+        "merchandiseCode"
+      ) as HTMLInputElement;
+      if (!merchandiseCode) {
+        this.messageService.add({
+          key: "notificationPopup",
+          severity: "error",
+          summary: "Thông báo",
+          detail: "Bắt buộc phải nhập mã vận đơn",
         });
-    } else {
-      this.messageService.add({
-        key: "notificationPopup",
-        severity: "error",
-        summary: "Thông báo",
-        detail: "Có lỗi xảy ra",
-      });
-      this.loading = false;
+        this.loading = false;
+        this.focusAndSelectMerchandiseCode();
+      } else if (this.merchandiseCodeCheckExist() == false) {
+        this.loading = false;
+        this.messageService.add({
+          key: "notificationPopup",
+          severity: "error",
+          summary: "Thông báo",
+          detail: "Kiện hàng đã tồn tại trong danh sách",
+        });
+        this.focusAndSelectMerchandiseCode();
+      } else if (merchandiseCode && this.merchandiseCodeCheckExist() == true) {
+        await this.merchandiseServices
+          .getMerchandiseByCode(merchandiseCode)
+          .toPromise()
+          .then(async (res) => {
+            if (res.result.success && res.result.data !== null) {
+              // hiển thị dữ liệu đơn hàng của kiện hàng
+              // Next sang control tiếp theo
+              this.loading = false;
+              this.captureMerchandise();
+              merchandiseCodeInput.blur();
+              console.log('run')
+            } else {
+              // hiển thị thông báo đơn hàng chưa được map vào kiện hàng
+              this.orderCodeMapping = "";
+              setTimeout(() => {
+                const orderCodeMappingInput = document.getElementById(
+                  "orderCodeMapping"
+                ) as HTMLInputElement;
+                orderCodeMappingInput.focus();
+                this.loading = false;
+              }, 300);
+              await this.confirmationService.confirm({
+                key: "comfirmOrder",
+                header: "Xác nhận",
+                message: `Kiện hàng chưa được khai báo.`,
+                acceptLabel: "Khai báo",
+                rejectLabel: "Bỏ qua",
+                accept: () => {
+                  const params: MerchandiseAddPrams = {
+                    merchandiseCode: merchandiseCode,
+                    OrderCode: this.orderCodeMapping,
+                    createdUserId: this.userId,
+                  };
+                  this.loading = true;
+                  this.merchandiseServices.addMerchandise(params).subscribe(
+                    (resAddAddMerchandise) => {
+                      if (resAddAddMerchandise.result.success) {
+                        this.messageService.add({
+                          key: "notificationPopup",
+                          severity: "success",
+                          summary: "Thông báo",
+                          detail: "Cập nhật thành công!",
+                        });
+                        this.captureMerchandise();
+                        merchandiseCodeInput.blur();
+                      } else {
+                        this.messageService.add({
+                          key: "notificationPopup",
+                          severity: "error",
+                          summary: "Thông báo",
+                          detail: resAddAddMerchandise.result.message,
+                        });
+                        this.focusAndSelectMerchandiseCode();
+                      }
+                      this.loading = false;
+                    },
+                    (err) => {
+                      this.loading = false;
+                    }
+                  );
+                },
+                reject: () => {
+                  this.loading = false;
+                  this.focusAndSelectMerchandiseCode();
+                },
+              });
+            }
+          })
+          .catch(() => {
+            this.loading = false;
+            this.messageService.add({
+              key: "notificationPopup",
+              severity: "error",
+              summary: "Thông báo",
+              detail: "Có lỗi xảy ra. Hãy thử lại",
+            });
+          });
+      } else {
+        this.messageService.add({
+          key: "notificationPopup",
+          severity: "error",
+          summary: "Thông báo",
+          detail: "Có lỗi xảy ra",
+        });
+        this.loading = false;
+      }
     }
   }
 
@@ -922,14 +924,23 @@ export class AddWarehouseImpComponent implements OnInit {
     }
   }
 
-  checkNextControlNNetWeight($event, netWeight) {
-    if (netWeight == undefined || netWeight == null || netWeight == "") {
-      setTimeout(() => {
-        const merchandiseCodeInput = document.getElementById(
-          "netWeight"
-        ) as HTMLInputElement;
-        merchandiseCodeInput.focus();
-      }, 200);
+  checkNextControlNetWeight($event, netWeight, type) {
+    if(this.loading == false){
+      if (netWeight == undefined || netWeight == null || netWeight == "") {
+        this.loading = true;
+        setTimeout(() => {
+          const merchandiseCodeInput = document.getElementById(
+            "netWeight"
+          ) as HTMLInputElement;
+          merchandiseCodeInput.focus();
+          merchandiseCodeInput.select();
+          this.loading = false;
+        }, 200);
+      } else{
+        if(type == 'keyupEnter'){
+          this.nextFocus($event)
+        }
+      }
     }
   }
 }

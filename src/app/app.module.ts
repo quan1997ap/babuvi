@@ -4,8 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, UrlSerializer } from '@angular/router';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
-import { HttpClientModule, HttpClient} from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpModule} from '@angular/http';
 import { HttpService } from './services/common/http.service';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -53,6 +53,7 @@ import { AuthChildGuard } from './services/common/AuthChildGuard';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CustomUrlSerializer } from './ship-manager/custom-url-serializer';
+import { RequestInterceptor } from './services/interceptor.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
@@ -78,7 +79,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SharedModule,
     RouterModule.forRoot(AppRoutes),
     FormsModule,
-    HttpModule,
     MatSidenavModule,
     MatInputModule,
     MatIconModule,
@@ -92,6 +92,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatCardModule,
     DemoMaterialModule,
     HttpClientModule,
+    HttpModule,
     TranslateModule.forRoot({
           loader: {
               provide: TranslateLoader,
@@ -101,7 +102,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       }),
     FlexLayoutModule,
     PerfectScrollbarModule,
-    HttpModule,
     NgxDatatableModule,
     ConfirmDialogModule,
     ShareCommonModule
@@ -120,6 +120,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     },
+    { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true },
     LstClientService,
     PassDataService,
     LoginService,

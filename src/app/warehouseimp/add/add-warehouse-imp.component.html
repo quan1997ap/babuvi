@@ -79,9 +79,9 @@
                                     <input type="text" class="form-control" id="merchandiseCode" name="merchandiseCode"
                                         required #merchandiseCode="ngModel" ngModel
                                         [(ngModel)]="warehouseImpDetail.merchandiseCode"
-                                        (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value) "
+                                        (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value, 'enter')"
                                         (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
-                                        (focusout)="merchandiseCodeCheckExist()"
+                                        (focusout)="checkMerchandiseCode($event,merchandiseCode.value, 'focusout')"
                                         (keydown.Tab)="checkNextControlMerchandiseCode($event, merchandiseCode.value)"
                                         #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
@@ -91,6 +91,7 @@
                                             trống</small>
                                     </div>
                                 </div>
+
                                 <div class="form-group upload-img-section"
                                     *ngIf="warehouseImpDetail.merchandiseCode && !checkEditExistingMerchandise()">
                                     <label class="upload-img-padding" for="shelfPosition">&nbsp;</label>
@@ -120,9 +121,10 @@
                                 <div class="form-group col-sm">
                                     <label for="netWeight">Cân nặng</label>
                                     <input type="number" class="form-control" id="netWeight" name="netWeight" ngModel
-                                        (keydown.Tab)="checkNextControlNNetWeight($event, warehouseImpDetail.netWeight)"
+                                        (keydown.Tab)="checkNextControlNetWeight($event, warehouseImpDetail.netWeight, 'keydownTab')"
                                         [(ngModel)]="warehouseImpDetail.netWeight" #inputToFocus tabindex="3"
-                                        (keyup.enter)="nextFocus($event)">
+                                        (keyup.enter)="checkNextControlNetWeight($event, warehouseImpDetail.netWeight, 'keyupEnter')"
+                                    >
                                 </div>
                                 <div class="form-group col-sm">
                                     <label for="length">Dài</label>
@@ -235,7 +237,9 @@
         <div>
             <label style="display: block; text-align: left;">Nhập mã đơn hàng để khai báo.</label>
             <input type="text" autocomplete="off" class="form-control" id="orderCodeMapping" name="orderCodeMapping"
-                placeholder="Mã đơn hàng" ngModel [(ngModel)]="orderCodeMapping">
+                placeholder="Mã đơn hàng" ngModel [(ngModel)]="orderCodeMapping"
+                (keydown.enter)="cd.accept(orderCodeMapping)"
+            >
             <br><br>
         </div>
         <button type="button" pButton icon="pi pi-check" label="Khai báo"

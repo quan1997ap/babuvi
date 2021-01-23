@@ -19,7 +19,6 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LockScreenComponent } from './lockscreen/lockscreen.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { SessionRoutes } from './session.routing';
-import { XHRBackend, RequestOptions, HttpModule } from '@angular/http';
 import { HttpService } from 'app/services/common/http.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -48,7 +47,6 @@ import { SystemService } from 'app/services/system.services';
     MatSelectModule,
     FlexLayoutModule,
     MatCheckboxModule,
-    HttpModule,
     MatProgressSpinnerModule,
     ToastModule,
     MessagesModule,

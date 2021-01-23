@@ -9,7 +9,12 @@
     "build:prod": "ng build --prod --buildOptimizer=true --aot=true --open",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-deploy": "ng build --base-href https://quan1997ap.github.io/babuvi/",
+    "deploy- must run vs cmd": "ngh --dir=dist",
+    "guide":"https://techmaster.vn/posts/35530/huong-dan-deploy-ung-dung-angular-len-github-pages",
+    "app-deploy": "https://quan1997ap.github.io/babuvi/authentication/login",
+    "app-infor": "admin/  12345678890"
   },
   "private": true,
   "dependencies": {
