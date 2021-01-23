@@ -897,7 +897,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HttpStatus", function() { return HttpStatus; });
 var Module = "babuvi";
 // export const ApiBaseUrl = "https:backendhuy.babuvi.com/api/";
-var ApiBaseUrl = "https:backendhuy.babuvi.com/api/";
+var ApiBaseUrl = "";
 //export const ApiBaseUrl = "http://localhost:5000/api/";
 var APP_NAME = "Babuvi";
 var MessageType = {
