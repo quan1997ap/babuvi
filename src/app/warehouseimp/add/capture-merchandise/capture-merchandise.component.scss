@@ -9,6 +9,22 @@
   min-height: 380px;
   position: relative;
 }
+.toggle-webcam {
+  position: absolute;
+  top: 20px !important;
+  right: 10px !important;
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #007ad9;
+  color: #fff;
+}
+
 @media only screen and (max-width: 600px) {
   .gr-action-btn {
     flex-direction: column;
@@ -20,23 +36,8 @@
     .btn-list {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
     }
-  }
-  .toggle-webcam {
-    position: absolute;
-    top: 20px !important;
-    right: 10px !important;
-    z-index: 1;
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #007ad9;
-    color: #fff;
   }
 }
 .view-img {
