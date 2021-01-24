@@ -79,12 +79,10 @@ export class CaptureMerchandiseComponent implements OnInit {
   }
 
   public get nextWebcamObservable(): Observable<boolean | string> {
-    this.cdr.detectChanges();
     return this.nextWebcam.asObservable();
   }
 
   public triggerSnapshot(): void {
-    this.cdr.detectChanges();
     this.trigger.next();
   }
 
