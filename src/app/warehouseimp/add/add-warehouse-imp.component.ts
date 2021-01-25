@@ -70,6 +70,7 @@ export class AddWarehouseImpComponent implements OnInit {
   selectionType = SelectionType;
   selected: WarehouseImpDetail[] = [];
   loading: boolean = false;
+  isCheckingNetWeight: boolean = false;
 
   constructor(
     private warehouseImpService: WarehouseImpService,
@@ -605,6 +606,9 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   merchandiseCodeChange(event, merchandiseCode) {
+    if(this.warehouseImpDetail.lsImage && this.warehouseImpDetail.lsImage.length){
+      this.warehouseImpDetail.lsImage.length = 0;
+    }
     if (merchandiseCode.indexOf("BBV-") == 0) {
       this.warehouseImpDetail.shelfPosition = merchandiseCode;
       this.warehouseImpDetail.merchandiseCode = "";
@@ -654,7 +658,6 @@ export class AddWarehouseImpComponent implements OnInit {
 
   async captureMerchandise() {
     // add ảnh
-
     if (this.loading == false) {
       const ref = this.dialogService.open(CaptureMerchandiseComponent, {
         header: "Chụp ảnh kiện hàng",
@@ -742,10 +745,9 @@ export class AddWarehouseImpComponent implements OnInit {
             if (res.result.success && res.result.data !== null) {
               // hiển thị dữ liệu đơn hàng của kiện hàng
               // Next sang control tiếp theo
+              merchandiseCodeInput.blur();
               this.loading = false;
               this.captureMerchandise();
-              merchandiseCodeInput.blur();
-              console.log('run')
             } else {
               // hiển thị thông báo đơn hàng chưa được map vào kiện hàng
               this.orderCodeMapping = "";
@@ -771,15 +773,16 @@ export class AddWarehouseImpComponent implements OnInit {
                   this.loading = true;
                   this.merchandiseServices.addMerchandise(params).subscribe(
                     (resAddAddMerchandise) => {
-                      if (resAddAddMerchandise.result.success) {
+                      if (resAddAddMerchandise.result.success == true) {
                         this.messageService.add({
                           key: "notificationPopup",
                           severity: "success",
                           summary: "Thông báo",
                           detail: "Cập nhật thành công!",
                         });
-                        this.captureMerchandise();
                         merchandiseCodeInput.blur();
+                        this.loading = false;
+                        this.captureMerchandise();
                       } else {
                         this.messageService.add({
                           key: "notificationPopup",
@@ -788,8 +791,8 @@ export class AddWarehouseImpComponent implements OnInit {
                           detail: resAddAddMerchandise.result.message,
                         });
                         this.focusAndSelectMerchandiseCode();
+                        this.loading = false;
                       }
-                      this.loading = false;
                     },
                     (err) => {
                       this.loading = false;
@@ -925,16 +928,16 @@ export class AddWarehouseImpComponent implements OnInit {
   }
 
   checkNextControlNetWeight($event, netWeight, type) {
-    if(this.loading == false){
+    if(this.isCheckingNetWeight == false){
       if (netWeight == undefined || netWeight == null || netWeight == "") {
-        this.loading = true;
+        this.isCheckingNetWeight = true;
         setTimeout(() => {
           const merchandiseCodeInput = document.getElementById(
             "netWeight"
           ) as HTMLInputElement;
           merchandiseCodeInput.focus();
           merchandiseCodeInput.select();
-          this.loading = false;
+          this.isCheckingNetWeight = false;
         }, 200);
       } else{
         if(type == 'keyupEnter'){

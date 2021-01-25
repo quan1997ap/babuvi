@@ -76,12 +76,12 @@
                             <div class="form-row">
                                 <div class="form-group col-sm">
                                     <label for="merchandiseCode">Mã kiện hàng</label>
+                                    <!-- (focusout)="checkMerchandiseCode($event,merchandiseCode.value, 'focusout')" -->
                                     <input type="text" class="form-control" id="merchandiseCode" name="merchandiseCode"
                                         required #merchandiseCode="ngModel" ngModel
                                         [(ngModel)]="warehouseImpDetail.merchandiseCode"
                                         (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value, 'enter')"
                                         (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
-                                        (focusout)="checkMerchandiseCode($event,merchandiseCode.value, 'focusout')"
                                         (keydown.Tab)="checkNextControlMerchandiseCode($event, merchandiseCode.value)"
                                         #inputToFocus tabindex="1">
                                     <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
