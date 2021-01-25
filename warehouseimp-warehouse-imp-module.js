@@ -1909,17 +1909,19 @@ var AddWarehouseImpComponent = /** @class */ (function () {
      * @param event
      */
     AddWarehouseImpComponent.prototype.nextFocus = function (event, inputName) {
-        event.preventDefault();
-        var inputs = Array.prototype.slice.call(document.querySelectorAll("button[tabindex],input[tabindex]"));
-        var index = (inputs.indexOf(document.activeElement) + 1) % inputs.length;
-        var input = inputs[index];
-        input.focus();
-        if (input.nodeName === "INPUT") {
-            input.select();
-        }
-        else if (inputName && inputName == 'height') {
+        if (inputName && inputName == 'height' && this.warehouseImpDetail.merchandiseCode && this.isValidSize() && this.warehouseImpDetail.lsImage.length) {
             var merchandiseCodeInput = document.getElementById("add-btn");
             merchandiseCodeInput.focus();
+        }
+        else {
+            event.preventDefault();
+            var inputs = Array.prototype.slice.call(document.querySelectorAll("button[tabindex],input[tabindex]"));
+            var index = (inputs.indexOf(document.activeElement) + 1) % inputs.length;
+            var input = inputs[index];
+            input.focus();
+            if (input.nodeName === "INPUT") {
+                input.select();
+            }
         }
     };
     /**
