@@ -36,7 +36,6 @@ export class CaptureMerchandiseComponent implements OnInit {
   public allowCameraSwitch = true;
   public deviceId: string;
   public errors: any[] = [];
-  // public webcamImages: WebcamImage[] = [];
   public webcamImages = [];
   private trigger: Subject<void> = new Subject<void>();
   private nextWebcam: Subject<boolean | string> = new Subject<

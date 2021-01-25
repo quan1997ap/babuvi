@@ -378,10 +378,15 @@ $col-left-md-width: 35%;
     transform: translate(-50%, -50%);
   }
 }
-
+.only-mobile{
+  display: none;
+}
 @media only screen and (max-width: 600px) {
   .upload-img-padding{
-    display: none;
+    display: none !important;
+  }
+  .only-mobile{
+    display: block;
   }
 }
 

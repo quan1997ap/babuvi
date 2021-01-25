@@ -832,21 +832,23 @@ export class AddWarehouseImpComponent implements OnInit {
    * @param event
    */
   nextFocus(event, inputName?) {
-    event.preventDefault();
-    const inputs = Array.prototype.slice.call(
-      document.querySelectorAll("button[tabindex],input[tabindex]")
-    );
-    const index = (inputs.indexOf(document.activeElement) + 1) % inputs.length;
-    const input = inputs[index];
-    input.focus();
-    if (input.nodeName === "INPUT") {
-      input.select();
-    }
-    else if(inputName && inputName == 'height'){
-      const merchandiseCodeInput = document.getElementById(
+    if(inputName && inputName == 'height' && this.warehouseImpDetail.merchandiseCode && this.isValidSize() && this.warehouseImpDetail.lsImage.length){
+      const addBtn = document.getElementById(
         "add-btn"
       ) as HTMLInputElement;
-      merchandiseCodeInput.focus();
+      addBtn.focus();
+      console.log('run')
+    } else {
+      event.preventDefault();
+      const inputs = Array.prototype.slice.call(
+        document.querySelectorAll("button[tabindex],input[tabindex]")
+      );
+      const index = (inputs.indexOf(document.activeElement) + 1) % inputs.length;
+      const input = inputs[index];
+      input.focus();
+      if (input.nodeName === "INPUT") {
+        input.select();
+      }
     }
   }
 
@@ -947,7 +949,7 @@ export class AddWarehouseImpComponent implements OnInit {
         }, 200);
       } else{
         if(type == 'keyupEnter'){
-          this.nextFocus($event)
+          this.nextFocus($event);
         }
       }
     }
