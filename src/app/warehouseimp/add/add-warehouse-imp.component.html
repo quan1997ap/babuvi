@@ -142,10 +142,11 @@
                                     <label for="height">Cao</label>
                                     <input type="number" class="form-control" id="height" name="height" ngModel
                                         [(ngModel)]="warehouseImpDetail.height" #inputToFocus tabindex="6"
-                                        (keyup.enter)="nextFocus($event)">
+                                        (keyup.enter)="nextFocus($event, 'height')">
                                 </div>
                                 <div class="form-group col-sm align-bottom align-self-end">
                                     <button class="btn btn-primary w-100" #inputToFocus tabindex="7"
+                                        id="add-btn"
                                         (keyup.enter)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
                                         (click)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
                                         [disabled]="!warehouseImpDetail.merchandiseCode || !isValidSize() || !warehouseImpDetail?.lsImage?.length || loading">{{isEditWarehouseImpDetails

@@ -831,7 +831,7 @@ export class AddWarehouseImpComponent implements OnInit {
    * Focus next input
    * @param event
    */
-  nextFocus(event) {
+  nextFocus(event, inputName?) {
     event.preventDefault();
     const inputs = Array.prototype.slice.call(
       document.querySelectorAll("button[tabindex],input[tabindex]")
@@ -841,6 +841,12 @@ export class AddWarehouseImpComponent implements OnInit {
     input.focus();
     if (input.nodeName === "INPUT") {
       input.select();
+    }
+    else if(inputName && inputName == 'height'){
+      const merchandiseCodeInput = document.getElementById(
+        "add-btn"
+      ) as HTMLInputElement;
+      merchandiseCodeInput.focus();
     }
   }
 
