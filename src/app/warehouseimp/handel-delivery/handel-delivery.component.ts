@@ -22,12 +22,16 @@ export class HandelDeliveryComponent implements OnInit {
   APP_NAME = APP_NAME;
   styleSheetFiles = "/assets/styles/css/print-bill.css";
   loading = false;
-  filterByOptions = [{ label: "Theo mã phiếu", value: 1 }];
+  filterByOptions = [
+    { label: "Theo mã phiếu", value: 1 },
+    { label: "Theo vị trí", value: 2 },
+  ];
   filterForm: FormGroup;
   currentPage = 0;
   numOfItemOnPage = 5;
   requestList = [];
   requestListSelected = []; // for print
+  checkedAll = true;
   constructor(
     private fb: FormBuilder,
     public messageService: MessageService,
@@ -38,20 +42,44 @@ export class HandelDeliveryComponent implements OnInit {
 
   ngOnInit() {
     this.filterForm = this.fb.group({
-      code: ["", Validators.required],
-      filterBy: [this.filterByOptions[0].value, Validators.required],
+      code: ["DlR20218", Validators.required],
     });
   }
 
+  changeTableSortBy($event) {
+    console.log($event.value);
+  }
+
+  checkStatusCheckboxCheckedAll(){
+    if(this.requestListSelected.length == this.requestList.length){
+      this.checkedAll = true;
+    } else {
+      this.checkedAll = false;
+    }
+  }
+
+
   cleanList() {
-    if (confirm("Bạn có chắc chắn muốn xóa?")) {
-      this.requestList =  this.requestList.filter((request) => request.checked == false);
+    if (this.requestListSelected && this.requestListSelected.length > 0) {
+      if (
+        confirm(
+          `Bạn có chắc chắn muốn xóa ${this.requestListSelected.length} request ?`
+        )
+      ) {
+        this.requestList = this.requestList.filter(
+          (request) => request.checked == false
+        );
+        if (this.requestList && this.requestList.length == 1) {
+          this.requestList[0].checked = true;
+        }
+      }
+    } else {
+      this.showMessage("error", "Bạn phải chọn ít nhất 1 request", "Thông báo");
     }
   }
 
   filterRequest() {
     const code = this.filterForm.getRawValue().code.trim();
-    const filterType = this.filterForm.getRawValue().filterBy;
     if (
       this.requestList
         .map((request) => request.deliveryRequestCode)
@@ -59,37 +87,45 @@ export class HandelDeliveryComponent implements OnInit {
     ) {
       this.showMessage("error", "Mã đã tồn tại", "Thông báo");
     } else {
-      switch (filterType) {
-        case 1:
-          this.merchandiseServices.getDeliveryRequestByCode(code).subscribe(
-            (res) => {
-              if (res && res.result && res.result.success == true) {
-                let listRequest =
-                  res.result.data && res.result.data.lsDetail
-                    ? res.result.data.lsDetail
-                    : [];
-                res.result.data.checked = false;
-                res.result.data.isCollapse = false;
-                res.result.sumRequestWeight = this.sumWeightOfRequestList(res.result.data.lsDetail);
-                this.requestList.unshift(res.result.data);
-              }
-            },
-            (err) => {
-              this.showMessage(
-                "error",
-                "Lọc dữ liệu không thành công",
-                "Thông báo"
-              );
-            }
+      this.merchandiseServices.getDeliveryRequestByCode(code).subscribe(
+        (res) => {
+          if (res && res.result && res.result.success == true) {
+            let listRequest =
+              res.result.data && res.result.data.lsDetail
+                ? res.result.data.lsDetail
+                : [];
+            res.result.data.numOfItem = res.result.data.lsDetail.length;
+            res.result.data.numOfMissingItem = res.result.data.lsDetail.filter(
+              (item) => item.status == 1
+            ).length;
+            res.result.data.checked = true;
+            res.result.data.isCollapse = false;
+            res.result.sumRequestWeight = this.sumWeightOfRequestList(
+              res.result.data.lsDetail
+            );
+            this.requestList.unshift(res.result.data);
+            this.requestListSelected = this.requestList.filter(
+              (request) => request.checked == true
+            );
+          }
+        },
+        (err) => {
+          this.showMessage(
+            "error",
+            "Lọc dữ liệu không thành công",
+            "Thông báo"
           );
-          break;
-      }
+        }
+      );
     }
   }
 
   sumWeightOfRequestList(requestList) {
     if (requestList && requestList.length > 0) {
-      return requestList.reduce((a, b) => a + (parseInt(b['paymentWeight']) || 0), 0);
+      return requestList.reduce(
+        (a, b) => a + (parseInt(b["paymentWeight"]) || 0),
+        0
+      );
     } else {
       return 0;
     }
@@ -97,7 +133,10 @@ export class HandelDeliveryComponent implements OnInit {
 
   totalPackageOfRequestList() {
     if (this.requestList && this.requestList.length > 0) {
-      return this.requestList.reduce((a, b) => a + (parseInt(b['totalPackage']) || 0), 0);
+      return this.requestList.reduce(
+        (a, b) => a + (parseInt(b["numOfItem"]) || 0),
+        0
+      );
     } else {
       return 0;
     }
@@ -105,7 +144,10 @@ export class HandelDeliveryComponent implements OnInit {
 
   totalMissingAmountOfRequestList() {
     if (this.requestList && this.requestList.length > 0) {
-      return this.requestList.reduce((a, b) => a + (parseInt(b['missingAmount']) || 0), 0);
+      return this.requestList.reduce(
+        (a, b) => a + (parseInt(b["numOfMissingItem"]) || 0),
+        0
+      );
     } else {
       return 0;
     }
@@ -155,88 +197,152 @@ export class HandelDeliveryComponent implements OnInit {
         );
     }
   }
+
   start() {
-    this.loading = true;
-    const deliveryRequestIds = this.requestList
-      .filter((request) => request.checked == true)
-      .map((request) => request.deliveryRequestId);
-    this.merchandiseServices
-      .startHandleDeliveryRequest(deliveryRequestIds)
-      .subscribe(
-        (resStart) => {
-          if (resStart && resStart.result && resStart.result.success == true) {
-            this.showMessage("success", "Bắt đầu thành công", "Thông báo");
-          } else {
+    if (this.requestListSelected && this.requestListSelected.length > 0) {
+      this.loading = true;
+      const deliveryRequestIds = this.requestList
+        .filter((request) => request.checked == true)
+        .map((request) => request.deliveryRequestId);
+      this.merchandiseServices
+        .startHandleDeliveryRequest(deliveryRequestIds)
+        .subscribe(
+          (resStart) => {
+            if (
+              resStart &&
+              resStart.result &&
+              resStart.result.success == true
+            ) {
+              this.upDateListRequestFromRes(resStart.result.data);
+              this.checkStatusCheckboxCheckedAll();
+              this.showMessage("success", "Bắt đầu thành công", "Thông báo");
+            } else {
+              this.showMessage(
+                "error",
+                "Bắt đầu không thành công",
+                "Thông báo"
+              );
+            }
+            this.loading = false;
+          },
+          (errStart) => {
             this.showMessage("error", "Bắt đầu không thành công", "Thông báo");
+            this.loading = false;
           }
-          this.loading = false;
-        },
-        (errStart) => {
-          this.showMessage("error", "Bắt đầu không thành công", "Thông báo");
-          this.loading = false;
-        }
-      );
+        );
+    } else {
+      this.showMessage("error", "Bạn phải chọn ít nhất 1 request", "Thông báo");
+    }
   }
 
   finish() {
-    this.loading = true;
-    const deliveryRequestIds = this.requestList
-      .filter((request) => request.checked == true)
-      .map((request) => request.deliveryRequestId);
-    this.merchandiseServices
-      .finishHandleDeliveryRequest(deliveryRequestIds)
-      .subscribe(
-        (resFinish) => {
-          if (
-            resFinish &&
-            resFinish.result &&
-            resFinish.result.success == true
-          ) {
-            this.showMessage("success", "Đã hoàn thành", "Thông báo");
-          } else {
+    if (this.requestListSelected && this.requestListSelected.length > 0) {
+      this.loading = true;
+      const deliveryRequestIds = this.requestList
+        .filter((request) => request.checked == true)
+        .map((request) => request.deliveryRequestId);
+      this.merchandiseServices
+        .finishHandleDeliveryRequest(deliveryRequestIds)
+        .subscribe(
+          (resFinish) => {
+            if (
+              resFinish &&
+              resFinish.result &&
+              resFinish.result.success == true
+            ) {
+              this.upDateListRequestFromRes(resFinish.result.data);
+              this.checkStatusCheckboxCheckedAll();
+              this.showMessage("success", "Đã hoàn thành", "Thông báo");
+            } else {
+              this.showMessage("error", "Có lỗi xảy ra", "Thông báo");
+            }
+            this.loading = false;
+          },
+          (errFinish) => {
             this.showMessage("error", "Có lỗi xảy ra", "Thông báo");
+            this.loading = false;
           }
-          this.loading = false;
-        },
-        (errFinish) => {
-          this.showMessage("error", "Có lỗi xảy ra", "Thông báo");
-          this.loading = false;
-        }
-      );
+        );
+    } else {
+      this.showMessage("error", "Bạn phải chọn ít nhất 1 request", "Thông báo");
+    }
   }
 
   /**
    * Cancel delivery
    */
-  cancelDelivery() {
-    this.loading = true;
-    const deliveryRequestIds = this.requestList
-      .filter((request) => request.checked == true)
-      .map((request) => request.deliveryRequestId);
-    this.merchandiseServices
-      .cancelHandleDeliveryRequest(deliveryRequestIds)
-      .toPromise()
-      .then((res) => {
-        if (res.result.success) {
-          this.showMessage("success", "Hủy thành công", "Thông báo");
-        } else {
-          this.showMessage("error", res.result.message, "Thông báo");
-        }
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-        this.showMessage("error", "Hủy thất bại", "Thông báo");
+  cancel() {
+    if (this.requestListSelected && this.requestListSelected.length > 0) {
+      this.loading = true;
+      const deliveryRequestIds = this.requestList
+        .filter((request) => request.checked == true)
+        .map((request) => request.deliveryRequestId);
+      this.merchandiseServices
+        .cancelHandleDeliveryRequest(deliveryRequestIds)
+        .subscribe(
+          (res) => {
+            if (res.result.success) {
+              this.upDateListRequestFromRes(res.result.data);
+              this.checkStatusCheckboxCheckedAll();
+              this.showMessage("success", "Hủy thành công", "Thông báo");
+            } else {
+              this.showMessage("error", res.result.message, "Thông báo");
+            }
+            this.loading = false;
+          },
+          (err) => {
+            this.loading = false;
+            this.showMessage("error", "Hủy thất bại", "Thông báo");
+          }
+        );
+    } else {
+      this.showMessage("error", "Bạn phải chọn ít nhất 1 request", "Thông báo");
+    }
+  }
+
+  upDateListRequestFromRes(newRequestList) {
+    if (newRequestList && newRequestList.length) {
+      newRequestList.forEach((newRequest) => {
+        this.requestList = this.requestList.map((request) => {
+          if (request.deliveryRequestCode == newRequest.deliveryRequestCode) {
+            request.status = newRequest.status;
+            request.statusDisplay = newRequest.statusDisplay;
+          }
+          return request;
+        });
       });
+    }
+    this.requestListSelected = this.requestList.filter(
+      (request) => request.checked == true
+    );
   }
 
-  changeSelectedDeliveryRequest($event){
-    console.log($event, this.requestListSelected)
-    this.requestListSelected =  this.requestList.filter((request) => request.checked == true)
+  changeSelectedDeliveryRequest($event, request) {
+    setTimeout(() => {
+      if (this.requestList && this.requestList.length == 1) {
+        this.requestList[0].checked = true;
+      }
+
+      this.requestListSelected = this.requestList.filter(
+        (request) => request.checked == true
+      );
+
+      this.checkStatusCheckboxCheckedAll();
+    }, 200);
   }
 
+  toggleCheckAll($event) {
+    this.requestList = this.requestList.map((item) => {
+      item.checked = $event;
+      return item;
+    });
+    this.requestListSelected = this.requestList.filter(
+      (request) => request.checked == true
+    );
+  }
 
   showMessage(type, message, summary) {
+    this.messageService.clear();
     this.messageService.add({
       key: "toast-message",
       severity: type,

@@ -8,16 +8,19 @@
 <div autoscroll="true" class="ng-scope">
   <div class="gr-btn">
     <button type="button" class="btn" printSectionId="print-delivery-request" [styleSheetFile]="styleSheetFiles"
-      ngxPrint>
+      ngxPrint [disabled]="requestListSelected && requestListSelected.length == 0">
       In phiếu
     </button>
-    <button type="button" (click)="start()" class="btn">
+    <button type="button" (click)="start()" class="btn"
+      [disabled]="requestListSelected && requestListSelected.length == 0">
       Bắt đầu
     </button>
-    <button type="button" (click)="finish()" class="btn">
+    <button type="button" (click)="finish()" class="btn"
+      [disabled]="requestListSelected && requestListSelected.length ==0">
       Hoàn thành
     </button>
-    <button type="button" (click)="cancelDelivery()" class="btn">
+    <button type="button" (click)="cancel()" class="btn"
+      [disabled]="requestListSelected && requestListSelected.length == 0">
       Ngừng chuẩn bị
     </button>
   </div>
@@ -25,103 +28,128 @@
     <h3 class="title">
       XỬ LÝ YÊU CẦU GIAO HÀNG
     </h3>
-    <div class="statistic-all">
-      <span>Tổng kiện: {{totalPackageOfRequestList()}} </span>
-      <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-      <span>Chưa thấy: {{totalMissingAmountOfRequestList()}}</span>
-    </div>
     <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
       <div class="controls">
-        <input type="text" pInputText formControlName="code" class="input-code" />
-        <p-dropdown [options]="filterByOptions" formControlName="filterBy"></p-dropdown>
+        <input type="text" pInputText formControlName="code" class="input-code" style="width: 100%;" />
       </div>
       <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
         [disabled]="!filterForm.valid"></button>
     </form>
 
     <div class="lst-request-title">
-      Danh sách request
+      <span class="title">Danh sách request</span>
+      <p-dropdown [options]="filterByOptions" (onChange)="changeTableSortBy($event)"></p-dropdown>
     </div>
-    <div (click)="cleanList()" class="clean-table" *ngIf="requestList && requestList.length > 0">
-      <i class="pi pi-times"></i>
-      <span style="padding-left: 4px;">Xóa khỏi danh sách</span>
-    </div>
-    <div class="table-detail">
-      <div *ngIf="!requestList || requestList.length == 0" style="padding-left: 8px;">
-        <strong> 0 request found</strong>
+    <div class="search-res">
+      <div class="clean-table-section" *ngIf="requestList && requestList.length > 0">
+        <div class="check-all">
+          <p-checkbox binary="true" [(ngModel)]="checkedAll" (onChange)="toggleCheckAll($event)">
+          </p-checkbox>
+        </div>
+        <div (click)="cleanList()" class="clean-table">
+          <i class="pi pi-times"></i>
+          <span style="padding-left: 4px;" pTooltip="Xóa các request đã chọn ra khỏi danh sách">Xóa khỏi danh sách</span>
+        </div>
+        <div class="statistic-all">
+          <span>Tổng kiện: {{totalPackageOfRequestList()}} </span>
+          <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+          <span>Chưa thấy: {{totalMissingAmountOfRequestList()}}</span>
+        </div>
+        <div class="number-item-display">
+          Đang xử lý <span class="number">{{ requestList.length }}</span> phiếu
+        </div>
       </div>
-      <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết">
-        <div [ngClass]="{'d-none': (i < currentPage*numOfItemOnPage) || (i >= (currentPage + 1)*numOfItemOnPage)  }">
-          <div class="row-statistic screen">
-            <!-- for desktop -->
-            <p-checkbox binary="true" [(ngModel)]="request.checked" inputId="binary" (onChange)="changeSelectedDeliveryRequest($event)">
-            </p-checkbox>
-            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></span>
-            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Số kiện: <strong>{{request.totalPackage}}</strong></span>
-            <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-            <span>Chưa thấy: <strong>{{request.missingAmount}}</strong> </span>
-            <i class="pi" (click)="request.isCollapse = !request.isCollapse"
-              [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
-              style="float: right; margin: 4px;"></i>
-          </div>
-          <div class="row-statistic mobile">
-            <div class="request-infor">
-               <!-- for mobile -->
-              <p-checkbox binary="true" [(ngModel)]="request.checked" inputId="binary" (onChange)="changeSelectedDeliveryRequest($event)">
-              </p-checkbox>
-              <div>
-                <div>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></div>
-                <div>Số kiện: <strong>{{request.totalPackage}}</strong></div>
-                <div>Chưa thấy: <strong>{{request.missingAmount}}</strong> </div>
+      <div class="table-detail">
+        <div *ngFor="let request of requestList; let i=index;" pTooltip="Click để xem chi tiết">
+          <div [ngClass]="{'d-none': (i < currentPage*numOfItemOnPage) || (i >= (currentPage + 1)*numOfItemOnPage)  }">
+            <div class="row-statistic screen">
+              <!-- for desktop -->
+              <div class="request-infor">
+                <p-checkbox binary="true" [(ngModel)]="request.checked"
+                  (onChange)="changeSelectedDeliveryRequest($event, request)">
+                </p-checkbox>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></span>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span>Số kiện: <strong>{{request.totalPackage}}</strong></span>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span>Chưa thấy: <strong>{{request.missingAmount}}</strong> </span>
+              </div>
+              <div class="right-header-table">
+                <div class="statusDisplay" [class.doing]="request.status==2" [class.create-new]="request.status==1"
+                  [class.finish]="request.status==3" [class.cancel]="request.status==7">
+                  {{request.statusDisplay}}
+                </div>
+                <i class="pi" (click)="request.isCollapse = !request.isCollapse"
+                  [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
+                  style="float: right; margin: 4px;"></i>
               </div>
             </div>
-            <i class="pi" (click)="request.isCollapse = !request.isCollapse"
-              [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
-              style="float: right; margin: 4px;"></i>
-          </div>
-
-          <div class="row" *ngFor="let requestDetail of request.lsDetail" [ngClass]="{'d-none': request['isCollapse']}">
-            <div class="col-table col-sm-12 col-md-6 col-lg-6">
-              <img class="img"
-                src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
-            </div>
-            <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
-              <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?
-                  requestDetail.merchandiseCode : '' }} </span></div>
-              <div class="detail-info">Vị trí: <span class="text-infor"> {{ requestDetail.ShelfPosition ?
-                  requestDetail.ShelfPosition: '' }}</span></div>
-              <div class="detail-info">Đơn hàng:<span class="text-infor"> {{ requestDetail.orderCode ?
-                  requestDetail.orderCode: '' }}</span></div>
-              <div class="detail-info">Mã phiếu:<span class="text-infor"> {{ requestDetail.deliveryRequestCode ?
-                  requestDetail.deliveryRequestCode: '' }}</span> </div>
-            </div>
-            <div class="col-table col-sm-12 col-md-3 col-lg-3 sub-infor  sub-infor-mobile">
-              <div>
-                <div class="detail-info">Cân nặng:<span class="text-infor"> {{ requestDetail.netWeight ?
-                    requestDetail.netWeight:
-                    ''}}</span> kg </div>
-                <div class="detail-info">Thể tích:<span class="text-infor"
-                    *ngIf="requestDetail.height !== undefined && requestDetail.width !== undefined && requestDetail.length !== undefined">
-                    {{ requestDetail.height && requestDetail.width && requestDetail.length }}</span></div>
-                <div class="detail-info">Mã khách hàng:<span class="text-infor"> {{ requestDetail.userCode ?
-                    requestDetail.userCode: '' }}</span></div>
+            <div class="row-statistic mobile">
+              <div class="request-infor">
+                <!-- for mobile -->
+                <p-checkbox binary="true" [(ngModel)]="request.checked" inputId="binary"
+                  (onChange)="changeSelectedDeliveryRequest($event)">
+                </p-checkbox>
+                <div>
+                  <div>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></div>
+                  <div>Số kiện: <strong>{{request.numOfItem}}</strong></div>
+                  <div>Chưa thấy: <strong>{{ request.numOfMissingItem }}</strong> </div>
+                </div>
               </div>
-              <div class="detail-info status" class="status"
-                (click)="changeStatusDeliveryRequestDetail(requestDetail, requestDetail.deliveryRequestDetailId, requestDetail.status)"
-                [ngClass]="{'not-found':  requestDetail.status == 1 , 'found':requestDetail.status == 2 }">
-                {{ requestDetail.status == 1 ? 'Chưa thấy' : 'Đã thấy'}}
+              <div class="right-header-table">
+                <div class="statusDisplay" [class.doing]="request.status==2" [class.create-new]="request.status==1"
+                  [class.finish]="request.status==3" [class.cancel]="request.status==7">
+                  {{request.statusDisplay}}
+                </div>
+                <i class="pi" (click)="request.isCollapse = !request.isCollapse"
+                  [ngClass]="request.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
+                  style="float: right; margin: 4px;"></i>
+              </div>
+            </div>
+  
+            <div class="row" *ngFor="let requestDetail of request.lsDetail" [ngClass]="{'d-none': request['isCollapse']}">
+              <div class="col-table col-sm-12 col-md-6 col-lg-6">
+                <img class="img"
+                  src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
+              </div>
+              <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
+                <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?
+                    requestDetail.merchandiseCode : '' }} </span></div>
+                <div class="detail-info">Vị trí: <span class="text-infor"> {{ requestDetail.shelfPosition ?
+                    requestDetail.shelfPosition: '' }}</span></div>
+                <div class="detail-info">Đơn hàng:<span class="text-infor"> {{ requestDetail.orderCode ?
+                    requestDetail.orderCode: '' }}</span></div>
+                <div class="detail-info">Mã phiếu:<span class="text-infor"> {{ requestDetail.deliveryRequestCode ?
+                    requestDetail.deliveryRequestCode: '' }}</span> </div>
+              </div>
+              <div class="col-table col-sm-12 col-md-3 col-lg-3 sub-infor  sub-infor-mobile">
+                <div>
+                  <div class="detail-info">Cân nặng:<span class="text-infor"> {{ requestDetail.netWeight ?
+                      requestDetail.netWeight:
+                      ''}}</span> kg </div>
+                  <div class="detail-info">Thể tích:<span class="text-infor"
+                      *ngIf="requestDetail.height !== undefined && requestDetail.width !== undefined && requestDetail.length !== undefined">
+                      {{ requestDetail.height && requestDetail.width && requestDetail.length }}</span></div>
+                  <div class="detail-info">Mã khách hàng:<span class="text-infor"> {{ requestDetail.userCode ?
+                      requestDetail.userCode: '' }}</span></div>
+                </div>
+                <div class="detail-info status" class="status"
+                  (click)="changeStatusDeliveryRequestDetail(requestDetail, requestDetail.deliveryRequestDetailId, requestDetail.status)"
+                  [ngClass]="{'not-found':  requestDetail.status == 1 , 'found':requestDetail.status == 2 }">
+                  {{ requestDetail.status == 1 ? 'Chưa thấy' : 'Đã thấy'}}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div *ngIf="requestList && requestList.length > 0">
-        <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
-        </p-paginator>
+        <div *ngIf="requestList && requestList.length > 0">
+          <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
+          </p-paginator>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
