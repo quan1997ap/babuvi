@@ -48,7 +48,7 @@ export class HandelDeliveryComponent implements OnInit {
 
   ngOnInit() {
     this.filterForm = this.fb.group({
-      code: ["DlR20218", Validators.required],
+      code: ["", Validators.required],
     });
   }
 
