@@ -28,20 +28,34 @@
     <h3 class="title">
       XỬ LÝ YÊU CẦU GIAO HÀNG
     </h3>
-    <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
-      <div class="controls">
-        <input type="text" pInputText formControlName="code" class="input-code" style="width: 100%;" />
-      </div>
-      <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
-        [disabled]="!filterForm.valid"></button>
-    </form>
+    <div style="background: #f2f4f8;">
+      <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
+        <div class="controls">
+          <input type="text" pInputText formControlName="code" class="input-code" style="width: 100%;" />
+        </div>
+        <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
+          [disabled]="!filterForm.valid"></button>
+      </form>
+    </div>
 
     <div class="lst-request-title">
-      <span class="title">Danh sách request</span>
+      <span class="title">DANH SÁCH REQUEST</span>
       <p-dropdown [options]="filterByOptions" (onChange)="changeTableSortBy($event)"></p-dropdown>
     </div>
-    <div class="search-res">
-      <div class="clean-table-section" *ngIf="requestList && requestList.length > 0">
+
+    <!-- table group theo mã phiếu -->
+    <div class="search-res" *ngIf="filterBy == 1">
+      <div class="clean-table-section mobile" *ngIf="requestList && requestList.length > 0">
+        <div class="statistic-all">
+          <span>Tổng kiện: <span class="number">{{totalPackageOfRequestList()}} </span> </span>
+          <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+          <span>Chưa thấy: <span class="number">{{totalMissingAmountOfRequestList()}}</span></span>
+        </div>
+        <div class="number-item-display">
+          Đang xử lý <span class="number">{{ requestList.length }}</span> phiếu
+        </div>
+      </div>
+      <div class="clean-table-section desktop" *ngIf="requestList && requestList.length > 0">
         <div class="check-all">
           <p-checkbox binary="true" [(ngModel)]="checkedAll" (onChange)="toggleCheckAll($event)">
           </p-checkbox>
@@ -51,9 +65,9 @@
           <span style="padding-left: 4px;" pTooltip="Xóa các request đã chọn ra khỏi danh sách">Xóa khỏi danh sách</span>
         </div>
         <div class="statistic-all">
-          <span>Tổng kiện: {{totalPackageOfRequestList()}} </span>
+          <span>Tổng kiện: <span class="number">{{totalPackageOfRequestList()}}</span> </span>
           <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-          <span>Chưa thấy: {{totalMissingAmountOfRequestList()}}</span>
+          <span>Chưa thấy: <span class="number">{{totalMissingAmountOfRequestList()}}</span></span>
         </div>
         <div class="number-item-display">
           Đang xử lý <span class="number">{{ requestList.length }}</span> phiếu
@@ -71,9 +85,9 @@
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                 <span>Mã phiếu: <strong>{{request.deliveryRequestCode}}</strong></span>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <span>Số kiện: <strong>{{request.totalPackage}}</strong></span>
+                <span>Số kiện: <strong>{{request.numOfItem}}</strong></span>
                 <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <span>Chưa thấy: <strong>{{request.missingAmount}}</strong> </span>
+                <span>Chưa thấy: <strong>{{ request.numOfMissingItem }}</strong> </span>
               </div>
               <div class="right-header-table">
                 <div class="statusDisplay" [class.doing]="request.status==2" [class.create-new]="request.status==1"
@@ -145,6 +159,75 @@
         </div>
         <div *ngIf="requestList && requestList.length > 0">
           <p-paginator [rows]="numOfItemOnPage" [totalRecords]="requestList.length" (onPageChange)="onPageChange($event)">
+          </p-paginator>
+        </div>
+      </div>
+    </div>
+
+    <!-- table group theo mã vị trí -->
+    <div class="search-res" *ngIf="filterBy == 2">
+      <div class="clean-table-section" *ngIf="requestList && requestList.length > 0">
+        <div class="statistic-all" style="border-left: none; margin-left: 0px;">
+          <span>Tổng kiện: {{totalPackageOfRequestList()}} </span>
+          <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+          <span>Chưa thấy: {{totalMissingAmountOfRequestList()}}</span>
+        </div>
+      </div>
+      <div class="table-detail">
+        <div *ngFor="let positionInfor of listPosition; let i=index;" pTooltip="Click để xem chi tiết">
+          <div [ngClass]="{'d-none': (i < currentPageOfRequestsGrByPosition*numOfItemOnPage) || (i >= (currentPageOfRequestsGrByPosition + 1)*numOfItemOnPage)  }">
+            <div class="row-statistic" style="display: flex; justify-content: space-between;">
+              <div class="request-infor">
+                <span>Mã vị trí: <strong>{{positionInfor.shelfPosition}}</strong></span>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span>Tổng kiện: <strong>{{requestListGroupByPosition[positionInfor.shelfPosition].length}}</strong></span>
+                <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <span>Chưa thấy: <strong> {{missingCountOfRequestList(requestListGroupByPosition[positionInfor.shelfPosition]) }}</strong></span>
+              </div>
+              <div class="right-header-table">
+                <i class="pi" (click)="positionInfor.isCollapse = !positionInfor.isCollapse"
+                  [ngClass]="positionInfor.isCollapse ? 'pi-chevron-down' : 'pi-chevron-right'"
+                  style="float: right; margin: 4px;"></i>
+              </div>
+            </div>
+
+            <div class="row" *ngFor="let requestDetail of requestListGroupByPosition[positionInfor.shelfPosition]" [ngClass]="{'d-none': positionInfor['isCollapse']}">
+              <div class="col-table col-sm-12 col-md-6 col-lg-6">
+                <img class="img"
+                  src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
+              </div>
+              <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
+                <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?
+                    requestDetail.merchandiseCode : '' }} </span></div>
+                <div class="detail-info">Vị trí: <span class="text-infor"> {{ requestDetail.shelfPosition ?
+                    requestDetail.shelfPosition: '' }}</span></div>
+                <div class="detail-info">Đơn hàng:<span class="text-infor"> {{ requestDetail.orderCode ?
+                    requestDetail.orderCode: '' }}</span></div>
+                <div class="detail-info">Mã phiếu:<span class="text-infor"> {{ requestDetail.deliveryRequestCode ?
+                    requestDetail.deliveryRequestCode: '' }}</span> </div>
+              </div>
+              <div class="col-table col-sm-12 col-md-3 col-lg-3 sub-infor  sub-infor-mobile">
+                <div>
+                  <div class="detail-info">Cân nặng:<span class="text-infor"> {{ requestDetail.netWeight ?
+                      requestDetail.netWeight:
+                      ''}}</span> kg </div>
+                  <div class="detail-info">Thể tích:<span class="text-infor"
+                      *ngIf="requestDetail.height !== undefined && requestDetail.width !== undefined && requestDetail.length !== undefined">
+                      {{ requestDetail.height && requestDetail.width && requestDetail.length }}</span></div>
+                  <div class="detail-info">Mã khách hàng:<span class="text-infor"> {{ requestDetail.userCode ?
+                      requestDetail.userCode: '' }}</span></div>
+                </div>
+                <div class="detail-info status" class="status"
+                  (click)="changeStatusDeliveryRequestDetail(requestDetail, requestDetail.deliveryRequestDetailId, requestDetail.status)"
+                  [ngClass]="{'not-found':  requestDetail.status == 1 , 'found':requestDetail.status == 2 }">
+                  {{ requestDetail.status == 1 ? 'Chưa thấy' : 'Đã thấy'}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="requestList && requestList.length > 0">
+          <p-paginator [rows]="numOfItemOnPage" [totalRecords]="listPosition.length" (onPageChange)="onPageGrByPositionChange($event)">
           </p-paginator>
         </div>
       </div>

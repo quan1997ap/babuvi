@@ -4,7 +4,7 @@ import { DialogService, MessageService } from "primeng/api";
 import { MerchandiseServices } from "app/services/merchandise.services";
 import { Component, OnInit } from "@angular/core";
 import { APP_NAME } from "app/config/app.config";
-
+import * as _ from "lodash";
 import {
   FormBuilder,
   FormGroup,
@@ -27,11 +27,17 @@ export class HandelDeliveryComponent implements OnInit {
     { label: "Theo vị trí", value: 2 },
   ];
   filterForm: FormGroup;
-  currentPage = 0;
   numOfItemOnPage = 5;
+  // using for filterBy code
   requestList = [];
   requestListSelected = []; // for print
   checkedAll = true;
+  currentPage = 0;
+  // using for filterBy position
+  requestListGroupByPosition = {};
+  listPosition = [];
+  currentPageOfRequestsGrByPosition = 0;
+  filterBy = 1;
   constructor(
     private fb: FormBuilder,
     public messageService: MessageService,
@@ -46,18 +52,42 @@ export class HandelDeliveryComponent implements OnInit {
     });
   }
 
-  changeTableSortBy($event) {
-    console.log($event.value);
+  changeTableSortBy($event, type) {
+    if ($event) {
+      this.filterBy = $event.value;
+    }
+    if (type) {
+      this.filterBy = type;
+    }
+    this.createRequestListGroupByPosition();
   }
 
-  checkStatusCheckboxCheckedAll(){
-    if(this.requestListSelected.length == this.requestList.length){
+  createRequestListGroupByPosition() {
+    // using for display RequestListGroupByPosition
+    let lstAllRequest = [];
+    this.requestList.forEach((request) => {
+      lstAllRequest = lstAllRequest.concat(request.lsDetail);
+    });
+    this.requestListGroupByPosition = _(lstAllRequest)
+      .groupBy((x) => x.shelfPosition)
+      .value();
+    this.listPosition = Object.keys(this.requestListGroupByPosition).map(
+      (position: string) => {
+        let newPosition: any = {};
+        newPosition.isCollapse = false;
+        newPosition.shelfPosition = position;
+        return newPosition;
+      }
+    );
+  }
+
+  checkStatusCheckboxCheckedAll() {
+    if (this.requestListSelected.length == this.requestList.length) {
       this.checkedAll = true;
     } else {
       this.checkedAll = false;
     }
   }
-
 
   cleanList() {
     if (this.requestListSelected && this.requestListSelected.length > 0) {
@@ -107,6 +137,7 @@ export class HandelDeliveryComponent implements OnInit {
             this.requestListSelected = this.requestList.filter(
               (request) => request.checked == true
             );
+            this.changeTableSortBy(null, this.filterBy);
           }
         },
         (err) => {
@@ -174,7 +205,31 @@ export class HandelDeliveryComponent implements OnInit {
                 "Đổi trạng thái thành công",
                 "Thông báo"
               );
-              requestDetail.status = oldStatus == 1 ? 2 : 1;
+
+              // update this.requestList;
+              this.requestList.forEach((request) => {
+                if (
+                  request.deliveryRequestCode ===
+                    requestDetail.deliveryRequestCode &&
+                  request.lsDetail.length
+                ) {
+                  request.lsDetail.forEach((requestDetailInfor) => {
+                    if (
+                      requestDetailInfor.deliveryRequestCode ==
+                        request.deliveryRequestCode &&
+                      requestDetailInfor.deliveryRequestDetailId ==
+                        requestDetail.deliveryRequestDetailId
+                    ) {
+                      requestDetailInfor.status =
+                        requestDetailInfor.status == 1 ? 2 : 1;
+                    }
+                  });
+                }
+              });
+              if (this.filterBy == 2) {
+                // update list request group by selfPosition
+                requestDetail.status = oldStatus == 1 ? 2 : 1;
+              }
               this.loading = false;
               this.cdr.detectChanges();
             } else {
@@ -199,6 +254,10 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   start() {
+    if(this.filterBy == 2){
+      this.requestListSelected = Object.assign([], this.requestList );
+      this.requestList.forEach( request => {request.checked == true})
+    }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
       const deliveryRequestIds = this.requestList
@@ -236,6 +295,10 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   finish() {
+    if(this.filterBy == 2){
+      this.requestListSelected = Object.assign([], this.requestList );
+      this.requestList.forEach( request => {request.checked == true})
+    }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
       const deliveryRequestIds = this.requestList
@@ -268,10 +331,11 @@ export class HandelDeliveryComponent implements OnInit {
     }
   }
 
-  /**
-   * Cancel delivery
-   */
   cancel() {
+    if(this.filterBy == 2){
+      this.requestListSelected = Object.assign([], this.requestList );
+      this.requestList.forEach( request => {request.checked == true})
+    }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
       const deliveryRequestIds = this.requestList
@@ -301,6 +365,7 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   upDateListRequestFromRes(newRequestList) {
+    // Cập nhật các request đã update vào listRequest gốc
     if (newRequestList && newRequestList.length) {
       newRequestList.forEach((newRequest) => {
         this.requestList = this.requestList.map((request) => {
@@ -354,5 +419,19 @@ export class HandelDeliveryComponent implements OnInit {
   onPageChange($event) {
     this.currentPage = $event.page;
     window.scrollTo(0, 0);
+  }
+
+  onPageGrByPositionChange($event) {
+    this.currentPageOfRequestsGrByPosition = $event.page;
+    window.scrollTo(0, 0);
+  }
+
+  missingCountOfRequestList( requestList ){
+    let missingRequest = requestList.filter( request => request.status == 1);
+    if(missingRequest && missingRequest.length){
+      return missingRequest.length;
+    } else {
+      return 0;
+    }
   }
 }
