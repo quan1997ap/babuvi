@@ -31,10 +31,10 @@
     <div style="background: #f2f4f8;">
       <form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
         <div class="controls">
-          <input type="text" pInputText formControlName="code" class="input-code" style="width: 100%;" />
+          <input placeholder="Mã phiếu" type="text" pInputText formControlName="code" id="deliveryRequestCode" class="input-code" style="width: 100%;" />
         </div>
         <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
-          [disabled]="!filterForm.valid"></button>
+          [disabled]="!filterForm.valid || loading"></button>
       </form>
     </div>
 
@@ -124,8 +124,8 @@
   
             <div class="row" *ngFor="let requestDetail of request.lsDetail" [ngClass]="{'d-none': request['isCollapse']}">
               <div class="col-table col-sm-12 col-md-6 col-lg-6">
-                <img class="img"
-                  src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
+                <img class="img" *ngIf="requestDetail.lsImage && requestDetail.lsImage.length"
+                  [src]="requestDetail.lsImage[0].attachLink"  (click)="viewImgs(requestDetail.lsImage)"/>
               </div>
               <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
                 <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?
@@ -193,8 +193,8 @@
 
             <div class="row" *ngFor="let requestDetail of requestListGroupByPosition[positionInfor.shelfPosition]" [ngClass]="{'d-none': positionInfor['isCollapse']}">
               <div class="col-table col-sm-12 col-md-6 col-lg-6">
-                <img class="img"
-                  src="https://public.bl.files.1drv.com/y4mWyQFyB_NqA6Gk5ojlRkNaXzwss0p70SnBm-RZpGJh1Mvev_G8d8y0sswmAPq1QWoedNmAnuOxSIZOHitV84mj0EyuDrBpWH-NV8ND2e29Gx-ysAWkneAhEYytXiz_rO9azV_YE74qXzK8BIzWiV3l7lDemMhCmP3x5qeOslcMg_bIsoVZtHMUAHP6X7kE94VL48f1cOdSEKsOeXUU3wbpGanlZuWD1QKxEb3HIMpxLAAalny8jgXEUW2CFwile26ZSGL1p0h-K5EtAVf1d3t9nt22tyzCEl4EnVm4r2OtxY?width=800&height=800&cropmode=none" />
+                <img class="img" *ngIf="requestDetail.lsImage && requestDetail.lsImage.length"
+                [src]="requestDetail.lsImage[0].attachLink" (click)="viewImgs(requestDetail.lsImage)" />
               </div>
               <div class="col-table col-sm-12 col-md-3 col-lg-3 main-infor">
                 <div class="detail-info">Mã vận đơn: <span class="id-infor"> {{ requestDetail.merchandiseCode ?

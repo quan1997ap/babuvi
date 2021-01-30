@@ -60,9 +60,13 @@ export class CaptureMerchandiseComponent implements OnInit {
     if (this.config && this.config.data && this.config.data.action) {
       // 'viewImg'
       this.currentAction = this.config.data.action;
-      if (this.config.data.action == "viewImg") {
+      if (this.currentAction == "viewImg") {
         this.zoomImg(this.config.data.imgLinks[0]);
       }
+      if (this.currentAction == "viewHistoryImg") {
+        this.zoomImg(this.config.data.imgLinks[0], 'viewHistoryImg');
+      }
+
     }
     this.autoFocusBtnSubmit();
     this.cdr.detectChanges();
@@ -109,9 +113,13 @@ export class CaptureMerchandiseComponent implements OnInit {
     this.deviceId = deviceId;
   }
 
-  zoomImg(img: WebcamImage) {
+  zoomImg(img: WebcamImage, action?) {
     this.currentZoomImg = img;
-    this.changeAction("viewImg");
+    if(action){
+      this.changeAction(action);
+    }else {
+      this.changeAction("viewImg");
+    }
   }
 
   changeAction(action) {
@@ -143,7 +151,9 @@ export class CaptureMerchandiseComponent implements OnInit {
   autoFocusBtnSubmit() {
     const submitBtnId = "save-btn";
     var input = document.getElementById(submitBtnId);
-    input.focus();
+    if(input){
+      input.focus();
+    }
   }
 
 

@@ -837,7 +837,6 @@ export class AddWarehouseImpComponent implements OnInit {
         "add-btn"
       ) as HTMLInputElement;
       addBtn.focus();
-      console.log('run')
     } else {
       event.preventDefault();
       const inputs = Array.prototype.slice.call(

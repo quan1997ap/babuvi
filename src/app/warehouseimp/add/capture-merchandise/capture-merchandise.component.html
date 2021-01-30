@@ -28,7 +28,7 @@
         <span class="img-index">{{i + 1}}</span>
       </div>
     </div>
-    <div class="btn-list">
+    <div class="btn-list" *ngIf="currentAction != 'viewHistoryImg'">
       <button id="save-btn" (keydown.enter)="captureAndUpload()" > </button>
       <p-button class="continue-capture" *ngIf="currentAction =='viewImg' " pTooltip="Tiếp tục chụp" label="Tiếp tục"
         (click)="changeAction('capture')">

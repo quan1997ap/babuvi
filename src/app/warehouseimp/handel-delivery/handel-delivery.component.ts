@@ -1,3 +1,4 @@
+import { CaptureMerchandiseComponent } from './../add/capture-merchandise/capture-merchandise.component';
 import { ChangeDetectorRef } from "@angular/core";
 // import { PrintBillComponent } from "./../../merchandise/delivery/print-bill/print-bill.component";
 import { DialogService, MessageService } from "primeng/api";
@@ -47,6 +48,11 @@ export class HandelDeliveryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // DlR20218
+    // DlR202111
+    // DlR202113
+    // DlR202115
+    // DlR202116
     this.filterForm = this.fb.group({
       code: ["", Validators.required],
     });
@@ -81,6 +87,18 @@ export class HandelDeliveryComponent implements OnInit {
     );
   }
 
+  viewImgs(imgLinks) {
+    const ref = this.dialogService.open(CaptureMerchandiseComponent, {
+      header: "Ảnh chụp kiện hàng",
+      width: "100vw",
+      style: { "max-width": "700px", "overflow-y": "auto" },
+      data: {
+        imgLinks: imgLinks,
+        action: "viewHistoryImg",
+      },
+    });
+  }
+
   checkStatusCheckboxCheckedAll() {
     if (this.requestListSelected.length == this.requestList.length) {
       this.checkedAll = true;
@@ -109,45 +127,55 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   filterRequest() {
-    const code = this.filterForm.getRawValue().code.trim();
-    if (
-      this.requestList
-        .map((request) => request.deliveryRequestCode)
-        .includes(code)
-    ) {
-      this.showMessage("error", "Mã đã tồn tại", "Thông báo");
-    } else {
-      this.merchandiseServices.getDeliveryRequestByCode(code).subscribe(
-        (res) => {
-          if (res && res.result && res.result.success == true) {
-            let listRequest =
-              res.result.data && res.result.data.lsDetail
-                ? res.result.data.lsDetail
-                : [];
-            res.result.data.numOfItem = res.result.data.lsDetail.length;
-            res.result.data.numOfMissingItem = res.result.data.lsDetail.filter(
-              (item) => item.status == 1
-            ).length;
-            res.result.data.checked = true;
-            res.result.data.isCollapse = false;
-            res.result.sumRequestWeight = this.sumWeightOfRequestList(
-              res.result.data.lsDetail
+    if(!this.loading){
+      const code = this.filterForm.getRawValue().code.trim();
+      let deliveryRequestCode = document.getElementById(
+        "deliveryRequestCode"
+      ) as HTMLInputElement;
+      deliveryRequestCode.focus();
+      deliveryRequestCode.select();
+      if (
+        this.requestList
+          .map((request) => request.deliveryRequestCode)
+          .includes(code)
+      ) {
+        this.showMessage("error", "Mã đã tồn tại", "Thông báo");
+      } else {
+        this.loading = true;
+        this.merchandiseServices.getDeliveryRequestByCode(code).subscribe(
+          (res) => {
+            if (res && res.result && res.result.success == true) {
+              let listRequest =
+                res.result.data && res.result.data.lsDetail
+                  ? res.result.data.lsDetail
+                  : [];
+              res.result.data.numOfItem = res.result.data.lsDetail.length;
+              res.result.data.numOfMissingItem = res.result.data.lsDetail.filter(
+                (item) => item.status == 1
+              ).length;
+              res.result.data.checked = true;
+              res.result.data.isCollapse = false;
+              res.result.sumRequestWeight = this.sumWeightOfRequestList(
+                res.result.data.lsDetail
+              );
+              this.requestList.unshift(res.result.data);
+              this.requestListSelected = this.requestList.filter(
+                (request) => request.checked == true
+              );
+              this.changeTableSortBy(null, this.filterBy);
+            }
+            this.loading = false;
+          },
+          (err) => {
+            this.showMessage(
+              "error",
+              "Lọc dữ liệu không thành công",
+              "Thông báo"
             );
-            this.requestList.unshift(res.result.data);
-            this.requestListSelected = this.requestList.filter(
-              (request) => request.checked == true
-            );
-            this.changeTableSortBy(null, this.filterBy);
+            this.loading = false;
           }
-        },
-        (err) => {
-          this.showMessage(
-            "error",
-            "Lọc dữ liệu không thành công",
-            "Thông báo"
-          );
-        }
-      );
+        );
+      }
     }
   }
 
@@ -254,9 +282,11 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   start() {
-    if(this.filterBy == 2){
-      this.requestListSelected = Object.assign([], this.requestList );
-      this.requestList.forEach( request => {request.checked == true})
+    if (this.filterBy == 2) {
+      this.requestListSelected = Object.assign([], this.requestList);
+      this.requestList.forEach((request) => {
+        request.checked == true;
+      });
     }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
@@ -295,9 +325,11 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   finish() {
-    if(this.filterBy == 2){
-      this.requestListSelected = Object.assign([], this.requestList );
-      this.requestList.forEach( request => {request.checked == true})
+    if (this.filterBy == 2) {
+      this.requestListSelected = Object.assign([], this.requestList);
+      this.requestList.forEach((request) => {
+        request.checked == true;
+      });
     }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
@@ -332,9 +364,11 @@ export class HandelDeliveryComponent implements OnInit {
   }
 
   cancel() {
-    if(this.filterBy == 2){
-      this.requestListSelected = Object.assign([], this.requestList );
-      this.requestList.forEach( request => {request.checked == true})
+    if (this.filterBy == 2) {
+      this.requestListSelected = Object.assign([], this.requestList);
+      this.requestList.forEach((request) => {
+        request.checked == true;
+      });
     }
     if (this.requestListSelected && this.requestListSelected.length > 0) {
       this.loading = true;
@@ -426,9 +460,9 @@ export class HandelDeliveryComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  missingCountOfRequestList( requestList ){
-    let missingRequest = requestList.filter( request => request.status == 1);
-    if(missingRequest && missingRequest.length){
+  missingCountOfRequestList(requestList) {
+    let missingRequest = requestList.filter((request) => request.status == 1);
+    if (missingRequest && missingRequest.length) {
       return missingRequest.length;
     } else {
       return 0;
