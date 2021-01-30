@@ -113,6 +113,7 @@ export class AddWarehouseImpComponent implements OnInit {
         this.saveWarehouseImpWithImgsUploaded();
       } else {
         // upload các img còn thiếu không?
+        this.loading = false;
         if (
           confirm(
             "Một số ảnh đã bị upload lỗi. Tiếp tục và bỏ lưu các ảnh lỗi?"
@@ -132,8 +133,6 @@ export class AddWarehouseImpComponent implements OnInit {
         (img) => img.attachLink && img.attachLink.includes("https:")
       );
     });
-    console.log(this.warehouseImp);
-
     this.warehouseImpService
       .saveWarehouseImp(this.warehouseImp)
       .toPromise()
@@ -336,9 +335,36 @@ export class AddWarehouseImpComponent implements OnInit {
    * Complete warehouse import
    * @param form
    */
-  completeWarehouseImp(form) {
+  async completeWarehouseImp(form) {
+    if (form.valid) {
+      this.loading = true;
+      const uploadSuccess = await this.uploadListImg();
+      if (uploadSuccess == true) {
+        this.completeWarehouseImpWithImgsUploaded(form);
+      } else {
+        // upload các img còn thiếu không?
+        this.loading = false;
+        if (
+          confirm(
+            "Một số ảnh đã bị upload lỗi. Tiếp tục và bỏ lưu các ảnh lỗi?"
+          )
+        ) {
+          this.completeWarehouseImpWithImgsUploaded(form);
+        } else {
+          this.completeWarehouseImp(form);
+        }
+      }
+    }
+  }
+
+  completeWarehouseImpWithImgsUploaded(form) {
     if (form.valid) {
       this.warehouseImp.lsDetail = this.warehouseImpDetailList;
+      this.warehouseImp.lsDetail.forEach((details) => {
+        details.lsImage = details.lsImage.filter(
+          (img) => img.attachLink && img.attachLink.includes("https:")
+        );
+      });
       this.warehouseImp.changeUserId = this.userId;
       this.loading = true;
       this.warehouseImpService

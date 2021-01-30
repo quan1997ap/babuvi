@@ -28,8 +28,9 @@
         <span class="img-index">{{i + 1}}</span>
       </div>
     </div>
-    <div class="btn-list" *ngIf="currentAction != 'viewHistoryImg'">
-      <button id="save-btn" (keydown.enter)="captureAndUpload()" > </button>
+    <div class="btn-list">
+      
+      <button id="save-btn" (keydown.enter)="captureAndUpload()"> </button>
       <p-button class="continue-capture" *ngIf="currentAction =='viewImg' " pTooltip="Tiếp tục chụp" label="Tiếp tục"
         (click)="changeAction('capture')">
       </p-button>
@@ -40,7 +41,7 @@
       <p-button label="Chụp" autofocus class="p-button-secondary" *ngIf="currentAction=='capture'" icon="pi pi-camera"
         (click)="triggerSnapshot();"></p-button>
       <span>&nbsp;&nbsp;</span>
-      <p-button label="Dừng chụp" type="submit" [disabled]="webcamImages.length == 0" class="p-button-secondary"
+      <p-button label="Dừng chụp" type="submit" [disabled]="webcamImages.length == 0" class="p-button-secondary" *ngIf="currentAction != 'viewHistoryImg'"
         (click)="uploadImgAndClose()"></p-button>
     </div>
   </div>

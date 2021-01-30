@@ -150,10 +150,8 @@ export class CaptureMerchandiseComponent implements OnInit {
 
   autoFocusBtnSubmit() {
     const submitBtnId = "save-btn";
-    var input = document.getElementById(submitBtnId);
-    if(input){
-      input.focus();
-    }
+    var saveBtn = document.getElementById(submitBtnId);
+    saveBtn.focus();
   }
 
 
