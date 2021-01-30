@@ -14,6 +14,21 @@ export const AppRoutes: Routes = [{
   component: AdminLayoutComponent,
   children: [
     {
+        path: 'coupon',
+        canActivate: [AuthGuard],
+        loadChildren: './coupon/coupon.module#CouponPackModule'
+    },
+    {
+        path: 'service-pack',
+        canActivate: [AuthGuard],
+        loadChildren: './service-pack/service-pack.module#ServicePackModule'
+    },
+    {
+        path: 'payment',
+        canActivate: [AuthGuard],
+        loadChildren: './payment/payment.module#PaymentModule'
+    },
+    {
         path: 'ship-manager',
         canActivate: [AuthGuard],
         loadChildren: './ship-manager/ship-manager.module#ShipManagerModule'

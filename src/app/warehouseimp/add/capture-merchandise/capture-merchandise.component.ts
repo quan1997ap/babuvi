@@ -12,8 +12,8 @@ import { WebcamImage, WebcamInitError, WebcamUtil } from "ngx-webcam";
   styleUrls: ["./capture-merchandise.component.scss"],
 })
 export class CaptureMerchandiseComponent implements OnInit {
-  width = screen.width < 640 ? Number(screen.width): 640 ;
-  height = screen.height < 550 ? Number(screen.height) : 550 ;
+  width = screen.width < 640 ? Number(screen.width) : 640;
+  height = screen.height < 550 ? Number(screen.height) : 550;
   currentAction = "capture"; // "capture" , 'viewImg' , 'viewHistoryImg'
   currentZoomImg = null;
   loading = false;
@@ -64,13 +64,11 @@ export class CaptureMerchandiseComponent implements OnInit {
         this.zoomImg(this.config.data.imgLinks[0]);
       }
       if (this.currentAction == "viewHistoryImg") {
-        this.zoomImg(this.config.data.imgLinks[0], 'viewHistoryImg');
+        this.zoomImg(this.config.data.imgLinks[0], "viewHistoryImg");
       }
-
     }
     this.autoFocusBtnSubmit();
     this.cdr.detectChanges();
-
   }
 
   public handleInitError(error: any): void {
@@ -115,10 +113,12 @@ export class CaptureMerchandiseComponent implements OnInit {
 
   zoomImg(img: WebcamImage, action?) {
     this.currentZoomImg = img;
-    if(action){
+    if (action) {
       this.changeAction(action);
-    }else {
-      this.changeAction("viewImg");
+    } else {
+      if(this.currentAction !== 'viewHistoryImg' ){
+        this.changeAction("viewImg");
+      }
     }
   }
 
@@ -153,6 +153,4 @@ export class CaptureMerchandiseComponent implements OnInit {
     var saveBtn = document.getElementById(submitBtnId);
     saveBtn.focus();
   }
-
-
 }

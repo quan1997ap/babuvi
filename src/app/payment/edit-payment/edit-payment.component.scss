@@ -1,0 +1,47 @@
+.payment-container {
+  .input-fullwidth {
+    .ui-inputtext {
+      width: 100% !important;
+    }
+  }
+  background: #fff;
+  .primary-btn {
+    background-color: #ec5d37;
+    color: #fff;
+  }
+  .title {
+    font-size: 16px;
+    color: #333;
+    border-top: 3px solid #ec5d37;
+    width: fit-content;
+    padding: 8px;
+    font-weight: bold;
+  }
+}
+
+.mr-right-8 {
+  margin-right: 8px;
+}
+.mr-bottom-8 {
+  margin-bottom: 8px;
+}
+.padding-8 {
+  padding: 8px;
+}
+.d-inline-block {
+  display: inline-block;
+}
+.statistic {
+  display: flex;
+  flex-direction: row;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  .detail-number {
+    color: #ec5d37;
+    font-weight: bold;
+  }
+}
+.btns-footer{
+    display: flex;
+    justify-content: flex-end;
+}

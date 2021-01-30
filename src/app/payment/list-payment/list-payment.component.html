@@ -1,0 +1,91 @@
+<ngx-spinner type = "line-spin-fade" [fullScreen] = "true"></ngx-spinner>
+<p-toast key="toast-message"></p-toast>
+<div class="payment-container">
+  <div>
+    <button pButton  label="Thêm mới" class="primary-btn mr-right-8" (click)="addPayment()"></button>
+    <button pButton  label="Xóa" class="primary-btn" (click)="removeSelectedPayment()"></button>
+  </div>
+  <div class="title">
+    Danh sách yêu cầu thanh toán hộ
+  </div>
+
+  <form [formGroup]="filterForm">
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <input type="text" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-dropdown [options]="paymentTypeList" formControlName="paymentType" placeholder="Loại yêu cầu"></p-dropdown>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-dropdown [options]="paymentStatusList" formControlName="paymentStatus" placeholder="Trạng thái yêu cầu"></p-dropdown>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-calendar formControlName="fromDate" placeholder="Từ ngày"></p-calendar>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-calendar formControlName="toDate" placeholder="Đến ngày"></p-calendar>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <button pButton  label="Lọc" style="min-width: 80px;" class="primary-btn" (click)="filterPayment()"></button>
+    </div>
+
+  </form>
+
+  <div class="statistic">
+    <div class="statistic-detail mr-right-8">
+      Tổng số giao dịch: <span class="detail-number">{{paymentList.length}}</span>
+    </div>
+    <div class="statistic-detail mr-right-8">
+      Tổng tiền thanh toán hộ <span class="detail-number">{{paymentList.length}}</span>
+    </div>
+    <div class="statistic-detail mr-right-8">
+      Tổng tiền phí <span class="detail-number">{{paymentList.length}}</span>
+    </div>
+  </div>
+
+  <div class="table">
+    <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true" >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th> Mã yêu cầu </th>
+          <th> Ngày yêu cầu </th>
+          <th>Cần TT</th>
+          <th>Tổng tiền (VND)</th>
+          <th>Nội dung</th>
+          <th>Loại Y/C</th>
+          <th>Trạng thái</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-payment>
+        <tr class="p-selectable-row">
+          <td>
+            <p-tableCheckbox [value]="payment.selected"></p-tableCheckbox>
+          </td>
+          <th> Mã yêu cầu </th>
+          <th> Ngày yêu cầu </th>
+          <th>Cần TT</th>
+          <th>Tổng tiền (VND)</th>
+          <th>Nội dung</th>
+          <th>Loại Y/C</th>
+          <th>
+            <button pButton type="button" label="Primary"></button>
+            <button pButton type="button" label="Secondary" class="ui-button-secondary"></button>
+            <button pButton type="button" label="Success" class="ui-button-success"></button>
+            <button pButton type="button" label="Info" class="ui-button-info"></button>
+            <button pButton type="button" label="Warning" class="ui-button-warning"></button>
+            <button pButton type="button" label="Danger" class="ui-button-danger"></button>
+          </th>
+          
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No payments found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

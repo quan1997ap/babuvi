@@ -208,6 +208,8 @@ export const ApiApplication = {
     finishHandleDeliveryRequest: "/finishHandleDeliveryRequest/",
     cancelHandleDeliveryRequest: "/cancelHandleDeliveryRequest",
     changeStatusDeliveryRequestDetail: "/changeStatusDeliveryRequestDetail",
+    // payment
+    searchPaymentRequest: "/searchPaymentRequest",
   },
   system: {
     controller: ApiBaseUrl + "system",
@@ -234,6 +236,10 @@ export const ApiApplication = {
     getListLevel: "getListLevel",
     getAttachFileType: "getAttachFileType",
     getUserStatus: "getUserStatus",
+    // payment
+    getPaymentRequestType: "/getPaymentRequestType",
+    getPaymentRequestStatus: "/getPaymentRequestStatus",
+    deletePaymentRequest: "/deletePaymentRequest"
   },
   order: {
     controller: ApiBaseUrl + "order",
