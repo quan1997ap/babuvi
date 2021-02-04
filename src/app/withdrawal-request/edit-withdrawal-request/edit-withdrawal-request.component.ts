@@ -220,31 +220,42 @@ export class EditWithdrawalRequestComponent implements OnInit {
     return valid;
   }
   confirmWithdrawalRequest() {
-    // const checkWithdrawRequestParams: any = {};
-    // const formVal = this.withdrawalRequestForm.getRawValue();
-    // checkWithdrawRequestParams["WalletId"] = this.walletSelected.walletId;
-    // checkWithdrawRequestParams["CurrencyId"] = this.walletSelected.currencyId;
-    // checkWithdrawRequestParams["MaxWithdrawAmount"] = formVal.maxWithdrawAmount;
-    // checkWithdrawRequestParams["UserBankId"] = formVal.userBank.UserBankId;
-    // checkWithdrawRequestParams["Bank"] = formVal.userBank.bankName;
-    // this.withdrawalService
-    //   .calWithdrawalRequest(checkWithdrawRequestParams)
-    //   .subscribe(
-    //     (res) => {
-    //       console.log(res);
-    //       if (res && res.result && res.result.success) {
-    //         this.nextToStep(2, true);
-    //       }
-    //     },
-    //     (errCheckAmount) => {
-    //       this.showMessage(
-    //         "error",
-    //         "Không thể lấy dữ liệu! Hãy thử lại",
-    //         "Có lỗi xảy ra!"
-    //       );
-    //     }
-    //   );
-    this.nextToStep(2, true);
+    this.spinner.show();
+    const checkWithdrawRequestParams: any = {};
+    
+    const formVal = this.withdrawalRequestForm.getRawValue();
+    checkWithdrawRequestParams["WalletId"] = this.walletSelected.walletId;
+    checkWithdrawRequestParams["CurrencyId"] = this.walletSelected.currencyId;
+    checkWithdrawRequestParams["MaxWithdrawAmount"] = formVal.maxWithdrawAmount;
+    checkWithdrawRequestParams["withdrawAmount"] = formVal.withdrawAmount;
+    checkWithdrawRequestParams["withdrawalFee"] = formVal.withdrawalFee;
+    checkWithdrawRequestParams["withdrawAmount"] = formVal.withdrawAmount;
+    checkWithdrawRequestParams["totalAmount"] = formVal.totalAmount;
+    checkWithdrawRequestParams["UserBankId"] = formVal.userBank.UserBankId;
+    checkWithdrawRequestParams["Bank"] = formVal.userBank.bankName;
+    checkWithdrawRequestParams["UserId"] = this.account.userId;
+    checkWithdrawRequestParams["LoginData"] = {
+      username: this.account.username,
+      password: this.account.password
+    }
+    this.withdrawalService
+      .calWithdrawalRequest(checkWithdrawRequestParams)
+      .subscribe(
+        (res) => {
+          if (res && res.result && res.result.success) {
+            this.nextToStep(2, true);
+          }
+          this.spinner.hide();
+        },
+        (errCheckAmount) => {
+          this.showMessage(
+            "error",
+            "Không thể thực hiện yêu cầu! Hãy thử lại",
+            "Có lỗi xảy ra!"
+          );
+          this.spinner.hide();
+        }
+      );
   }
 
   editUserBank() {
