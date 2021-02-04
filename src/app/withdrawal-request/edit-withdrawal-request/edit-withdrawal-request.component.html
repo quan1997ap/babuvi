@@ -1,0 +1,170 @@
+<p-toast key="toast-message"></p-toast>
+<div class="withdrawal-request-container">
+  <title>
+    THÔNG TIN SỐ DƯ TRONG TÀI KHOẢN
+  </title>
+  <div class="select-bank-account">
+    <div class="mr-right-8 mr-bottom-8 dr-select-account ">
+      <p-dropdown [style]="{'width': '100%'}" [(ngModel)]="walletSelected" [options]="walletOptions" (onChange)="changeWallet($event)"
+        placeholder="Chọn ví"></p-dropdown>
+    </div>
+    <p-messages [(value)]="msgs"></p-messages>
+    <table class="bank-account-table" *ngIf="walletSelected">
+      <tr>
+        <th>Số dư tài khoản</th>
+        <th>Số dư đóng băng</th>
+        <th>Số dư khả dụng</th>
+      </tr>
+      <tr>
+        <td>{{walletSelected?.totalAmount | number }} {{ walletSelected?.symbolsDisplay}}</td>
+        <td>{{walletSelected?.blockedAmount | number }} {{ walletSelected?.symbolsDisplay}}</td>
+        <td>{{walletSelected?.availableAmount | number}} {{ walletSelected?.symbolsDisplay}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="sperate"></div>
+  <div class="configs">
+    <p-steps [model]="items" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+    <div class="detail-step">
+
+      <div title="step1" *ngIf="activeIndex == 0">
+        <form [formGroup]="withdrawalRequestForm" class="withdrawal-request-form">
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tên ngân hàng</div>
+            <p-dropdown [options]="userBankOptions" formControlName="userBank" placeholder="Chọn ngân hàng">
+            </p-dropdown>
+            <p-button style="margin-left: 4px;" icon="pi pi-pencil" (click)="editUserBank()"></p-button>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Số tài khoản</div>
+            <input type="text" disabled=true pInputText value="{{withdrawalRequestForm.value?.userBank?.accountNumber}}"
+              placeholder="Vui lòng chọn ngân hàng" />
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tên chủ tài khoản</div>
+            <input type="text" disabled=true pInputText value="{{withdrawalRequestForm.value?.userBank?.accountName}}"
+              placeholder="Vui lòng chọn ngân hàng" />
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Số tiền cần rút</div>
+            <input type="text" pInputText formControlName="withdrawAmount"
+              placeholder="{{withdrawalRequestForm.value?.userBank?.accountNumber ? 'Nhập số tiền cần rút' : 'Vui lòng chọn ngân hàng' }}"
+              mvndrMatCurrencyFormat [allowNegative]="false" [currencyCode]="' '" />
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row" *ngIf="withdrawalRequestForm.getRawValue()?.withdrawAmount > withdrawalRequestForm.getRawValue()?.maxWithdrawAmount">
+            <div class="form-row-title">&nbsp;</div>
+            <div style="color: red;">Số tiền cần rút phải nhỏ hơn số tiền tối đa</div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Số tiền tối đa</div>
+            <div class="static-text">
+              {{withdrawalRequestForm.getRawValue().maxWithdrawAmount | number}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Phí rút tiền</div>
+            <div class="static-text">
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tổng số tiền rút</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.getRawValue().totalAmount | number}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
+            <button pButton label="Xác nhận" class="primary-btn"
+              [disabled]="checkRequestValid() == false" (click)="nextToConfirmWithdrawalRequest()"></button>
+          </div>
+
+        </form>
+      </div>
+      <div title="step2" *ngIf="activeIndex == 1">
+        <div class="confirm-request">
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Thông tin ví</div>
+            <div class="static-text" style="height: 72px;">
+              <div>Tên ví: <span class="highlight">{{walletSelected.walletName}}</span> </div>
+              <div>Số dư <span class="highlight">{{walletSelected.totalAmount | number}} {{walletSelected.symbolsDisplay}} </span></div>
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tên ngân hàng</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.value.userBank.bankName}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Số tài khoản</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.value.userBank.accountNumber}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tên chủ tài khoản</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.value.userBank.accountName}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Số tiền rút</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Phí rút tiền</div>
+            <div class="static-text highlight">
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+            </div>
+          </div>
+          <div class="notify">
+           Note: Nhập mật khẩu sau đó ấn xác nhận để thực hiện yêu cầu rút tiền
+          </div>  
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Tên người dùng</div>
+            <div class="static-text highlight">
+              {{account.username}}
+            </div>
+          </div>
+          <div class="mr-right-8 mr-bottom-8 form-row">
+            <div class="form-row-title">Mật khẩu</div>
+            <div style="display: flex; flex: 1;">
+              <input type="{{showPass ? 'text' : 'password'}}" pInputText [(ngModel)]="password"  placeholder="Nhập mật khẩu">
+              <p-button icon="pi pi-eye" (click)="showPass = !showPass" *ngIf="showPass"></p-button>
+              <p-button icon="pi pi-eye-slash" (click)="showPass = !showPass" *ngIf="!showPass"></p-button>
+            </div>
+           </div>
+          <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
+            <button pButton label="Xác nhận" class="primary-btn"
+              [disabled]="!withdrawalRequestForm.valid || !walletSelected || withdrawalRequestForm.getRawValue().withdrawAmount == 0" (click)="confirmWithdrawalRequest()"></button>
+          </div>
+
+        </div>
+      </div>
+      <div title="step3" *ngIf="activeIndex == 2">
+        <div class="success-message">
+          <i class="pi pi-check-circle"></i>
+          <span>
+            Yêu cầu đã thực hiện thành công
+          </span>
+          <button style="margin-top: 20px;" pButton type="button" icon="pi pi-refresh" iconPos="left"  label="Tiếp tục" (click)="finish()"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <p>Lưu ý</p>
+    <p>
+      - Tổng số tiền phải lớn hơn hoặc bằng {{minWithdrawAmount}}đ và nhỏ hơn hoặc bằng số dư khả dụng
+    </p>
+    <p>
+      - Phí rút tiền là 5000đ + 1%.Phí rút không vượt quá 10.000đ.
+    </p>
+    <p>
+      - Quý khách vui lòng điền đúng thông tin tài khoản. Nếu quý khách điền sai thông tin mà Napot đã thực hiện lệnh
+      chuyển tiền thì Quý khách sẽ phải chịu phí chuyển tiền của ngân hàng.
+    </p>
+  </div>
+</div>

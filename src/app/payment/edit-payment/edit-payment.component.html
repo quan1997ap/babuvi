@@ -1,4 +1,4 @@
-<ngx-spinner type="line-spin-fade" [fullScreen]="true"></ngx-spinner>
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
 <p-toast key="toast-message"></p-toast>
 <div class="payment-container">
 
@@ -24,38 +24,26 @@
         <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 3rem">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-              <th> Mã yêu cầu </th>
-              <th> Ngày yêu cầu </th>
-              <th>Cần TT</th>
-              <th>Tổng tiền (VND)</th>
+              <th style="width: 50px;">STT</th>
+              <th>Số tiền ( (¥) )<span style="color: red;">*</span></th>
               <th>Nội dung</th>
-              <th>Loại Y/C</th>
-              <th>Trạng thái</th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-payment>
-            <tr class="p-selectable-row">
-              <td>
-                <p-tableCheckbox [value]="payment.selected"></p-tableCheckbox>
+          <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
+            <tr>
+              <td style="width: 50px;">  
+                {{rowIndex}}
               </td>
-              <th> Mã yêu cầu </th>
-              <th> Ngày yêu cầu </th>
-              <th>Cần TT</th>
-              <th>Tổng tiền (VND)</th>
-              <th>Nội dung</th>
-              <th>Loại Y/C</th>
-              <th>
-                <button pButton type="button" label="Primary"></button>
-                <button pButton type="button" label="Secondary" class="ui-button-secondary"></button>
-                <button pButton type="button" label="Success" class="ui-button-success"></button>
-                <button pButton type="button" label="Info" class="ui-button-info"></button>
-                <button pButton type="button" label="Warning" class="ui-button-warning"></button>
-                <button pButton type="button" label="Danger" class="ui-button-danger"></button>
-              </th>
-
+              <td>
+                <div class="input-fullwidth ">
+                  <input type="text" [(ngModel)]="payment.amount" [style]=" {'width.px': '100%'}" pInputText placeholder="Số tiền" />
+                </div>
+              </td>
+              <td>
+                <div class="input-fullwidth ">
+                  <input type="text" [(ngModel)]="payment.desc" [style]=" {'width.px': '100%'}" pInputText placeholder="Nội dung" />
+                </div>
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
@@ -64,6 +52,17 @@
             </tr>
           </ng-template>
         </p-table>
+
+        <div class="add-request-item">
+          <p-button class="primary-btn" icon="pi pi-plus" label="Thêm yêu cầu" (click)="addPaymentRequest()"></p-button>
+        </div>
+        <div class="note">
+          <p>Lưu ý:</p>
+          <p>Thanh toán hộ 30k/ngày, ngoài giờ hành chính 50k/ngày</p>
+          <p>Thanh toán hộ đơn sale 10k/ lệnh</p>
+          <p>Nạp tệ Alipay 30k/lần</p>
+          <p>Mua bán tệ 30k/ mã 5 lệnh</p>
+        </div>
       </div>
 
 
@@ -77,44 +76,44 @@
           <div class="form-title">
             Mã khách hàng
           </div>
-          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="UserId" placeholder="Mã khách hàng" />
         </div>
         <div class="mr-right-8 mr-bottom-8 input-fullwidth ">
           <div class="form-title">
             Mã yêu cầu
           </div>
-          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="PaymentRequestCode" placeholder="Mã yêu cầu" />
         </div>
         <div class="mr-right-8 mr-bottom-8 ">
           <div class="form-title">
             Loại yêu cầu
           </div>
-          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentTypeList" formControlName="paymentType" placeholder="Loại yêu cầu"></p-dropdown>
+          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentTypeList" formControlName="Type" placeholder="Loại yêu cầu"></p-dropdown>
         </div>
         <div class="mr-right-8 mr-bottom-8 ">
           <div class="form-title">
             Dịch vụ
           </div>
-          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentStatusList" formControlName="paymentStatus" placeholder="Trạng thái yêu cầu">
+          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentStatusList" formControlName="Status" placeholder="Dịch vụ">
           </p-dropdown>
         </div>
         <div class="mr-right-8 mr-bottom-8 input-fullwidth">
           <div class="form-title">
             Tỉ giá
           </div>
-          <input [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+          <input [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="ExchangeRate" placeholder="Tỉ giá" />
         </div>
         <div class="mr-right-8 mr-bottom-8 input-fullwidth ">
           <div class="form-title">
-            Tổng tệ
+            Tổng tệ (¥)
           </div>
-          <input  [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+          <input  [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="TotalAmount" placeholder="Tổng tệ" />
         </div>
         <div class="mr-right-8 mr-bottom-8 ">
           <div> Phí thanh toán:</div>
-          <div> 1000đ</div>
+          <div style="color: #ec5d37;"> 1000đ</div>
           <div> Phí thanh toán:</div>
-          <div> 1000đ</div>
+          <div style="color: #ec5d37;"> 1000đ</div>
         </div>
         <div class="mr-right-8 mr-bottom-8 btns-footer">
           <button pButton label="Xóa yêu cầu" style="min-width: 80px;" class="primary-btn mr-right-8" (click)="filterPayment()"></button>

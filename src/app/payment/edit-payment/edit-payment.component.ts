@@ -1,3 +1,5 @@
+import { User } from './../../model/user.model';
+import { UserService } from './../../services/user.service';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
 import { NgxSpinnerService } from "ngx-spinner";
@@ -7,28 +9,47 @@ import { PaymentService } from "./../../services/payment.service";
 import { MessageService } from "primeng/api";
 // RXJS
 import { forkJoin } from "rxjs";
+
+class PaymentItemModel{
+  amount: number;
+  desc: string;
+}
+
 @Component({
   selector: "app-edit-payment",
   templateUrl: "./edit-payment.component.html",
   styleUrls: ["./edit-payment.component.scss"],
+  providers: [UserService]
 })
 export class EditPaymentComponent implements OnInit {
   filterForm: FormGroup;
   paymentTypeList = [];
   paymentStatusList = [];
-  paymentList = [];
+  paymentList:PaymentItemModel[]= [{
+    amount: 0,
+    desc: ""
+  }];
+  currentUser = new User();
   constructor(
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     private paymentService: PaymentService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private userService: UserService
   ) {
     this.filterForm = this.fb.group({
-      paymentCode: [""],
-      paymentType: [""],
-      paymentStatus: [""],
-      fromDate: [new Date()],
-      toDate: [new Date()],
+      PaymentRequestId: [""],
+      PaymentRequestCode: [""],
+      PaymentRequestDate: [new Date()],
+      UserId: [""],
+      AmountRequest: [0],
+      TotalFee: [0],
+      TotalAmount: [0],
+      ExchangeRate: [0],
+      Type: [""],
+      Status: [""],
+      StatusDisplay: [""],
+      ServiceId: [""]
     });
   }
 
@@ -45,9 +66,11 @@ export class EditPaymentComponent implements OnInit {
     forkJoin([
       this.paymentService.getPaymentRequestType(),
       this.paymentService.getPaymentRequestStatus(),
+      this.userService.getInfoUser()
     ]).subscribe(
       (res) => {
         if (res && res.length) {
+          console.log(res)
           if (res[0] && res[0].result && res[0].result.success) {
             this.paymentTypeList = res[0].result.data.map((item) => ({
               label: item.displayValue,
@@ -60,15 +83,21 @@ export class EditPaymentComponent implements OnInit {
               value: item.code,
             }));
           }
+          if (res[2] && res[2].result && res[2].result.success) {
+            this.currentUser = res[2].result.data;
+          }
         }
         this.spinner.hide();
         let patchFromVal = { };
         if(this.paymentTypeList.length && this.paymentTypeList[0].value){
           patchFromVal['paymentType'] = this.paymentTypeList[0].value
         }
-        else if(this.paymentStatusList.length && this.paymentStatusList[0].value){
+        if(this.paymentStatusList.length && this.paymentStatusList[0].value){
           patchFromVal['paymentStatus'] = this.paymentStatusList[0].value
-        }
+        } 
+        if(this.currentUser){
+          patchFromVal['UserId'] = this.currentUser.userId;
+        };
         this.filterForm.patchValue(patchFromVal);
       },
       (error) => {
@@ -78,17 +107,12 @@ export class EditPaymentComponent implements OnInit {
     );
   }
 
-  filterPayment() {
-    const formVal = this.filterForm.getRawValue();
-    console.log(formVal);
-    this.paymentService.searchPaymentRequest(1, 10).subscribe(
-      (resPayment) => {
-        console.log(resPayment);
-      },
-      (err) => {
-        this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
-      }
-    );
+  addPaymentRequest(){
+    const newPaymentRequest: PaymentItemModel = {
+      amount: 0,
+      desc: ""
+    }
+    this.paymentList.push(newPaymentRequest)
   }
 
   showMessage(type, message, summary) {

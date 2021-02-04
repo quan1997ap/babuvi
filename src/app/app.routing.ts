@@ -14,9 +14,14 @@ export const AppRoutes: Routes = [{
   component: AdminLayoutComponent,
   children: [
     {
+        path: 'withdrawal-request',
+        canActivate: [AuthGuard],
+        loadChildren: './withdrawal-request/withdrawal-request.module#WithdrawalRequestModule'
+    },
+    {
         path: 'coupon',
         canActivate: [AuthGuard],
-        loadChildren: './coupon/coupon.module#CouponPackModule'
+        loadChildren: './coupon/coupon.module#CouponModule'
     },
     {
         path: 'service-pack',

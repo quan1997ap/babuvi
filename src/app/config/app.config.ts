@@ -208,7 +208,9 @@ export const ApiApplication = {
     finishHandleDeliveryRequest: "/finishHandleDeliveryRequest/",
     cancelHandleDeliveryRequest: "/cancelHandleDeliveryRequest",
     changeStatusDeliveryRequestDetail: "/changeStatusDeliveryRequestDetail",
-    // payment
+  },
+  paymentRequest: {
+    controller: ApiBaseUrl + "paymentRequest",
     searchPaymentRequest: "/searchPaymentRequest",
   },
   system: {
@@ -240,6 +242,12 @@ export const ApiApplication = {
     getPaymentRequestType: "/getPaymentRequestType",
     getPaymentRequestStatus: "/getPaymentRequestStatus",
     deletePaymentRequest: "/deletePaymentRequest"
+  },
+  service : {
+    controller: ApiBaseUrl + "Service",
+    getLsServicePackByUser: "/getLsServicePackByUser",
+    paymentServicePack: "/paymentServicePack",
+    calWithdrawalRequest: "/calWithdrawalRequest"
   },
   order: {
     controller: ApiBaseUrl + "order",
@@ -299,6 +307,11 @@ export const ApiApplication = {
     getTopupCode: "getTopupCode",
     Topup: "Topup",
     searchWalletTransaction: "searchWalletTransaction/",
+    getLsUserBank: '/getLsUserBank',
+    addOrUpdateUserBank: "/addOrUpdateUserBank",
+    getLsWallet: "/getLsWallet",
+    addWithdrawalRequest: "/addWithdrawalRequest",
+    deleteUserBank: "/deleteUserBank"
   },
   print: {
     controller: ApiBaseUrl + "print",

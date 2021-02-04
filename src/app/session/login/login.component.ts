@@ -47,7 +47,8 @@ export class LoginComponent implements AfterViewInit {
     }
     _self._login.getLogin(account).subscribe( res => {
       if(res.result.success) {
-        _self.router.navigate(['/payment']);
+        _self.router.navigate(['/withdrawal-request']);
+        // _self.router.navigate(['/payment']);
         // _self.router.navigate(['/coupon']);
         // _self.router.navigate(['/service-pack']);
         localStorage.setItem('lMenu', JSON.stringify(res.result.data.lsMenu));

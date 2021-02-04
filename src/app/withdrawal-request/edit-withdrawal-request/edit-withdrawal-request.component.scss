@@ -1,0 +1,129 @@
+.withdrawal-request-container {
+  background: #fff;
+  padding: 8px;
+  .primary-btn {
+    background-color: #ec5d37;
+    color: #fff;
+  }
+  .title {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  .note {
+    display: block;
+    background-color: #fdf7e5;
+    padding: 10px;
+  }
+}
+.sperate {
+  background-color: #f2f4f8;
+  height: 10px;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+}
+
+.mr-right-8 {
+  margin-right: 8px;
+}
+.mr-bottom-8 {
+  margin-bottom: 8px;
+}
+.d-inline-block {
+  display: inline-block;
+}
+
+.select-bank-account {
+  display: flex;
+  margin: 12px auto;
+  max-width: 500px;
+  flex-direction: column;
+  .dr-select-account {
+  }
+  .bank-account-table {
+    font-weight: 600;
+    tr > th {
+      background-color: #ec5d37;
+      color: #fff;
+      padding: 4px 8px;
+      border: 1px solid #fff;
+      text-align: center;
+    }
+    tr > td {
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      background: #fff;
+      text-align: center;
+    }
+  }
+}
+
+.configs {
+  margin-top: 12px;
+  .withdrawal-request-form,
+  .confirm-request {
+    width: fit-content;
+    margin: 10px auto;
+    min-width: 400px;
+    .notify {
+      background: #ec5d37;
+      padding: 10px 8px;
+      color: #fff;
+      margin-right: 12px;
+    }
+    .form-row {
+      margin-top: 10px;
+      display: flex;
+      .form-row-title {
+        width: 140px;
+      }
+      .static-text {
+        height: 36px;
+        border: 1px solid #ddd;
+        flex: 1;
+        border-radius: 4px;
+        line-height: 36px;
+        padding: 0 8px;
+        color: #848484;
+        &.highlight {
+          color: #ec5d37;
+        }
+        .highlight {
+          color: #ec5d37;
+        }
+      }
+      input,
+      p-dropdown {
+        flex: 1;
+        ::ng-deep {
+          .ui-dropdown {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.success-message {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 0;
+  margin-bottom: 40px;
+  i {
+    color: #4caf50 !important;
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 400px) {
+  .withdrawal-request-form,.confirm-request {
+    min-width: 340px !important;
+    .form-row-title{
+      width: 116px !important;
+    }
+  }
+}

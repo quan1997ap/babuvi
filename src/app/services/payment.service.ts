@@ -1,3 +1,4 @@
+import { PaymentRequestSearchModel } from "./../model/payment-request.model";
 import { ApiBaseUrl } from "./../config/app.config";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -11,12 +12,13 @@ export class PaymentService extends ApiService {
     super(ApiApplication.shipManager.controller, http, _router);
   }
 
-  searchPaymentRequest(pageIndex, pageSize) {
+  searchPaymentRequest(pageIndex, pageSize, params: PaymentRequestSearchModel) {
     // /Merchandise/searchPaymentRequest?page=1&perPage=1
-    return this.get(
-      ApiApplication.merchandise.controller +
-        ApiApplication.merchandise.searchPaymentRequest +
-        `?page=${pageIndex}&perPage=${pageSize}`
+    return this.post(
+      ApiApplication.paymentRequest.controller +
+        ApiApplication.paymentRequest.searchPaymentRequest +
+        `?page=${pageIndex}&perPage=${pageSize}`,
+      params
     );
   }
 
@@ -36,7 +38,10 @@ export class PaymentService extends ApiService {
 
   // add
   addPaymentRequest(paymentRequest) {
-    return this.post( ApiBaseUrl + `paymentRequest/addPaymentRequest`, paymentRequest);
+    return this.post(
+      ApiBaseUrl + `paymentRequest/addPaymentRequest`,
+      paymentRequest
+    );
   }
 
   paymentRequestFee() {

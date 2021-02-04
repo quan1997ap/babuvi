@@ -1,0 +1,61 @@
+.withdrawal-request-container{
+
+  ::ng-deep{
+    .ui-steps{
+      display: flex;
+      ul{
+        display: flex;
+        width: 100% !important;
+        justify-content: center;
+      }
+    }
+    .ui-steps .ui-steps-item {
+      width: 30%;
+      // .ui-menuitem-link{
+      //   display: flex;
+      //   display: flex;
+      //   width: 110px;
+      //   justify-content: space-between;
+      //   align-items: center;
+      //   padding: 8px 12px;
+      //   position: relative;
+      //   margin: 0 auto;
+      //   .ui-steps-number{
+      //     top: 0px !important;
+      //     margin-bottom: 0;
+      //   }
+      //   .ui-steps-title{
+      //     margin-top: -6px;
+      //     background: #fff;
+      //     padding: 10px 14px;
+      //     position: absolute;
+      //     right: 0;
+      //   }
+      // }
+    }
+    
+    .ui-steps.steps-custom {
+      margin-bottom: 30px;
+    }
+
+    
+    .ui-steps.steps-custom .ui-steps-item .ui-menuitem-link {
+      height: 10px;
+      padding: 0 1em;
+    }
+    
+    .ui-steps.steps-custom .ui-steps-item .ui-steps-number {
+      background-color: #0081c2;
+      color: #ffffff;
+      display: inline-block;
+      width: 36px;
+      border-radius: 50%;
+      margin-top: -14px;
+      margin-bottom: 10px;
+    }
+    
+    .ui-steps.steps-custom .ui-steps-item .ui-steps-title {
+      color: #555555;
+    }
+  }
+}

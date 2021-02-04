@@ -1,0 +1,111 @@
+<p-toast key="toast-message-edit-userbank"></p-toast>
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
+<p-confirmDialog #cd header="Xác nhận" icon="pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" pButton icon="pi pi-times" label="Hủy" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div>
+  <div class="dialog-header">
+    <p>
+      Danh sách tài khoản ngân hàng
+    </p>
+    <i class="pi pi-times" (click)="cancel()"></i>
+  </div>
+  <div class="note" *ngIf="showNoteMessage" (click)="showNoteMessage = !showNoteMessage">
+    <p>Lưu ý:</p>
+    <p>- Mỗi tài khoản chỉ chứa tối đa {{maxAccount}} tài khoản ngân hàng</p>
+    <p>- Quý khách kiểm tra kĩ thông tin tài khoản ngân hàng</p>
+  </div>
+  <div class="no-account-message" *ngIf="userBanks && userBanks.length == 0">
+    Bạn đang chưa có tài khoản nào
+  </div>
+  <div class="ui-g bankaccounts">
+    <table class="bankaccounts-table">
+      <tr *ngFor="let userBank of userBanks; let i=index;">
+        <td>
+          <p-radioButton (click)="editUserBank(userBank)" name="groupUserBanks" [value]="userBank"
+            [(ngModel)]="selectedBank" inputId="{{userBank.userBankId}}">
+          </p-radioButton>
+        </td>
+        <td class="bank-infor">
+          <div> {{userBank.accountNumber}} - {{userBank.bankName}}</div>
+          <div> {{userBank.accountName}} - {{userBank.bankBranch}} </div>
+        </td>
+        <td>
+          <div class="gr-btn">
+            <button pButton type="button" icon="pi pi-check" label="Chọn" (click)="selectedUserBank(userBank)"
+              styleClass="p-button-sm"></button>
+            <button pButton type="button" icon="pi pi-times" label="Xóa" (click)="deleteUserBank(userBank)"
+              class=" ui-button-danger" styleClass="p-button-sm"></button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="userBanks.length < maxAccount">
+        <td colspan="1">
+          <!-- [value]="defaultUserBank" [(ngModel)]="selectedBank"-->
+          <p-radioButton name="groupUserBanks" (click)="addBankAccount($event)" >
+          </p-radioButton>
+        </td>
+        <td colspan="2" class="bank-infor">Thêm tài khoản ngân hàng</td>
+      </tr>
+    </table>
+
+
+  </div>
+  <div *ngIf="selectedBank">
+    <form [formGroup]="editBankAccountForm" class="edit-bankAccount-form">
+      <div class="form-row">
+        <div class="form-row-title"><span class="required">*</span>Tên chủ tài khoản</div>
+        <input type="text" pInputText formControlName="accountName" placeholder="Tên chủ tài khoản" />
+        <div *ngIf="isControlHasError('AccountName','required')" class="error-message">
+          Tên chủ tài khoản là bắt buộc
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-row-title"><span class="required">*</span>Số tài khoản</div>
+        <input type="text" pInputText formControlName="accountNumber" placeholder="Số tài khoản" />
+        <div *ngIf="isControlHasError('AccountNumber','required')" class="error-message">
+          Số tài khoản là bắt buộc
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-row-title"><span class="required">*</span>Tên ngân hàng</div>
+        <input type="text" pInputText formControlName="bankName" placeholder="Tên ngân hàng" />
+        <div *ngIf="isControlHasError('BankName','required')" class="error-message">
+          Tên ngân hàng là bắt buộc
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-row-title">Chi nhánh ngân hàng</div>
+        <input type="text" pInputText formControlName="bankBranch" placeholder="Chi nhánh ngân hàng" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-row-title">Quốc gia </div>
+        <p-dropdown filter="true" [options]="nationOptions" formControlName="countryId" placeholder="Chọn quốc gia"
+          (onChange)="onChangeCountry($event)">
+        </p-dropdown>
+      </div>
+
+      <div class="form-row">
+        <div class="form-row-title">Tỉnh/ thành phố </div>
+        <p-dropdown filter="true" [disabled]="!editBankAccountForm.value.countryId" [options]="cityOptions"
+          formControlName="cityId" placeholder="Chọn Tỉnh/ thành phố">
+        </p-dropdown>
+      </div>
+
+
+      <div class="form-row submit-btn-section">
+        <button pButton label="{{currentFormAction == 'add' ? 'Thêm' : 'Sửa'}}" style="float: right;"
+          class="primary-btn" style="width: 100px;" [disabled]="!editBankAccountForm.valid"
+          (click)="saveBankAccountToDb()"></button>
+      </div>
+
+    </form>
+  </div>
+</div>
