@@ -6,10 +6,12 @@
   </title>
   <div class="select-bank-account">
     <div class="mr-right-8 mr-bottom-8 dr-select-account ">
-      <p-dropdown [style]="{'width': '100%'}" [(ngModel)]="walletSelected" [options]="walletOptions" (onChange)="changeWallet($event)"
-        placeholder="Chọn ví"></p-dropdown>
+      <p-dropdown [style]="{'width': '100%'}" [(ngModel)]="walletSelected" [options]="walletOptions"
+        (onChange)="changeWallet($event)" placeholder="Chọn ví"></p-dropdown>
     </div>
-    <p-messages [(value)]="msgs"></p-messages>
+    <div style="color: red;    margin: 8px 0;" *ngIf="!walletSelected">
+      Bạn chưa chọn tài khoản nào.
+    </div>
     <table class="bank-account-table" *ngIf="walletSelected">
       <tr>
         <th>Số dư tài khoản</th>
@@ -52,7 +54,8 @@
               placeholder="{{withdrawalRequestForm.value?.userBank?.accountNumber ? 'Nhập số tiền cần rút' : 'Vui lòng chọn ngân hàng' }}"
               mvndrMatCurrencyFormat [allowNegative]="false" [currencyCode]="' '" />
           </div>
-          <div class="mr-right-8 mr-bottom-8 form-row" *ngIf="withdrawalRequestForm.getRawValue()?.withdrawAmount > withdrawalRequestForm.getRawValue()?.maxWithdrawAmount">
+          <div class="mr-right-8 mr-bottom-8 form-row"
+            *ngIf="withdrawalRequestForm.getRawValue()?.withdrawAmount > withdrawalRequestForm.getRawValue()?.maxWithdrawAmount">
             <div class="form-row-title">&nbsp;</div>
             <div style="color: red;">Số tiền cần rút phải nhỏ hơn số tiền tối đa</div>
           </div>
@@ -75,8 +78,8 @@
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
-            <button pButton label="Xác nhận" class="primary-btn"
-              [disabled]="checkRequestValid() == false" (click)="nextToConfirmWithdrawalRequest()"></button>
+            <button pButton label="Xác nhận" class="primary-btn" [disabled]="checkRequestValid() == false"
+              (click)="nextToConfirmWithdrawalRequest()"></button>
           </div>
 
         </form>
@@ -87,7 +90,8 @@
             <div class="form-row-title">Thông tin ví</div>
             <div class="static-text" style="height: 72px;">
               <div>Tên ví: <span class="highlight">{{walletSelected.walletName}}</span> </div>
-              <div>Số dư <span class="highlight">{{walletSelected.totalAmount | number}} {{walletSelected.symbolsDisplay}} </span></div>
+              <div>Số dư <span class="highlight">{{walletSelected.totalAmount | number}}
+                  {{walletSelected.symbolsDisplay}} </span></div>
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row">
@@ -121,25 +125,32 @@
             </div>
           </div>
           <div class="notify">
-           Note: Nhập mật khẩu sau đó ấn xác nhận để thực hiện yêu cầu rút tiền
-          </div>  
-          <div class="mr-right-8 mr-bottom-8 form-row">
-            <div class="form-row-title">Tên người dùng</div>
-            <div class="static-text highlight">
-              {{account.username}}
-            </div>
+            <strong>Note:</strong> Nhập mật khẩu sau đó ấn xác nhận để thực hiện yêu cầu rút tiền
           </div>
-          <div class="mr-right-8 mr-bottom-8 form-row">
-            <div class="form-row-title">Mật khẩu</div>
-            <div style="display: flex; flex: 1;">
-              <input type="{{showPass ? 'text' : 'password'}}" pInputText [(ngModel)]="password"  placeholder="Nhập mật khẩu">
-              <p-button icon="pi pi-eye" (click)="showPass = !showPass" *ngIf="showPass"></p-button>
-              <p-button icon="pi pi-eye-slash" (click)="showPass = !showPass" *ngIf="!showPass"></p-button>
+          <div class="confim">
+            <div class="mr-right-8 mr-bottom-8 form-row">
+              <div class="form-row-title">Tên người dùng</div>
+              <div class="static-text highlight">
+                {{account.username}}
+              </div>
             </div>
-           </div>
-          <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
-            <button pButton label="Xác nhận" class="primary-btn"
-              [disabled]="!withdrawalRequestForm.valid || !walletSelected || withdrawalRequestForm.getRawValue().withdrawAmount == 0" (click)="confirmWithdrawalRequest()"></button>
+            <div class="mr-right-8 mr-bottom-8 form-row">
+              <div class="form-row-title">Mật khẩu</div>
+              <div style="display: flex; flex: 1;">
+                <input type="{{showPass ? 'text' : 'password'}}" pInputText [(ngModel)]="password"
+                  placeholder="Nhập mật khẩu">
+                <p-button icon="pi pi-eye" (click)="showPass = !showPass" *ngIf="showPass"></p-button>
+                <p-button icon="pi pi-eye-slash" (click)="showPass = !showPass" *ngIf="!showPass"></p-button>
+              </div>
+            </div>
+            <div class="mr-right-8 mr-bottom-8 form-row">
+              <p-messages [(value)]="msgs" closable=false></p-messages>
+            </div>
+            <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
+              <button pButton label="Xác nhận" class="primary-btn"
+                [disabled]="!withdrawalRequestForm.valid || !walletSelected || withdrawalRequestForm.getRawValue().withdrawAmount == 0"
+                (click)="confirmWithdrawalRequest()"></button>
+            </div>
           </div>
 
         </div>
@@ -150,7 +161,8 @@
           <span>
             Yêu cầu đã thực hiện thành công
           </span>
-          <button style="margin-top: 20px;" pButton type="button" icon="pi pi-refresh" iconPos="left"  label="Tiếp tục" (click)="finish()"></button>
+          <button style="margin-top: 20px;" pButton type="button" icon="pi pi-refresh" iconPos="left" label="Tiếp tục"
+            (click)="finish()"></button>
         </div>
       </div>
     </div>

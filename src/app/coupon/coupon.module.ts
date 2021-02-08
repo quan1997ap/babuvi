@@ -1,4 +1,4 @@
-import { CouponRoutes } from './coupon.routing';
+import { CouponRoutes } from "./coupon.routing";
 import { PaymentService } from "./../services/payment.service";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
@@ -7,16 +7,15 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ShareCommonModule } from "../common/share-common.module";
 import { DialogModule } from "primeng/dialog";
 import { InputTextModule } from "primeng/inputtext";
-import { CalendarModule } from "primeng/calendar";
 import { MessagesModule } from "primeng/primeng";
-import { MessageService } from "primeng/api";
-import { DropdownModule } from "primeng/dropdown";
+import { DialogService, MessageService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { NgxSpinnerModule } from "ngx-spinner";
-import { TableModule } from "primeng/table";
 import { ToastModule } from "primeng/toast";
-import { ListCouponComponent } from './list-coupon/list-coupon.component';
-import { DetailCouponComponent } from './detail-coupon/detail-coupon.component';
+import { ListCouponComponent } from "./list-coupon/list-coupon.component";
+import { DetailCouponComponent } from "./detail-coupon/detail-coupon.component";
+import { ShowCouponComponent } from "./show-coupon/show-coupon.component";
+import { DynamicDialogModule } from "primeng/dynamicdialog";
 
 @NgModule({
   imports: [
@@ -30,12 +29,15 @@ import { DetailCouponComponent } from './detail-coupon/detail-coupon.component';
     ButtonModule,
     DialogModule,
     InputTextModule,
-    CalendarModule,
-    DropdownModule,
-    TableModule,
-    ToastModule
+    ToastModule,
+    DynamicDialogModule
   ],
-  declarations: [ ListCouponComponent, DetailCouponComponent],
-  providers: [MessageService, PaymentService],
+  declarations: [
+    ListCouponComponent,
+    DetailCouponComponent,
+    ShowCouponComponent,
+  ],
+  providers: [MessageService, PaymentService, DialogService],
+  entryComponents: [ListCouponComponent, DetailCouponComponent],
 })
 export class CouponModule {}

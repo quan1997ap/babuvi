@@ -11,27 +11,21 @@
     }
     .ui-steps .ui-steps-item {
       width: 30%;
-      // .ui-menuitem-link{
-      //   display: flex;
-      //   display: flex;
-      //   width: 110px;
-      //   justify-content: space-between;
-      //   align-items: center;
-      //   padding: 8px 12px;
-      //   position: relative;
-      //   margin: 0 auto;
-      //   .ui-steps-number{
-      //     top: 0px !important;
-      //     margin-bottom: 0;
-      //   }
-      //   .ui-steps-title{
-      //     margin-top: -6px;
-      //     background: #fff;
-      //     padding: 10px 14px;
-      //     position: absolute;
-      //     right: 0;
-      //   }
-      // }
+      overflow: hidden;
+      text-overflow: ellipsis;
+      .ui-menuitem-link{
+        .ui-steps-number{
+        }
+        .ui-steps-title{
+          display: block;
+          margin-top: 6px;
+          color: #848484;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          max-width: 80%;
+        }
+      }
     }
     
     .ui-steps.steps-custom {

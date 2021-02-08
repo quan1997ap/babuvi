@@ -1,20 +1,19 @@
-import { ServicePackService } from './../services/service-pack.service';
-import { ServicePackRoutes } from './service-pack.routing';
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ShareCommonModule } from "../common/share-common.module";
-import { DialogModule } from "primeng/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
+import { RouterModule } from "@angular/router";
+import { NgxSpinnerModule } from "ngx-spinner";
+import { MessageService } from "primeng/api";
+import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { MessagesModule } from "primeng/primeng";
-import { DialogService, MessageService } from "primeng/api";
-import { ButtonModule } from "primeng/button";
-import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastModule } from "primeng/toast";
-import { ListServicePackComponent } from './list-service-pack/list-service-pack.component';
-import { DetailServicePackComponent } from './detail-service-pack/detail-service-pack.component';
-import { DynamicDialogComponent } from 'primeng/dynamicdialog';
+import { ShareCommonModule } from "../common/share-common.module";
+import { ServicePackService } from "./../services/service-pack.service";
+import { DetailServicePackComponent } from "./detail-service-pack/detail-service-pack.component";
+import { ListServicePackComponent } from "./list-service-pack/list-service-pack.component";
+import { ServicePackRoutes } from "./service-pack.routing";
 
 @NgModule({
   imports: [
@@ -26,13 +25,15 @@ import { DynamicDialogComponent } from 'primeng/dynamicdialog';
     ShareCommonModule,
     MessagesModule,
     ButtonModule,
-    DialogModule,
     InputTextModule,
-    ToastModule
+    ToastModule,
+    MatDialogModule
   ],
-  declarations: [DetailServicePackComponent, ListServicePackComponent, DynamicDialogComponent],
-  providers: [MessageService, ServicePackService, DialogService],
-  entryComponents: [DetailServicePackComponent, DynamicDialogComponent]
+  entryComponents: [DetailServicePackComponent],
+  declarations: [
+    DetailServicePackComponent,
+    ListServicePackComponent,
+  ],
+  providers: [MessageService, ServicePackService],
 })
-
 export class ServicePackModule {}

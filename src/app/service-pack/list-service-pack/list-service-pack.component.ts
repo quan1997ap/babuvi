@@ -1,6 +1,6 @@
-import { DetailServicePackComponent } from './../detail-service-pack/detail-service-pack.component';
-import { DialogService } from 'primeng/api';
 import { ServicePackService } from './../../services/service-pack.service';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DetailServicePackComponent } from './../detail-service-pack/detail-service-pack.component';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,24 +10,23 @@ import { Component, OnInit } from '@angular/core';
   providers: []
 })
 export class ListServicePackComponent implements OnInit {
-  pageSize= 100;
-  pageIndex = 1;
-  constructor(
-    private servicePackService: ServicePackService,
-    public dialogService: DialogService
-  ) { }
+
+  constructor(public dialog: MatDialog, public servicePackService: ServicePackService) { }
 
   ngOnInit() {
-    this.servicePackService.getLsServicePackByUser(this.pageIndex, this.pageSize).subscribe(res => {
-      console.log(res)
+    this.servicePackService.getLsServicePackByUser(1, 10).subscribe( resServicePack => {
+      console.log(resServicePack)
     })
   }
 
   viewDetailServicePack() {
-    const ref = this.dialogService.open(DetailServicePackComponent, {
-      data: { },
-      header: "Chi tiết gói dịch vụ",
-      width: "70%",
+    let dialogRef = this.dialog.open(DetailServicePackComponent, {
+      height: '400px',
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
 }

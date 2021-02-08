@@ -67,10 +67,25 @@
     margin: 10px auto;
     min-width: 400px;
     .notify {
-      background: #ec5d37;
-      padding: 10px 8px;
-      color: #fff;
+      padding: 10px 0px;
+      color: #ec5d37;
       margin-right: 12px;
+    }
+    .confim{
+      border: 1px solid #ddd;
+      background: #fdf7e5;
+      padding: 8px 4px 8px 12px;
+      border-radius: 4px;
+      @media(max-width:580px){
+        margin-bottom: 40px;
+        .form-row{
+          .form-row-title{
+            width: 100% !important;
+            display: block;
+            margin-bottom: 8px;
+          }
+        }
+      }
     }
     .form-row {
       margin-top: 10px;

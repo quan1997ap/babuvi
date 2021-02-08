@@ -219,10 +219,11 @@ export class EditWithdrawalRequestComponent implements OnInit {
     }
     return valid;
   }
+
   confirmWithdrawalRequest() {
     this.spinner.show();
     const checkWithdrawRequestParams: any = {};
-    
+
     const formVal = this.withdrawalRequestForm.getRawValue();
     checkWithdrawRequestParams["WalletId"] = this.walletSelected.walletId;
     checkWithdrawRequestParams["CurrencyId"] = this.walletSelected.currencyId;
@@ -243,16 +244,18 @@ export class EditWithdrawalRequestComponent implements OnInit {
       .subscribe(
         (res) => {
           if (res && res.result && res.result.success) {
+            this.password = "";
             this.nextToStep(2, true);
+          } else {
+            this.msgs = [];
+            this.msgs.push({severity:'error', summary:"Có lỗi xảy ra!", detail: "Không thể thực hiện yêu cầu! Hãy thử lại"});
+            this.spinner.hide();
           }
           this.spinner.hide();
         },
         (errCheckAmount) => {
-          this.showMessage(
-            "error",
-            "Không thể thực hiện yêu cầu! Hãy thử lại",
-            "Có lỗi xảy ra!"
-          );
+          this.msgs = [];
+          this.msgs.push({severity:'error', summary:"Có lỗi xảy ra!", detail: "Không thể thực hiện yêu cầu! Hãy thử lại"});
           this.spinner.hide();
         }
       );

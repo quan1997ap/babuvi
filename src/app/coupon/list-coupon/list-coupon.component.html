@@ -1,0 +1,26 @@
+<form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
+    <div class="controls">
+        <input placeholder="Nhập mã khuyến mãi" type="text" pInputText formControlName="code" id="deliveryRequestCode"
+            class="input-code" style="width: 100%;" />
+    </div>
+    <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
+        [disabled]="!filterForm.valid || loading"></button>
+</form>
+<div class="coupons">
+    <div class="coupon-item">
+        <div class="img-section">
+            <img class="img-service"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToaQxosQ19vLQ_8_D4S8vmnBWwaSnVBx2NcA&usqp=CAU">
+          </div>
+        <div class="main-infor">
+
+        </div>
+        <div class="ticketHolder noFloat">
+            <div class="coupon">
+                <div class="inner">
+                    <div class="savings">Sử dụng ngay</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
