@@ -4,31 +4,40 @@
   <div class="title">
     Gói dịch vụ
   </div>
-  <div class="row services">
-    <div class="col-sm-6 col-md-4 col-lg-3 service-item" (click)="viewDetailServicePack()">
-      <div class="img-section">
-        <img class="img-service"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToaQxosQ19vLQ_8_D4S8vmnBWwaSnVBx2NcA&usqp=CAU">
-      </div>
-      <div class="infor">
-        <div class="name">
-          Take a look at this pure
+  <div class="row services" *ngIf="resServicePacks && resServicePacks.length">
+    <div *ngFor="let servicePack of resServicePacks" class="col-sm-6 col-md-4 col-lg-4" style="padding: 4px;"
+      (click)="viewDetailServicePack(servicePack)">
+      <div class="service-item">
+        <div class="img-section">
+          <img class="img-service" *ngIf="!servicePack.image"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToaQxosQ19vLQ_8_D4S8vmnBWwaSnVBx2NcA&usqp=CAU" />
+          <img class="img-service" *ngIf="servicePack.image" [src]="servicePack.image" />
         </div>
-        <div class="desc" style="overflow: hidden;
+        <div class="infor">
+          <div class="name">
+            {{servicePack.servicePackTitle}}
+          </div>
+          <div class="desc" style="overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;">
-          Take a look at this pureTake a look at this pureTake a look at this pureTake a look at this pureTake
-          a look at this pureTake a look at this pureTake a look at this pure
+            {{servicePack.servicePackSubTitle}}
+          </div>
+          <div class="cost">
+            <div>{{servicePack.price}}</div>
+            <div>{{servicePack.priceDescription}}</div>
+          </div>
         </div>
-        <div class="cost">
-          20d / ngay
+        <div class="icon">
+          <i class="pi pi-chevron-right"></i>
         </div>
-      </div>
-      <div class="icon">
-        <i class="pi pi-chevron-right"></i>
       </div>
     </div>
+  </div>
+  <div *ngIf="loading ==false && ( !resServicePacks || resServicePacks.length == 0 )" >
+    <h4 style="margin-top: 20px;">
+      <strong>Không có gói dịch vụ nào khả dụng</strong>
+    </h4>
   </div>
 </div>

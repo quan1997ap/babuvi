@@ -2,6 +2,7 @@ import { ServicePackService } from './../../services/service-pack.service';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { DetailServicePackComponent } from './../detail-service-pack/detail-service-pack.component';
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-list-service-pack',
@@ -10,23 +11,45 @@ import { Component, OnInit } from '@angular/core';
   providers: []
 })
 export class ListServicePackComponent implements OnInit {
-
-  constructor(public dialog: MatDialog, public servicePackService: ServicePackService) { }
+  loading = false;
+  resServicePacks = [];
+  constructor(public dialog: MatDialog, public servicePackService: ServicePackService,     private messageService: MessageService) { }
 
   ngOnInit() {
+    this.loading = true;
     this.servicePackService.getLsServicePackByUser(1, 10).subscribe( resServicePack => {
-      console.log(resServicePack)
+      if(resServicePack && resServicePack.result && resServicePack.result.success ){
+        this.resServicePacks = resServicePack.result.data.lsData;
+      }
+      this.loading = false;
+    }, error => {
+      this.showMessage('error', "Error", "Có lỗi xảy ra")
+      this.loading = false;
     })
   }
 
-  viewDetailServicePack() {
+  viewDetailServicePack(servicePack) {
     let dialogRef = this.dialog.open(DetailServicePackComponent, {
-      height: '400px',
-      width: '600px',
+      height: '90vh',
+      width: '90vw',
+      maxHeight: '400px',
+      maxWidth: '700px',
+      data: servicePack
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  showMessage(type, summary, detail) {
+    this.messageService.add({
+      severity: type,
+      summary: summary,
+      detail: detail
+    });
+    setTimeout(() => {
+      this.messageService.clear();
+    }, 4000);
   }
 }

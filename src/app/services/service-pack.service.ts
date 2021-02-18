@@ -19,7 +19,7 @@ export class ServicePackService extends ApiService {
         `?page=${pageIndex}&perPage=${pageSize}`
     );
   }
-  paymentServicePack(servicePackId, params) {
+  paymentServicePack(servicePackId) {
     return this.post(
       ApiApplication.service.controller +
         ApiApplication.service.paymentServicePack +

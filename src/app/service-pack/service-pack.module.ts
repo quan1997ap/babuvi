@@ -14,9 +14,13 @@ import { ServicePackService } from "./../services/service-pack.service";
 import { DetailServicePackComponent } from "./detail-service-pack/detail-service-pack.component";
 import { ListServicePackComponent } from "./list-service-pack/list-service-pack.component";
 import { ServicePackRoutes } from "./service-pack.routing";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
 
 @NgModule({
   imports: [
+    ConfirmDialogModule,
     NgxSpinnerModule,
     CommonModule,
     RouterModule.forChild(ServicePackRoutes),
@@ -27,13 +31,16 @@ import { ServicePackRoutes } from "./service-pack.routing";
     ButtonModule,
     InputTextModule,
     ToastModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   entryComponents: [DetailServicePackComponent],
-  declarations: [
-    DetailServicePackComponent,
-    ListServicePackComponent,
+  declarations: [DetailServicePackComponent, ListServicePackComponent],
+  providers: [
+    ConfirmationService,
+    MessageService,
+    ServicePackService,
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} },
   ],
-  providers: [MessageService, ServicePackService],
 })
 export class ServicePackModule {}

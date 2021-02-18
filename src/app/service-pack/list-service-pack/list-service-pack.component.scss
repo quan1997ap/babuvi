@@ -1,3 +1,10 @@
+::ng-deep.custom-modalbox {
+  max-height: 500px;
+}
+
+.no-padding{
+  padding: 0px;
+}
 .service-pack-container {
     background: #fff;
     .primary-btn {
@@ -30,6 +37,7 @@
   .services {
     margin: 4px 8px !important;
     .service-item {
+      height: 100%;
       display: flex;
       align-items: center;
       padding: 8px 8px;
