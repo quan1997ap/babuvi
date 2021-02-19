@@ -1,12 +1,14 @@
 <p-toast key="toast-message-edit-userbank"></p-toast>
 <ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
-<p-confirmDialog #cd header="Xác nhận" icon="pi pi-exclamation-triangle">
+
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd
+  [baseZIndex]="50000">
   <p-footer>
-    <button type="button" pButton icon="pi pi-times" label="Hủy" (click)="cd.reject()"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
+      (click)="cd.reject()"></button>
     <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
   </p-footer>
 </p-confirmDialog>
-
 <div>
   <div class="dialog-header">
     <p>

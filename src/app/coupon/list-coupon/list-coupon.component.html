@@ -3,23 +3,31 @@
         <input placeholder="Nhập mã khuyến mãi" type="text" pInputText formControlName="code" id="deliveryRequestCode"
             class="input-code" style="width: 100%;" />
     </div>
-    <button class="filter-btn" pButton type="button" label="Lọc" (click)="filterRequest()"
+    <button class="filter-btn" pButton type="button" label="Sử dụng" (click)="filterRequest()"
         [disabled]="!filterForm.valid || loading"></button>
 </form>
 <div class="coupons">
     <div class="coupon-item">
         <div class="img-section">
+            <div class="total-use">
+                111111
+            </div>
             <img class="img-service"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToaQxosQ19vLQ_8_D4S8vmnBWwaSnVBx2NcA&usqp=CAU">
+              src="assets/coupon.png">
           </div>
         <div class="main-infor">
-
-        </div>
-        <div class="ticketHolder noFloat">
-            <div class="coupon">
-                <div class="inner">
-                    <div class="savings">Sử dụng ngay</div>
+            <div class="description">
+                <div class="name">
+                    Or this feature already exists
                 </div>
+                <div class="out-date">
+                    Or this feature already exists
+                </div>
+            </div>
+            <div class="use-now">
+               <div class="text">
+                Dùng ngay
+               </div>
             </div>
         </div>
     </div>

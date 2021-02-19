@@ -33,12 +33,16 @@ export class ListServicePackComponent implements OnInit {
       height: '90vh',
       width: '90vw',
       maxHeight: '400px',
-      maxWidth: '700px',
+      maxWidth: '600px',
       data: servicePack
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log(result)
+      if(result && result.paymentSuccess){
+        console.log('success')
+        this.showMessage("success","Success","Thanh toán thành công");
+      }
     });
   }
 

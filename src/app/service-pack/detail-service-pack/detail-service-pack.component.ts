@@ -18,7 +18,6 @@ export class DetailServicePackComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {
-    console.log(servicePack);
   }
 
   ngOnInit() {}
@@ -38,7 +37,7 @@ export class DetailServicePackComponent implements OnInit {
                 resPaymentServicePack.result &&
                 resPaymentServicePack.result.success
               ) {
-                this.showMessage("success","Success","Thanh toán thành công");
+                this.dialogRef.close({paymentSuccess:true});
               } else {
                 this.showMessage("error","Error","Thanh toán không thành công");
               }

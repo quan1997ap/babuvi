@@ -1,5 +1,5 @@
 <ngx-spinner type="line-spin-fade" [fullScreen]="true" size="small"></ngx-spinner>
-<p-toast key="toast-message"></p-toast>
+<p-toast></p-toast>
 <div class="service-pack-container">
   <div class="title">
     Gói dịch vụ
@@ -10,7 +10,7 @@
       <div class="service-item">
         <div class="img-section">
           <img class="img-service" *ngIf="!servicePack.image"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToaQxosQ19vLQ_8_D4S8vmnBWwaSnVBx2NcA&usqp=CAU" />
+          src="assets/service-provider-icon.jpg" />
           <img class="img-service" *ngIf="servicePack.image" [src]="servicePack.image" />
         </div>
         <div class="infor">
