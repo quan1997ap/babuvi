@@ -247,7 +247,9 @@ export const ApiApplication = {
     controller: ApiBaseUrl + "Service",
     getLsServicePackByUser: "/getLsServicePackByUser",
     paymentServicePack: "/paymentServicePack",
-    calWithdrawalRequest: "/calWithdrawalRequest"
+    calWithdrawalRequest: "/calWithdrawalRequest",
+    getMyCoupon: "getMyCoupon",
+    getCouponByCode: "getCouponByCode"
   },
   order: {
     controller: ApiBaseUrl + "order",

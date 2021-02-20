@@ -1,3 +1,5 @@
+import { DynamicDialogConfig } from 'primeng/api';
+import { DynamicDialogRef } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailCouponComponent implements OnInit {
 
-  constructor() { }
+  currentCoupon:any;
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) { }
 
   ngOnInit() {
+    console.log(this.config.data)
+    if(this.config.data){
+      this.currentCoupon = this.config.data
+    }
   }
 
 }

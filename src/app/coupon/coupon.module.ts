@@ -1,5 +1,4 @@
 import { CouponRoutes } from "./coupon.routing";
-import { PaymentService } from "./../services/payment.service";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
@@ -16,6 +15,7 @@ import { ListCouponComponent } from "./list-coupon/list-coupon.component";
 import { DetailCouponComponent } from "./detail-coupon/detail-coupon.component";
 import { ShowCouponComponent } from "./show-coupon/show-coupon.component";
 import { DynamicDialogModule } from "primeng/dynamicdialog";
+import { CouponServices } from "app/services/coupon.service";
 
 @NgModule({
   imports: [
@@ -37,7 +37,7 @@ import { DynamicDialogModule } from "primeng/dynamicdialog";
     DetailCouponComponent,
     ShowCouponComponent,
   ],
-  providers: [MessageService, PaymentService, DialogService],
+  providers: [MessageService, CouponServices, DialogService],
   entryComponents: [ListCouponComponent, DetailCouponComponent],
 })
 export class CouponModule {}
