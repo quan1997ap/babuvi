@@ -6,6 +6,7 @@
   padding: 0px;
 }
 .service-pack-container {
+  min-height: calc(100vh - 130px );
     background: #fff;
     .primary-btn {
       background-color: #ec5d37;
