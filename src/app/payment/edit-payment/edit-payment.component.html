@@ -1,126 +1,143 @@
 <ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
 <p-toast key="toast-message"></p-toast>
 <div class="payment-container">
+  <div class="title">
+    TẠO YÊU CẦU THANH TOÁN HỘ
+  </div>
 
-  <div class="row">
-    <div class="col-sm-12 col-md-8">
-      <div class="title">
-        TẠO YÊU CẦU THANH TOÁN HỘ
-      </div>
-
-      <div class="statistic padding-8">
-        <div class="statistic-detail mr-right-8">
-          Tổng số giao dịch: <span class="detail-number">{{paymentList.length}}</span>
-        </div>
-        <div class="statistic-detail mr-right-8">
-          Tổng tiền thanh toán hộ <span class="detail-number">{{paymentList.length}}</span>
-        </div>
-        <div class="statistic-detail mr-right-8">
-          Tổng tiền phí <span class="detail-number">{{paymentList.length}}</span>
-        </div>
-      </div>
-
-      <div class="table padding-8">
-        <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true">
+  <div class="row form-layout">
+    <div class="col-sm-12 col-md-12 col-lg-8">
+      <div class="table padding-8" [formGroup]="requestListForm">
+        <p-table class="request-table" #dt [value]="paymentRequestFormArray.controls" [rowHover]="true" [rows]="10"
+          [paginator]="true" [autoLayout]="true">
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 50px;">STT</th>
-              <th>Số tiền ( (¥) )<span style="color: red;">*</span></th>
-              <th>Nội dung</th>
+              <th style="min-width: 180px;">Thanh toán hộ</th>
+              <th>Chi phí</th>
+              <th style="width: 60px;"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-payment let-rowIndex="rowIndex">
-            <tr>
-              <td style="width: 50px;">  
-                {{rowIndex}}
-              </td>
-              <td>
-                <div class="input-fullwidth ">
-                  <input type="text" [(ngModel)]="payment.amount" [style]=" {'width.px': '100%'}" pInputText placeholder="Số tiền" />
-                </div>
-              </td>
-              <td>
-                <div class="input-fullwidth ">
-                  <input type="text" [(ngModel)]="payment.desc" [style]=" {'width.px': '100%'}" pInputText placeholder="Nội dung" />
-                </div>
-              </td>
-            </tr>
+            <ng-container formArrayName="lsPaymentRequest">
+              <tr [formGroupName]="rowIndex">
+                <td style="width: 50px;">
+                  <p-checkbox formControlName="checked" binary="true" inputId="binary"></p-checkbox>
+                </td>
+                <td>
+                  <div class="d-flex">
+                    <div class="input-fullwidth" style="margin-right: 8px;">
+                      <label>Loại yêu cầu <span style="color: red;">*</span></label>
+                      <p-dropdown  scrollHeight="124px" formControlName="serviceGroupId" (onChange)="calPaymentRequest($event,rowIndex )"
+                        [style]="{'width': '100%'}"  maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
+                      </p-dropdown>
+                    </div>
+                    <div class="input-fullwidth">
+                      <label>Số tiền(¥) <span style="color: red;">*</span></label>
+                      <input type="text" mask="comma_separator" formControlName="amountRequest" [style]="{'width.px': '100%'}" pInputText (ngModelChange)="calPaymentRequest($event,rowIndex )"
+                        placeholder="Nhập số tiền" />
+                    </div>
+                  </div>
+                  <div style="margin-top: 10px;" *ngIf="paymentValAtIndex(rowIndex, 'serviceGroupId')">
+                    <label>Dịch vụ</label>
+                    <div class="p-field-checkbox" *ngIf="paymentValAtIndex(rowIndex, 'lsAllService' ).length; else no_service">
+                      <p-multiSelect (onChange)="calPaymentRequest($event,rowIndex )" scrollHeight="100px" placeholder="Chọn dịch vụ" maxSelectedLabels=2 [options]="makeDataForDropdownService(rowIndex, 'lsAllService' )" formControlName="lsService"  autoWidth="false" [style]="{'width':'100%'}"></p-multiSelect>
+                    </div>
+                    <ng-template #no_service>
+                      <div style="margin-bottom: 8px;color: red;">
+                        Không có dịch vụ khả dụng nào
+                      </div>
+                    </ng-template>
+                  </div>
+                  <div style="margin-top: 10px;">
+                    <div class="input-fullwidth ">
+                      <label>Nội dung</label>
+                      <textarea [rows]="3" formControlName="description" autoResize="autoResize" pInputTextarea
+                        style="width: 100%; padding: 4px;" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                  </div>
+                  <div class="error-label" *ngIf="isPaymentControlHasError( payment.get('serviceGroupId'), 'required')">
+                    Loại yêu cầu là bắt buộc</div>
+                </td>
+                <td>
+                  <div class="input-fullwidth chiphi" style="max-width: 300px;min-width: 200px;">
+                    <p> <span class="label">Tỷ giá:</span> <span class="number"> {{paymentValAtIndex(rowIndex, 'exchangeRate' ) | number}} </span></p>
+                    <p> <span class="label">Quy đổi:</span> <span  class="number"> {{paymentValAtIndex(rowIndex, 'exchangeRate' )| number }} </span></p>
+                    <p> <span class="label">Phí:</span> <span  class="number"> {{paymentValAtIndex(rowIndex, 'totalFee' ) | number}} </span></p>
+                    <p> <span class="label">Tổng tiền:</span> <span class="number"> {{paymentValAtIndex(rowIndex, 'totalAmount' ) | number}} </span> </p>
+                  </div>
+                </td>
+                <td>
+                  <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"
+                    (click)="removePaymentRequest(rowIndex)"></button>
+                </td>
+              </tr>
+            </ng-container>
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="8">No payments found.</td>
             </tr>
           </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="4">
+                <div class="add-request-item">
+                  <p-button [disabled]="requestListForm.invalid" icon="pi pi-plus" label="Thêm yêu cầu"
+                    (click)="addPaymentRequest()"></p-button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
         </p-table>
-
-        <div class="add-request-item">
-          <p-button class="primary-btn" icon="pi pi-plus" label="Thêm yêu cầu" (click)="addPaymentRequest()"></p-button>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-4 d-flex flex-column">
+      <div class="padding-8 d-flex flex-column" style="height: 100%;">
+        <div class="statistic-title">
+          Tổng hợp chi phí
         </div>
-        <div class="note">
-          <p>Lưu ý:</p>
-          <p>Thanh toán hộ 30k/ngày, ngoài giờ hành chính 50k/ngày</p>
-          <p>Thanh toán hộ đơn sale 10k/ lệnh</p>
-          <p>Nạp tệ Alipay 30k/lần</p>
-          <p>Mua bán tệ 30k/ mã 5 lệnh</p>
+        <div class="cal-fee">
+          <div class="cal-fee-content">
+            <div class="mr-right-8 mr-bottom-8 w-100">
+              <div class=" statistic">
+                <div class="title-detail">Số yêu cầu:</div>
+                <div class="detail-number"> {{paymentRequestFormArray.controls.length}}</div>
+              </div>
+              <div class=" statistic">
+                <div class="title-detail">Tổng tiền:</div>
+                <div class="detail-number"> {{totalPaymentRequest.totalPay | number}}</div>
+              </div>
+              <div class=" statistic">
+                <div class="title-detail">Tổng phí:</div>
+                <div class="detail-number"> {{totalPaymentRequest.totalFee | number}}</div>
+              </div>
+              <div class=" statistic">
+                <div class="title-detail">Tổng thanh toán:</div>
+                <div class="detail-number"> {{totalPaymentRequest.totalFee | number}}</div>
+              </div>
+              <div class=" statistic ">
+                <div class="title-detail">Mã khuyễn mãi:</div>
+                <div class="detail-number select-coupon" (click)="selectCoupon()"> Nhập mã</div>
+              </div>
+
+              <div class="statistic" style="justify-content: space-between;">
+                <button  class="action" pButton type="button" label="Mua gói" (click)="handleClick($event)"></button>
+                <button class="action highlight-btn" pButton type="button" label="Gửi yêu cầu" (click)="handleClick($event)"></button>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
-
-
     </div>
-    <div class="col-sm-12 col-md-4">
-      <div class="title">
-        THÔNG TIN CHUNG
-      </div>
-      <form [formGroup]="filterForm" class="padding-8">
-        <div class="mr-right-8 mr-bottom-8 input-fullwidth ">
-          <div class="form-title">
-            Mã khách hàng
-          </div>
-          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="UserId" placeholder="Mã khách hàng" />
-        </div>
-        <div class="mr-right-8 mr-bottom-8 input-fullwidth ">
-          <div class="form-title">
-            Mã yêu cầu
-          </div>
-          <input type="text" [style]=" {'width.px': '100%'}" pInputText formControlName="PaymentRequestCode" placeholder="Mã yêu cầu" />
-        </div>
-        <div class="mr-right-8 mr-bottom-8 ">
-          <div class="form-title">
-            Loại yêu cầu
-          </div>
-          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentTypeList" formControlName="Type" placeholder="Loại yêu cầu"></p-dropdown>
-        </div>
-        <div class="mr-right-8 mr-bottom-8 ">
-          <div class="form-title">
-            Dịch vụ
-          </div>
-          <p-dropdown  [style]="{'width': '100%'}" [options]="paymentStatusList" formControlName="Status" placeholder="Dịch vụ">
-          </p-dropdown>
-        </div>
-        <div class="mr-right-8 mr-bottom-8 input-fullwidth">
-          <div class="form-title">
-            Tỉ giá
-          </div>
-          <input [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="ExchangeRate" placeholder="Tỉ giá" />
-        </div>
-        <div class="mr-right-8 mr-bottom-8 input-fullwidth ">
-          <div class="form-title">
-            Tổng tệ (¥)
-          </div>
-          <input  [style]=" {'width.px': '100%'}" type="text" pInputText formControlName="TotalAmount" placeholder="Tổng tệ" />
-        </div>
-        <div class="mr-right-8 mr-bottom-8 ">
-          <div> Phí thanh toán:</div>
-          <div style="color: #ec5d37;"> 1000đ</div>
-          <div> Phí thanh toán:</div>
-          <div style="color: #ec5d37;"> 1000đ</div>
-        </div>
-        <div class="mr-right-8 mr-bottom-8 btns-footer">
-          <button pButton label="Xóa yêu cầu" style="min-width: 80px;" class="primary-btn mr-right-8" (click)="filterPayment()"></button>
-          <button pButton label="Gửi yêu cầu" style="min-width: 80px;" class="primary-btn" (click)="filterPayment()"></button>
-        </div>
-      </form>
-    </div>
+  </div>
+
+  <div class="mr-right-8 mr-bottom-8 btns-footer">
+    <button pButton label="Xóa yêu cầu" style="min-width: 80px;" class="primary-btn mr-right-8"
+      (click)="removePaymentRequestToDb()"></button>
+    <button pButton label="Gửi yêu cầu" style="min-width: 80px;" class="primary-btn"
+      (click)="savePaymentRequestToDb()"></button>
   </div>
 
 </div>

@@ -1,3 +1,6 @@
+import { CouponServices } from 'app/services/coupon.service';
+import { DetailCouponComponent } from "./../coupon/detail-coupon/detail-coupon.component";
+import { ListCouponComponent } from "./../coupon/list-coupon/list-coupon.component";
 import { PaymentService } from "./../services/payment.service";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
@@ -8,7 +11,7 @@ import { DialogModule } from "primeng/dialog";
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
 import { MessagesModule } from "primeng/primeng";
-import { MessageService } from "primeng/api";
+import { DialogService, MessageService } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
 import { PaymentRoutes } from "./payment.routing";
@@ -17,8 +20,16 @@ import { ListPaymentComponent } from "./list-payment/list-payment.component";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { TableModule } from "primeng/table";
 import { ToastModule } from "primeng/toast";
+import { CheckboxModule } from "primeng/checkbox";
+import { AccordionModule } from "primeng/accordion";
+import { MultiSelectModule } from "primeng/multiselect";
+import { NgxMaskModule } from "ngx-mask";
+import { DynamicDialogModule } from "primeng/dynamicdialog";
+
 @NgModule({
   imports: [
+    DynamicDialogModule,
+    NgxMaskModule.forRoot(),
     NgxSpinnerModule,
     CommonModule,
     RouterModule.forChild(PaymentRoutes),
@@ -33,8 +44,22 @@ import { ToastModule } from "primeng/toast";
     DropdownModule,
     TableModule,
     ToastModule,
+    CheckboxModule,
+    AccordionModule,
+    MultiSelectModule,
   ],
-  declarations: [EditPaymentComponent, ListPaymentComponent],
-  providers: [MessageService, PaymentService],
+  declarations: [
+    EditPaymentComponent,
+    ListPaymentComponent,
+    ListCouponComponent,
+    DetailCouponComponent,
+  ],
+  providers: [
+    MessageService,
+    PaymentService,
+    CouponServices,
+    DialogService
+  ],
+  entryComponents: [ListCouponComponent, DetailCouponComponent],
 })
 export class PaymentModule {}

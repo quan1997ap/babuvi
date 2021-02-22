@@ -54,4 +54,8 @@ export class PaymentService extends ApiService {
         `paymentRequest/deletePaymentRequest?paymentRequestId=${paymentRequestId}`
     );
   }
+
+  calPaymentRequest(params){
+    return this.post(ApiApplication.paymentRequest.controller + ApiApplication.paymentRequest.calPaymentRequest, params );
+  }
 }
