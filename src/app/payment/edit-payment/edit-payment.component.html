@@ -38,7 +38,7 @@
                         placeholder="Nhập số tiền" />
                     </div>
                   </div>
-                  <div style="margin-top: 10px;" *ngIf="paymentValAtIndex(rowIndex, 'serviceGroupId')">
+                  <div style="margin-top: 10px;" *ngIf="paymentValAtIndex(rowIndex, 'serviceGroupId') && paymentValAtIndex(rowIndex, 'edited') == true">
                     <label>Dịch vụ</label>
                     <div class="p-field-checkbox" *ngIf="paymentValAtIndex(rowIndex, 'lsAllService' ).length; else no_service">
                       <p-multiSelect (onChange)="calPaymentRequest($event,rowIndex )" scrollHeight="100px" placeholder="Chọn dịch vụ" maxSelectedLabels=2 [options]="makeDataForDropdownService(rowIndex, 'lsAllService' )" formControlName="lsService"  autoWidth="false" [style]="{'width':'100%'}"></p-multiSelect>
@@ -57,7 +57,11 @@
                     </div>
                   </div>
                   <div class="error-label" *ngIf="isPaymentControlHasError( payment.get('serviceGroupId'), 'required')">
-                    Loại yêu cầu là bắt buộc</div>
+                    Loại yêu cầu là bắt buộc
+                  </div>
+                  <div class="error-label" *ngIf="isPaymentControlHasError( payment.get('amountRequest'), 'min')">
+                    Số tiền phải > 0
+                  </div>
                 </td>
                 <td>
                   <div class="input-fullwidth chiphi" style="max-width: 300px;min-width: 200px;">
@@ -118,7 +122,11 @@
               </div>
               <div class=" statistic ">
                 <div class="title-detail">Mã khuyễn mãi:</div>
-                <div class="detail-number select-coupon" (click)="selectCoupon()"> Nhập mã</div>
+                <div class="detail-number select-coupon" style="color: #007ad9;" (click)="selectCoupon()"> 
+                 
+                  <span *ngIf="currentCoupon">{{currentCoupon.couponCode}}</span>
+                  <span *ngIf="!currentCoupon"> Nhập mã</span>
+                </div>
               </div>
 
               <div class="statistic" style="justify-content: space-between;">

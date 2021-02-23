@@ -1,6 +1,6 @@
 import { CouponServices } from 'app/services/coupon.service';
-import { DetailCouponComponent } from "./../coupon/detail-coupon/detail-coupon.component";
-import { ListCouponComponent } from "./../coupon/list-coupon/list-coupon.component";
+import { DetailCouponComponent } from "./detail-coupon/detail-coupon.component";
+import { ListCouponComponent } from "./list-coupon/list-coupon.component";
 import { PaymentService } from "./../services/payment.service";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";

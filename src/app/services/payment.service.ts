@@ -29,6 +29,13 @@ export class PaymentService extends ApiService {
     );
   }
 
+  getLsServiceGroupPaymentRequest(){
+    return this.get(
+      ApiApplication.service.controller +
+        ApiApplication.service.getLsServiceGroupPaymentRequest
+    );
+  }
+
   getPaymentRequestStatus() {
     return this.get(
       ApiApplication.system.controller +

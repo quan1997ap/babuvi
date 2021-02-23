@@ -1,18 +1,20 @@
 import { DetailCouponComponent } from "./../detail-coupon/detail-coupon.component";
-import { DialogService } from "primeng/api";
+import { DialogService, DynamicDialogRef } from "primeng/api";
 import { Validators } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy} from "@angular/core";
 import { CouponServices } from "app/services/coupon.service";
 import { NgxSpinnerService } from "ngx-spinner";
+import { cloneDeep } from "lodash";
 
 @Component({
   selector: "app-list-coupon",
   templateUrl: "./list-coupon.component.html",
   styleUrls: ["./list-coupon.component.scss"],
+  providers: [DialogService] // resolve close multi dialog
 })
-export class ListCouponComponent implements OnInit {
+export class ListCouponComponent implements OnInit, OnDestroy {
   msgs = [];
   loading = false;
   filterForm: FormGroup;
@@ -20,8 +22,9 @@ export class ListCouponComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private couponServices: CouponServices,
-    private dialogService: DialogService,
-    private spinner: NgxSpinnerService
+    private dialogServiceLstCoupon: DialogService,
+    private dynamicDialogRefLstCoupon: DynamicDialogRef,
+    private spinner: NgxSpinnerService,
   ) {}
 
   ngOnInit() {
@@ -29,6 +32,9 @@ export class ListCouponComponent implements OnInit {
     this.filterForm = this.fb.group({
       code: ["", Validators.required],
     });
+  }
+  
+  ngOnDestroy(): void {
   }
 
   filterRequest() {
@@ -104,8 +110,13 @@ export class ListCouponComponent implements OnInit {
   }
 
   showDetailCoupon(event, coupon) {
-    if (event && event.target.className !== "use-now" && event.target.className !== "text") {
-      const ref = this.dialogService.open(DetailCouponComponent, {
+    if (
+      event &&
+      event.target.className !== "use-now" &&
+      event.target.className !== "text"
+    ) {
+      console.log(this.dynamicDialogRefLstCoupon)
+      const refDetail = this.dialogServiceLstCoupon.open(DetailCouponComponent, {
         header: "Chi tiết mã khuyến mại",
         style: {
           "max-width": "400px",
@@ -114,8 +125,15 @@ export class ListCouponComponent implements OnInit {
         },
         data: coupon,
       });
+      refDetail.onClose.subscribe((couponSelected) => {
+        if (couponSelected) {
+          this.dynamicDialogRefLstCoupon.close(couponSelected);
+        }
+      });
     }
   }
 
-  useCoupon() {}
+  useCoupon(coupon) {
+    this.dynamicDialogRefLstCoupon.close(coupon);
+  }
 }

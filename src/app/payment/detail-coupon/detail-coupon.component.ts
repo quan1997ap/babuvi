@@ -10,13 +10,16 @@ import { Component, OnInit } from '@angular/core';
 export class DetailCouponComponent implements OnInit {
 
   currentCoupon:any;
-  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) { }
+  constructor(public dialogRef: DynamicDialogRef, public config: DynamicDialogConfig) { }
 
   ngOnInit() {
-    console.log(this.config.data)
     if(this.config.data){
       this.currentCoupon = this.config.data
     }
+  }
+
+  useCurrentCoupon(coupon) {
+    this.dialogRef.close(this.currentCoupon);
   }
 
 }

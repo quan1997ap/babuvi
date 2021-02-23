@@ -30,8 +30,7 @@
         <div class="main-infor">
             <div class="description">
                 <div class="name" style="-webkit-box-orient: vertical;">
-                    {{coupon.couponTitle}} 
-                    Note that, as of this comment, -webkit-line-clamp does not respect visibility: hidden.
+                    {{coupon.couponTitle}}
                 </div>
                 <div class="out-date">
                     <span>Ngày hết hạn</span>
@@ -41,7 +40,7 @@
                 </div>
             </div>
             <div class="use-now">
-                <div class="text" (click)="useCoupon($event, coupon)">
+                <div class="text" (click)="useCoupon(coupon)">
                     Dùng ngay
                 </div>
             </div>

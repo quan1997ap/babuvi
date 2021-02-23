@@ -9,7 +9,7 @@
 }
 .coupons {
   display: flex;
-  max-height: 400px;
+  max-height: 374px;
   flex-direction: column;
   overflow: auto;
   min-height: 200px;
@@ -44,6 +44,9 @@
       transform: translate(-30px, 10px) rotate(-48deg);
       width: 100px;
       text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   .coupon-item {
@@ -80,7 +83,7 @@
         min-height: 60px;
         .name {
           color: #333;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: bold;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -89,6 +92,7 @@
           margin-bottom: 4px;
         }
         .out-date {
+          font-size: 14px;
           flex-direction: column;
           color: gray;
           font-weight: bold;

@@ -19,11 +19,6 @@ export const AppRoutes: Routes = [{
         loadChildren: './withdrawal-request/withdrawal-request.module#WithdrawalRequestModule'
     },
     {
-        path: 'coupon',
-        canActivate: [AuthGuard],
-        loadChildren: './coupon/coupon.module#CouponModule'
-    },
-    {
         path: 'service-pack',
         canActivate: [AuthGuard],
         loadChildren: './service-pack/service-pack.module#ServicePackModule'
