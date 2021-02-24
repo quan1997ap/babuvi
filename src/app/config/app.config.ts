@@ -212,7 +212,8 @@ export const ApiApplication = {
   paymentRequest: {
     controller: ApiBaseUrl + "paymentRequest",
     searchPaymentRequest: "/searchPaymentRequest",
-    calPaymentRequest: "/calPaymentRequest"
+    calPaymentRequest: "/calPaymentRequest",
+    addCouponPaymentRequest: "/addCouponPaymentRequest"
   },
   system: {
     controller: ApiBaseUrl + "system",

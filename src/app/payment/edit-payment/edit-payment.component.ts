@@ -1,5 +1,10 @@
+/*
+note: 
+1. nhóm isOption = 1: là luôn luôn bị tính phí --> khách không thể lựa chọn --> không hiển thị trong list chọn mà chỉ hiển thị tổng phí trong cột chi phí
+nhóm isOption = 2: là khách thích chọn cũng được mà không thích chọn cũng ko sao. là tùy ý.
+nhóm isOption = 3: là phải chọn 1 trong những lựa chọn này. Trong nhóm isOption = 3 sẽ được chia nhóm theo group_option và groupType nếu có 2 giá trị trên giống nhau thì là cùng một nhóm
+*/
 import {
-  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
@@ -78,8 +83,8 @@ export class EditPaymentComponent implements OnInit {
       totalAmount: new FormControl(0, []),
       totalFee: new FormControl(0, []),
       lsServiceSelectedOptionType1: new FormControl([]),
-      lsServiceSelectedOptionType2: new FormControl([], [Validators.required]),
-      lsServiceSelectedOptionType3: new FormControl([]),
+      lsServiceSelectedOptionType2: new FormControl([]),
+      lsServiceSelectedOptionType3: new FormControl([], [Validators.required]),
       // for display option
       couponCode: new FormControl(null),
       lsAllService: new FormControl([]),
@@ -172,7 +177,6 @@ export class EditPaymentComponent implements OnInit {
         this.spinner.show();
         // các dịch vụ đã chọn => isChecked == true
         let lsRequestService = [];
-        console.log(isChangeGroupPaymentRequest)
         if(!isChangeGroupPaymentRequest){
           lsRequestService = currentPaymentRequestControl.value.lsAllService.map( service => {
             if( 
@@ -185,7 +189,6 @@ export class EditPaymentComponent implements OnInit {
             return service;
           })
         }
-        console.log( lsRequestService )
         const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
           couponCode: currentPaymentRequestControl.value.couponCode,
@@ -296,7 +299,28 @@ export class EditPaymentComponent implements OnInit {
           this.subscription = this.paymentService.addCouponPaymentRequest(
             {
               coupon: couponSelected.couponCode,
-              lsPaymentRequest: this.paymentRequestFormArray.value
+              lsPaymentRequest: this.paymentRequestFormArray.value.map( paymentRequest => {
+                let newPaymentRequest: any = {};
+                newPaymentRequest.exchangeRate = paymentRequest.exchangeRate;
+                newPaymentRequest.couponCode = couponSelected.couponCode;
+                newPaymentRequest.totalAmount = paymentRequest.totalAmount;
+                newPaymentRequest.totalFee = paymentRequest.totalFee;
+                newPaymentRequest.serviceGroupId = paymentRequest.serviceGroupId;
+                newPaymentRequest.amountRequest = paymentRequest.amountRequest;
+                newPaymentRequest.description = paymentRequest.description;
+                let lsRequestService = paymentRequest.lsAllService.map( service => {
+                  if( 
+                    paymentRequest.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
+                    paymentRequest.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
+                    paymentRequest.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
+                  ){
+                    service.isChecked = true;
+                  }
+                  return service;
+                })
+                newPaymentRequest.lsService = lsRequestService;
+                return newPaymentRequest;
+              })
             }
           ).subscribe(
             resAddCouponPaymentRequest => {
@@ -310,17 +334,17 @@ export class EditPaymentComponent implements OnInit {
               );
             }
           )
-          this.paymentRequestFormArray.controls.forEach(
-            (requestControl, index) => {
-              let currentPaymentRequestControl = this.paymentRequestFormArray.at(
-                index
-              );
-              this.calPaymentRequest(null, index);
-              currentPaymentRequestControl.patchValue({
-                couponCode: couponSelected.couponCode,
-              });
-            }
-          );
+          // this.paymentRequestFormArray.controls.forEach(
+          //   (requestControl, index) => {
+          //     let currentPaymentRequestControl = this.paymentRequestFormArray.at(
+          //       index
+          //     );
+          //     currentPaymentRequestControl.patchValue({
+          //       couponCode: couponSelected.couponCode,
+          //     });
+          //   }
+          // );
+
         }
       });
     } else {

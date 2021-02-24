@@ -73,6 +73,6 @@ export class PaymentService extends ApiService {
         “lsPaymentRequest”: []
       }
      */
-    return this.post(ApiApplication.paymentRequest.controller + ApiApplication.paymentRequest.calPaymentRequest, params );
+    return this.post(ApiApplication.paymentRequest.controller + ApiApplication.paymentRequest.addCouponPaymentRequest, params );
   }
 }
