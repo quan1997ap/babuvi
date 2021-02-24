@@ -1,4 +1,4 @@
-import { PaymentRequestSearchModel } from "./../model/payment-request.model";
+import { PaymentRequestModel, PaymentRequestSearchModel } from "./../model/payment-request.model";
 import { ApiBaseUrl } from "./../config/app.config";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -62,7 +62,17 @@ export class PaymentService extends ApiService {
     );
   }
 
-  calPaymentRequest(params){
+  calPaymentRequest(params: PaymentRequestModel){
+    return this.post(ApiApplication.paymentRequest.controller + ApiApplication.paymentRequest.calPaymentRequest, params );
+  }
+
+  addCouponPaymentRequest(params){
+    /*
+     * params = {
+        “Coupon”: “COUPON01”,
+        “lsPaymentRequest”: []
+      }
+     */
     return this.post(ApiApplication.paymentRequest.controller + ApiApplication.paymentRequest.calPaymentRequest, params );
   }
 }

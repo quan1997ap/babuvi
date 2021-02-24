@@ -1,16 +1,19 @@
 export class PaymentRequestModel {
-  PaymentRequestId: number;
-  PaymentRequestCode: string;
-  PaymentRequestDate: Date;
-  UserId: number;
-  AmountRequest: number;
-  TotalFee: number;
-  TotalAmount: number;
-  ExchangeRate: number;
-  Type: string;
-  Status: string;
-  StatusDisplay: string;
-  ServiceId: number;
+  serviceGroupId?: string;
+  paymentRequestId?: number;
+  paymentRequestCode?: string;
+  paymentRequestDate?: Date;
+  userId?: number;
+  amountRequest?: number;
+  totalFee?: number;
+  totalAmount?: number;
+  exchangeRate?: number;
+  type?: string;
+  status?: string;
+  statusDisplay?: string;
+  serviceId?: number;
+  lsService?: PaymentServiceModel[];
+  couponCode?: string;
 }
 
 export class PaymentRequestSearchModel {
@@ -32,19 +35,20 @@ export class ServiceGroupPaymentRequestModel {
 }
 
 export class PaymentServiceModel {
-  serviceid: number;
-  servicename: string;
+  serviceId: number;
+  serviceName: string;
   display: string;
-  shortdisplay: string;
+  shortDisplay: string;
   description: string;
-  grouptype: string;
-  isoption: string;
-  isdefault: string;
-  isinternal: string;
-  locationdisplay: string;
-  feetype: string;
+  groupType: string;
+  isOption: string;
+  isDefault: string;
+  isInternal: string;
+  locationDisplay: string;
+  feeType: string;
   status: string;
   ord: number;
   amount: number;
-  ischecked: boolean;
+  isChecked: boolean;
 }
+

@@ -160,7 +160,7 @@ export class EditPaymentComponent implements OnInit {
     });
   }
 
-  calPaymentRequest(event, rowIndex) {
+  calPaymentRequest(event, rowIndex, isChangeGroupPaymentRequest?: boolean) {
     clearTimeout(this.timeoutInputChange);
     this.subscription.unsubscribe();
     let currentPaymentRequestControl = this.paymentRequestFormArray.at(
@@ -171,18 +171,22 @@ export class EditPaymentComponent implements OnInit {
       this.timeoutInputChange = setTimeout(() => {
         this.spinner.show();
         // các dịch vụ đã chọn => isChecked == true
-        const lsRequestService = currentPaymentRequestControl.value.lsAllService.map( service => {
-          if( 
-            currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
-            currentPaymentRequestControl.value.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
-            currentPaymentRequestControl.value.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
-          ){
-            service.isChecked = true;
-          }
-          return service;
-        })
-        console.log( currentPaymentRequestControl.value.lsAllService )
-        const params = {
+        let lsRequestService = [];
+        console.log(isChangeGroupPaymentRequest)
+        if(!isChangeGroupPaymentRequest){
+          lsRequestService = currentPaymentRequestControl.value.lsAllService.map( service => {
+            if( 
+              currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
+              currentPaymentRequestControl.value.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
+              currentPaymentRequestControl.value.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
+            ){
+              service.isChecked = true;
+            }
+            return service;
+          })
+        }
+        console.log( lsRequestService )
+        const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
           couponCode: currentPaymentRequestControl.value.couponCode,
           lsService: lsRequestService,
@@ -250,10 +254,6 @@ export class EditPaymentComponent implements OnInit {
     }
   }
 
-  // calPaymentRequestAtIndexPromise(){
-  //   return new Obser
-  // }
-
   calTotalPaymentRequest() {
     this.totalPaymentRequest = {
       totalPay: 0,
@@ -293,6 +293,23 @@ export class EditPaymentComponent implements OnInit {
       ref.onClose.subscribe((couponSelected) => {
         if (couponSelected) {
           this.currentCoupon = couponSelected;
+          this.subscription = this.paymentService.addCouponPaymentRequest(
+            {
+              coupon: couponSelected.couponCode,
+              lsPaymentRequest: this.paymentRequestFormArray.value
+            }
+          ).subscribe(
+            resAddCouponPaymentRequest => {
+              console.log(resAddCouponPaymentRequest)
+            },
+            error => {
+              this.showMessage(
+                "error",
+                "Có lỗi xảy ra khi áp dụng coupon. Hãy thử lại!",
+                "Error"
+              );
+            }
+          )
           this.paymentRequestFormArray.controls.forEach(
             (requestControl, index) => {
               let currentPaymentRequestControl = this.paymentRequestFormArray.at(

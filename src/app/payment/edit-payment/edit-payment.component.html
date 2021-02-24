@@ -28,7 +28,7 @@
                   <div class="d-flex">
                     <div class="input-fullwidth" style="margin-right: 8px;">
                       <label>Loại yêu cầu <span style="color: red;">*</span></label>
-                      <p-dropdown  scrollHeight="124px" formControlName="serviceGroupId" (onChange)="calPaymentRequest($event,rowIndex )"
+                      <p-dropdown  scrollHeight="124px" formControlName="serviceGroupId" (onChange)="calPaymentRequest($event,rowIndex, true )"
                         [style]="{'width': '100%'}"  maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
                       </p-dropdown>
                     </div>
