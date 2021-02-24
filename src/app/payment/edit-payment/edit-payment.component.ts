@@ -19,6 +19,7 @@ import { DialogService } from "primeng/api";
 // Models
 import { ClientProfile } from "app/model/client-profile.model";
 import { User } from "./../../model/user.model";
+import { PaymentRequestModel, PaymentServiceModel, ServiceGroupPaymentRequestModel } from './../../model/payment-request.model';
 
 // RXJS
 import { forkJoin, Subscription } from "rxjs";
@@ -35,7 +36,6 @@ import { ListCouponComponent } from "./../list-coupon/list-coupon.component";
 export class EditPaymentComponent implements OnInit {
   requestListForm: FormGroup;
   paymentTypeList = [];
-  paymentStatusList = [];
   currentUser = new User();
   private subscription: Subscription;
   timeoutInputChange: any;
@@ -77,9 +77,11 @@ export class EditPaymentComponent implements OnInit {
       exchangeRate: new FormControl(0, []),
       totalAmount: new FormControl(0, []),
       totalFee: new FormControl(0, []),
-      lsService: new FormControl([]),
+      lsServiceSelectedOptionType1: new FormControl([]),
+      lsServiceSelectedOptionType2: new FormControl([], [Validators.required]),
+      lsServiceSelectedOptionType3: new FormControl([]),
       // for display option
-      couponCode: new FormControl({}),
+      couponCode: new FormControl(null),
       lsAllService: new FormControl([]),
       edited: new FormControl(false),
     });
@@ -130,19 +132,13 @@ export class EditPaymentComponent implements OnInit {
       (res) => {
         if (res && res.length) {
           if (res[0] && res[0].result && res[0].result.success) {
-            this.paymentTypeList = res[0].result.data.map((item) => ({
+            this.paymentTypeList = res[0].result.data.map((item: ServiceGroupPaymentRequestModel) => ({
               label: item.groupName,
               value: item.serviceGroupId,
             }));
           }
           if (res[1] && res[1].result && res[1].result.success) {
-            this.paymentStatusList = res[1].result.data.map((item) => ({
-              label: item.displayValue,
-              value: item.code,
-            }));
-          }
-          if (res[2] && res[2].result && res[2].result.success) {
-            this.currentUser = res[2].result.data;
+            this.currentUser = res[1].result.data;
           }
         }
         this.spinner.hide();
@@ -171,41 +167,56 @@ export class EditPaymentComponent implements OnInit {
       rowIndex
     );
 
-    if (currentPaymentRequestControl.valid) {
+    if (currentPaymentRequestControl.value.serviceGroupId && currentPaymentRequestControl.value.amountRequest) {
       this.timeoutInputChange = setTimeout(() => {
         this.spinner.show();
-        // map lsServiceChecked to lsAllService
-        const serviceSelected = currentPaymentRequestControl.value.lsService.map(
-          (service) => {
+        // các dịch vụ đã chọn => isChecked == true
+        const lsRequestService = currentPaymentRequestControl.value.lsAllService.map( service => {
+          if( 
+            currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
+            currentPaymentRequestControl.value.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
+            currentPaymentRequestControl.value.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
+          ){
             service.isChecked = true;
-            return service;
           }
-        );
-        const lsServiceMerge = Object.assign(
-          currentPaymentRequestControl.value.lsAllService,
-          currentPaymentRequestControl.value.lsService
-        );
+          return service;
+        })
+        console.log( currentPaymentRequestControl.value.lsAllService )
         const params = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
           couponCode: currentPaymentRequestControl.value.couponCode,
-          lsService: lsServiceMerge,
+          lsService: lsRequestService,
           amountRequest: currentPaymentRequestControl.value.amountRequest,
         };
         this.subscription = this.paymentService
           .calPaymentRequest(params)
           .subscribe(
             (resServiceOfPaymentType) => {
-              let lsServiceChecked = [];
+              let lsServiceSelectedOptionType1 = [];
+              let lsServiceSelectedOptionType2 = [];
+              let lsServiceSelectedOptionType3 = [];
               let lsAllService = resServiceOfPaymentType.result.data.lsService;
               if (currentPaymentRequestControl.value.edited) {
                 // Đã edit => lấy theo isChecked
-                lsServiceChecked = lsAllService.filter(
-                  (service) => service.isChecked == true
+                lsServiceSelectedOptionType1 = lsAllService.filter(
+                  (service) => service.isOption == '1'
+                );
+                lsServiceSelectedOptionType2 = lsAllService.filter(
+                  (service) => service.isChecked == true && service.isOption == '2'
+                );
+                lsServiceSelectedOptionType3 = lsAllService.filter(
+                  (service) => service.isChecked == true && service.isOption == '3'
                 );
               } else {
                 // Chưa edit => lấy theo isDefault
-                lsServiceChecked = lsAllService.filter(
-                  (service) => service.isDefault == "1"
+                lsServiceSelectedOptionType1 = lsAllService.filter(
+                  (service) => service.isOption == '1'
+                );
+                lsServiceSelectedOptionType2 = lsAllService.filter(
+                  (service) => service.isDefault == "1" == true && service.isOption == '2'
+                );
+                lsServiceSelectedOptionType3 = lsAllService.filter(
+                  (service) => service.isDefault == "1" == true && service.isOption == '3'
                 );
               }
 
@@ -223,7 +234,9 @@ export class EditPaymentComponent implements OnInit {
                   totalAmount: resServiceOfPaymentType.result.data.totalAmount,
                   totalFee: resServiceOfPaymentType.result.data.totalFee,
                   lsAllService: lsAllService,
-                  lsService: lsServiceChecked,
+                  lsServiceSelectedOptionType1: lsServiceSelectedOptionType1,
+                  lsServiceSelectedOptionType2: lsServiceSelectedOptionType2,
+                  lsServiceSelectedOptionType3: lsServiceSelectedOptionType3
                 });
               }
               this.calTotalPaymentRequest();
@@ -260,10 +273,10 @@ export class EditPaymentComponent implements OnInit {
     return currentPaymentRequestControl.value[field];
   }
 
-  makeDataForDropdownService(rowIndex, field) {
-    return this.paymentValAtIndex(rowIndex, field).map((service) => ({
+  makeDataForDropdownService(rowIndex, field, isOption: string) {
+    return this.paymentValAtIndex(rowIndex, field).filter( service => service.isOption == isOption ).map((service) => ({
       label: service.serviceName,
-      value: service,
+      value: service
     }));
   }
 
