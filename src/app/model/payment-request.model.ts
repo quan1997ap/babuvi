@@ -41,6 +41,7 @@ export class PaymentServiceModel {
   shortDisplay: string;
   description: string;
   groupType: string;
+  groupOption: string;
   isOption: string;
   isDefault: string;
   isInternal: string;

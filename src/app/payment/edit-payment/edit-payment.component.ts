@@ -24,14 +24,18 @@ import { DialogService } from "primeng/api";
 // Models
 import { ClientProfile } from "app/model/client-profile.model";
 import { User } from "./../../model/user.model";
-import { PaymentRequestModel, PaymentServiceModel, ServiceGroupPaymentRequestModel } from './../../model/payment-request.model';
+import {
+  PaymentRequestModel,
+  PaymentServiceModel,
+  ServiceGroupPaymentRequestModel,
+} from "./../../model/payment-request.model";
 
 // RXJS
 import { forkJoin, Subscription } from "rxjs";
 
 // Components
 import { ListCouponComponent } from "./../list-coupon/list-coupon.component";
-
+import * as _ from "lodash";
 @Component({
   selector: "app-edit-payment",
   templateUrl: "./edit-payment.component.html",
@@ -137,10 +141,12 @@ export class EditPaymentComponent implements OnInit {
       (res) => {
         if (res && res.length) {
           if (res[0] && res[0].result && res[0].result.success) {
-            this.paymentTypeList = res[0].result.data.map((item: ServiceGroupPaymentRequestModel) => ({
-              label: item.groupName,
-              value: item.serviceGroupId,
-            }));
+            this.paymentTypeList = res[0].result.data.map(
+              (item: ServiceGroupPaymentRequestModel) => ({
+                label: item.groupName,
+                value: item.serviceGroupId,
+              })
+            );
           }
           if (res[1] && res[1].result && res[1].result.success) {
             this.currentUser = res[1].result.data;
@@ -172,22 +178,33 @@ export class EditPaymentComponent implements OnInit {
       rowIndex
     );
 
-    if (currentPaymentRequestControl.value.serviceGroupId && currentPaymentRequestControl.value.amountRequest) {
+    if (
+      currentPaymentRequestControl.value.serviceGroupId &&
+      currentPaymentRequestControl.value.amountRequest
+    ) {
       this.timeoutInputChange = setTimeout(() => {
         this.spinner.show();
         // các dịch vụ đã chọn => isChecked == true
         let lsRequestService = [];
-        if(!isChangeGroupPaymentRequest){
-          lsRequestService = currentPaymentRequestControl.value.lsAllService.map( service => {
-            if( 
-              currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
-              currentPaymentRequestControl.value.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
-              currentPaymentRequestControl.value.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
-            ){
-              service.isChecked = true;
+        if (!isChangeGroupPaymentRequest) {
+          lsRequestService = currentPaymentRequestControl.value.lsAllService.map(
+            (service) => {
+              if (
+                currentPaymentRequestControl.value.lsServiceSelectedOptionType1
+                  .map((s) => s.serviceId)
+                  .includes(service.serviceId) ||
+                currentPaymentRequestControl.value.lsServiceSelectedOptionType2
+                  .map((s) => s.serviceId)
+                  .includes(service.serviceId) ||
+                currentPaymentRequestControl.value.lsServiceSelectedOptionType3
+                  .map((s) => s.serviceId)
+                  .includes(service.serviceId)
+              ) {
+                service.isChecked = true;
+              }
+              return service;
             }
-            return service;
-          })
+          );
         }
         const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
@@ -206,24 +223,30 @@ export class EditPaymentComponent implements OnInit {
               if (currentPaymentRequestControl.value.edited) {
                 // Đã edit => lấy theo isChecked
                 lsServiceSelectedOptionType1 = lsAllService.filter(
-                  (service) => service.isOption == '1'
+                  (service) => service.isOption == "1"
                 );
                 lsServiceSelectedOptionType2 = lsAllService.filter(
-                  (service) => service.isChecked == true && service.isOption == '2'
+                  (service) =>
+                    service.isChecked == true && service.isOption == "2"
                 );
                 lsServiceSelectedOptionType3 = lsAllService.filter(
-                  (service) => service.isChecked == true && service.isOption == '3'
+                  (service) =>
+                    service.isChecked == true && service.isOption == "3"
                 );
               } else {
                 // Chưa edit => lấy theo isDefault
                 lsServiceSelectedOptionType1 = lsAllService.filter(
-                  (service) => service.isOption == '1'
+                  (service) => service.isOption == "1"
                 );
                 lsServiceSelectedOptionType2 = lsAllService.filter(
-                  (service) => service.isDefault == "1" == true && service.isOption == '2'
+                  (service) =>
+                    (service.isDefault == "1") == true &&
+                    service.isOption == "2"
                 );
                 lsServiceSelectedOptionType3 = lsAllService.filter(
-                  (service) => service.isDefault == "1" == true && service.isOption == '3'
+                  (service) =>
+                    (service.isDefault == "1") == true &&
+                    service.isOption == "3"
                 );
               }
 
@@ -243,7 +266,7 @@ export class EditPaymentComponent implements OnInit {
                   lsAllService: lsAllService,
                   lsServiceSelectedOptionType1: lsServiceSelectedOptionType1,
                   lsServiceSelectedOptionType2: lsServiceSelectedOptionType2,
-                  lsServiceSelectedOptionType3: lsServiceSelectedOptionType3
+                  lsServiceSelectedOptionType3: lsServiceSelectedOptionType3,
                 });
               }
               this.calTotalPaymentRequest();
@@ -277,10 +300,57 @@ export class EditPaymentComponent implements OnInit {
   }
 
   makeDataForDropdownService(rowIndex, field, isOption: string) {
-    return this.paymentValAtIndex(rowIndex, field).filter( service => service.isOption == isOption ).map((service) => ({
-      label: service.serviceName,
-      value: service
-    }));
+    if (isOption == "3") {
+      // option = 3 => chia theo các nhóm, mỗi nhóm chỉ được chọn 1
+      // tạo group và xắp xếp theo thứ tự => bind ra html
+      const lstAllService = _.sortBy(this.paymentValAtIndex(rowIndex, field), [
+        "groupType",
+        "groupOption",
+      ]).filter((service) => service.isOption == isOption);
+      let uniqueRequestService3Id = _.uniqBy(
+        lstAllService,
+        (service: PaymentServiceModel) =>
+          [service.groupType, service.groupOption].join()
+      );
+      lstAllService.forEach((service, index) => {
+        uniqueRequestService3Id.forEach((uniqueService, uniqueServiceIndex) => {
+          if (
+            uniqueService.groupType == service.groupType &&
+            uniqueService.groupOption == service.groupOption
+          ) {
+            service["group"] = uniqueServiceIndex;
+          }
+        });
+      });
+      return lstAllService;
+    } else {
+      return this.paymentValAtIndex(rowIndex, field)
+        .filter((service) => service.isOption == isOption)
+        .map((service) => ({
+          label: service.serviceName,
+          value: service,
+        }));
+    }
+  }
+
+  checkBoxServiceOptionType3Disabled(paymentRequestIndex, currentService) {
+    let disabled = true;
+    let currentPaymentRequestControl = this.paymentRequestFormArray.at(
+      paymentRequestIndex
+    );
+    let lsServiceSelected =
+      currentPaymentRequestControl.value.lsServiceSelectedOptionType3;
+    let lsServiceSelectedId = lsServiceSelected.map((s) => s.serviceId);
+    let lsServiceSelectedGroup = lsServiceSelected.map((s) => s.group);
+    if (
+      lsServiceSelectedId.includes(currentService.serviceId) ||
+      lsServiceSelectedId.length == 0
+    ) {
+      disabled = false;
+    } else if (lsServiceSelectedGroup.includes(currentService.group) == false) {
+      disabled = false;
+    }
+    return disabled;
   }
 
   selectCoupon() {
@@ -296,55 +366,66 @@ export class EditPaymentComponent implements OnInit {
       ref.onClose.subscribe((couponSelected) => {
         if (couponSelected) {
           this.currentCoupon = couponSelected;
-          this.subscription = this.paymentService.addCouponPaymentRequest(
-            {
+          this.subscription = this.paymentService
+            .addCouponPaymentRequest({
               coupon: couponSelected.couponCode,
-              lsPaymentRequest: this.paymentRequestFormArray.value.map( paymentRequest => {
-                let newPaymentRequest: any = {};
-                newPaymentRequest.exchangeRate = paymentRequest.exchangeRate;
-                newPaymentRequest.couponCode = couponSelected.couponCode;
-                newPaymentRequest.totalAmount = paymentRequest.totalAmount;
-                newPaymentRequest.totalFee = paymentRequest.totalFee;
-                newPaymentRequest.serviceGroupId = paymentRequest.serviceGroupId;
-                newPaymentRequest.amountRequest = paymentRequest.amountRequest;
-                newPaymentRequest.description = paymentRequest.description;
-                let lsRequestService = paymentRequest.lsAllService.map( service => {
-                  if( 
-                    paymentRequest.lsServiceSelectedOptionType1.map(s => s.serviceId).includes(service.serviceId) ||  
-                    paymentRequest.lsServiceSelectedOptionType2.map(s => s.serviceId).includes(service.serviceId) ||
-                    paymentRequest.lsServiceSelectedOptionType3.map(s => s.serviceId).includes(service.serviceId)
-                  ){
-                    service.isChecked = true;
-                  }
-                  return service;
-                })
-                newPaymentRequest.lsService = lsRequestService;
-                return newPaymentRequest;
-              })
-            }
-          ).subscribe(
-            resAddCouponPaymentRequest => {
-              console.log(resAddCouponPaymentRequest)
-            },
-            error => {
-              this.showMessage(
-                "error",
-                "Có lỗi xảy ra khi áp dụng coupon. Hãy thử lại!",
-                "Error"
-              );
-            }
-          )
-          // this.paymentRequestFormArray.controls.forEach(
-          //   (requestControl, index) => {
-          //     let currentPaymentRequestControl = this.paymentRequestFormArray.at(
-          //       index
-          //     );
-          //     currentPaymentRequestControl.patchValue({
-          //       couponCode: couponSelected.couponCode,
-          //     });
-          //   }
-          // );
-
+              lsPaymentRequest: this.paymentRequestFormArray.value.map(
+                (paymentRequest) => {
+                  let newPaymentRequest: any = {};
+                  newPaymentRequest.exchangeRate = paymentRequest.exchangeRate;
+                  newPaymentRequest.couponCode = couponSelected.couponCode;
+                  newPaymentRequest.totalAmount = paymentRequest.totalAmount;
+                  newPaymentRequest.totalFee = paymentRequest.totalFee;
+                  newPaymentRequest.serviceGroupId =
+                    paymentRequest.serviceGroupId;
+                  newPaymentRequest.amountRequest =
+                    paymentRequest.amountRequest;
+                  newPaymentRequest.description = paymentRequest.description;
+                  let lsRequestService = paymentRequest.lsAllService.map(
+                    (service) => {
+                      if (
+                        paymentRequest.lsServiceSelectedOptionType1
+                          .map((s) => s.serviceId)
+                          .includes(service.serviceId) ||
+                        paymentRequest.lsServiceSelectedOptionType2
+                          .map((s) => s.serviceId)
+                          .includes(service.serviceId) ||
+                        paymentRequest.lsServiceSelectedOptionType3
+                          .map((s) => s.serviceId)
+                          .includes(service.serviceId)
+                      ) {
+                        service.isChecked = true;
+                      }
+                      return service;
+                    }
+                  );
+                  newPaymentRequest.lsService = lsRequestService;
+                  return newPaymentRequest;
+                }
+              ),
+            })
+            .subscribe(
+              (resAddCouponPaymentRequest) => {
+                console.log(resAddCouponPaymentRequest);
+                // this.paymentRequestFormArray.controls.forEach(
+                //   (requestControl, index) => {
+                //     let currentPaymentRequestControl = this.paymentRequestFormArray.at(
+                //       index
+                //     );
+                //     currentPaymentRequestControl.patchValue({
+                //       couponCode: couponSelected.couponCode,
+                //     });
+                //   }
+                // );
+              },
+              (error) => {
+                this.showMessage(
+                  "error",
+                  "Có lỗi xảy ra khi áp dụng coupon. Hãy thử lại!",
+                  "Error"
+                );
+              }
+            );
         }
       });
     } else {

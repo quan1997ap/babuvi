@@ -61,6 +61,20 @@ textarea:focus{
   font-weight: bold;
 }
 .payment-container {
+  background: #fff;
+  .require-service{
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+    .require-service-item{
+      margin-bottom: 4px;
+      .gr-name{
+        color: #007ad9;
+        margin: 4px 0 8px 0;
+        font-weight: bold;
+      }
+    }
+  }
   .form-title {
     display: flex;
   }
@@ -69,7 +83,6 @@ textarea:focus{
       width: 100% !important;
     }
   }
-  background: #fff;
   .primary-btn {
     background-color: #ec5d37;
     color: #fff;
