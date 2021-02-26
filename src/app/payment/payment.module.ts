@@ -1,4 +1,4 @@
-import { CouponServices } from 'app/services/coupon.service';
+import { CouponServices } from "app/services/coupon.service";
 import { DetailCouponComponent } from "./detail-coupon/detail-coupon.component";
 import { ListCouponComponent } from "./list-coupon/list-coupon.component";
 import { PaymentService } from "./../services/payment.service";
@@ -25,6 +25,7 @@ import { AccordionModule } from "primeng/accordion";
 import { MultiSelectModule } from "primeng/multiselect";
 import { NgxMaskModule } from "ngx-mask";
 import { DynamicDialogModule } from "primeng/dynamicdialog";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { DynamicDialogModule } from "primeng/dynamicdialog";
     CheckboxModule,
     AccordionModule,
     MultiSelectModule,
+    TooltipModule
   ],
   declarations: [
     EditPaymentComponent,
@@ -54,12 +56,7 @@ import { DynamicDialogModule } from "primeng/dynamicdialog";
     ListCouponComponent,
     DetailCouponComponent,
   ],
-  providers: [
-    MessageService,
-    PaymentService,
-    CouponServices,
-    DialogService
-  ],
+  providers: [MessageService, PaymentService, CouponServices, DialogService],
   entryComponents: [ListCouponComponent, DetailCouponComponent],
 })
 export class PaymentModule {}

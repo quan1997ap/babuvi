@@ -6,7 +6,7 @@
   </div>
 
   <div class="row form-layout">
-    <div class="col-sm-12 col-md-12 col-lg-8">
+    <div class="col-sm-12 col-md-12 col-lg-8" *ngIf="requestListForm && paymentRequestFormArray">
       <div class="table padding-8" [formGroup]="requestListForm">
         <p-table class="request-table" #dt [value]="paymentRequestFormArray.controls" [rowHover]="true" [rows]="10"
           [paginator]="true" [autoLayout]="true">
@@ -28,7 +28,7 @@
                   <div class="d-flex">
                     <div class="input-fullwidth" style="margin-right: 8px;">
                       <label>Loại yêu cầu <span style="color: red;">*</span></label>
-                      <p-dropdown  scrollHeight="124px" formControlName="serviceGroupId" (onChange)="calPaymentRequest($event,paymentRequestIndex, true )"
+                      <p-dropdown  scrollHeight="124px" formControlName="serviceGroupId" (onChange)="calPaymentRequest($event,paymentRequestIndex )"
                         [style]="{'width': '100%'}"  maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
                       </p-dropdown>
                     </div>
@@ -45,13 +45,14 @@
                     Số tiền phải > 0
                   </div>
                   <div style="margin-top: 10px;" *ngIf="paymentValAtIndex(paymentRequestIndex, 'serviceGroupId') && paymentValAtIndex(paymentRequestIndex, 'edited') == true">
-                    <label>Dịch vụ bắt buộc ( chọn 1 DV trong mỗi nhóm ) <span style="color: red;">*</span></label>
+                    <label>Dịch vụ bắt buộc <span style="color: #848484;" >( chọn duy nhất 1 DV trong mỗi nhóm )</span> <span style="color: red;">*</span></label>
                     <div class="require-service" *ngIf="paymentValAtIndex(paymentRequestIndex, 'lsAllService' ).length; else no_service2">
                       <div class="require-service-item"  *ngFor="let service of makeDataForDropdownService(paymentRequestIndex, 'lsAllService', '3' ); let indexServiceGroup = index;">
                         <div class="gr-name" *ngIf="indexServiceGroup == 0 || service.group !== makeDataForDropdownService(paymentRequestIndex, 'lsAllService', '3' )[indexServiceGroup - 1]['group']">
                           Nhóm dịch vụ bắt buộc số {{ service.group }}
                         </div>
-                        <p-checkbox [disabled]="checkBoxServiceOptionType3Disabled(paymentRequestIndex, service )" name="serviceOptionType3" [value]="service" [label]="service.serviceName" formControlName="lsServiceSelectedOptionType3"></p-checkbox>
+                        <!-- [disabled]="checkBoxServiceOptionType3Disabled(paymentRequestIndex, service )" -->
+                        <p-checkbox pTooltip="Bỏ tích để thay đổi lựa chọn" [disabled]="checkBoxServiceOptionType3Disabled(paymentRequestIndex, service )" (onChange)="calPaymentRequest($event, paymentRequestIndex, service )" name="{{ 'serviceOptionType3' + paymentRequestIndex }}" [value]="service" [label]="service.serviceName + service.serviceId" formControlName="lsServiceSelectedOptionType3"></p-checkbox>
                       </div>
                     </div>
                     <ng-template #no_service2>
@@ -66,7 +67,7 @@
                   <div style="margin-top: 10px;" *ngIf="paymentValAtIndex(paymentRequestIndex, 'serviceGroupId') && paymentValAtIndex(paymentRequestIndex, 'edited') == true">
                     <label>Dịch vụ không bắt buộc</label>
                     <div class="p-field-checkbox" *ngIf="paymentValAtIndex(paymentRequestIndex, 'lsAllService' ).length; else no_service3">
-                      <p-multiSelect (onChange)="calPaymentRequest($event,paymentRequestIndex )" scrollHeight="100px" placeholder="Chọn dịch vụ" maxSelectedLabels=2 [options]="makeDataForDropdownService(paymentRequestIndex, 'lsAllService', '2' )" formControlName="lsServiceSelectedOptionType2"  autoWidth="false" [style]="{'width':'100%'}"></p-multiSelect>
+                      <p-multiSelect (onChange)="calPaymentRequest($event,paymentRequestIndex)" scrollHeight="100px" placeholder="Chọn dịch vụ" maxSelectedLabels=2 [options]="makeDataForDropdownService(paymentRequestIndex, 'lsAllService', '2' )" formControlName="lsServiceSelectedOptionType2"  autoWidth="false" [style]="{'width':'100%'}"></p-multiSelect>
                     </div>
                     <ng-template #no_service3>
                       <div style="margin-bottom: 8px;color: red;">
@@ -122,7 +123,7 @@
         </div>
         <div class="cal-fee">
           <div class="cal-fee-content">
-            <div class="mr-right-8 mr-bottom-8 w-100">
+            <div class="mr-right-8 mr-bottom-8 w-100" *ngIf="requestListForm && paymentRequestFormArray">
               <div class=" statistic">
                 <div class="title-detail">Số yêu cầu:</div>
                 <div class="detail-number"> {{paymentRequestFormArray.controls.length}}</div>
