@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 /*
 note: 
 1. nhóm isOption = 1: là luôn luôn bị tính phí --> khách không thể lựa chọn --> không hiển thị trong list chọn mà chỉ hiển thị tổng phí trong cột chi phí
@@ -43,6 +44,7 @@ import * as _ from "lodash";
   providers: [UserService, DialogService], // resolve close multi dialog
 })
 export class EditPaymentComponent implements OnInit {
+  showServicePacks = false;
   requestListForm: FormGroup;
   paymentTypeList = [];
   currentUser = new User();
@@ -56,7 +58,8 @@ export class EditPaymentComponent implements OnInit {
     private paymentService: PaymentService,
     private messageService: MessageService,
     private userService: UserService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef
   ) {
     this.account = JSON.parse(localStorage.getItem("userData")); //this.account.userId
   }
@@ -68,14 +71,13 @@ export class EditPaymentComponent implements OnInit {
   };
 
   private createPaymentRequest(): FormGroup {
-    console.log(this.paymentTypeList[0].value);
     return this.fb.group({
       checked: new FormControl(true),
       description: new FormControl(""),
       serviceGroupId: new FormControl(this.paymentTypeList[0].value, [
         Validators.required,
       ]),
-      amountRequest: new FormControl(0, [
+      amountRequest: new FormControl(null, [
         Validators.required,
         Validators.min(1),
       ]),
@@ -122,7 +124,15 @@ export class EditPaymentComponent implements OnInit {
   }
 
   savePaymentRequestToDb() {
-    console.log(this.paymentRequestFormArray.value);
+    const lsPaymentRequest = 
+    this.paymentService.addPaymentRequest({
+      lsPaymentRequest : this.paymentRequestFormArray.value
+    }).subscribe( 
+      resAddPaymentRequest => {
+      this.showMessage("success", "Success", "Thêm yêu cầu thành công");
+    }, err=> {
+      this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
+    })
   }
 
   removePaymentRequestToDb() {}
@@ -174,47 +184,55 @@ export class EditPaymentComponent implements OnInit {
     });
   }
 
-  calPaymentRequest(event, rowIndex) {
-    clearTimeout(this.timeoutInputChange);
-    this.subscription.unsubscribe();
-    let currentPaymentRequestControl = this.paymentRequestFormArray.at(
-      rowIndex
-    );
+  calPaymentRequest(event, rowIndex, changeGroupPaymentRequest?: boolean) {
+    this.subscription.unsubscribe();clearTimeout(this.timeoutInputChange);
+    let currentPaymentRequestControl = this.paymentRequestFormArray.at( rowIndex );
+    // nếu đổi loại yêu cầu => đổi các control đi kèm = Dịch vụ bắt buộc ( đổi validate ) + Dịch vụ không bắt buộc
+    if(changeGroupPaymentRequest == true){
+      currentPaymentRequestControl.get("lsServiceSelectedOptionType3").setValidators([Validators.minLength(0), Validators.required]);
+      currentPaymentRequestControl.patchValue({
+        edited: false,
+        exchangeRate: 0,
+        totalAmount: 0,
+        totalFee: 0,
+        lsAllService: [],
+        lsServiceSelectedOptionType1: [],
+        lsServiceSelectedOptionType2: [],
+        lsServiceSelectedOptionType3: [],
+      });
+      this.cd.detectChanges();
+    }
 
     if (
       currentPaymentRequestControl.value.serviceGroupId &&
       currentPaymentRequestControl.value.amountRequest &&
+      currentPaymentRequestControl.get("amountRequest").valid && 
       (
          !currentPaymentRequestControl.value.edited ||
-        (currentPaymentRequestControl.value.edited == true && currentPaymentRequestControl.get("lsServiceSelectedOptionType3").valid) 
+        (
+          currentPaymentRequestControl.value.edited == true &&
+          currentPaymentRequestControl.get("lsServiceSelectedOptionType3").valid
+        ) 
       )
     ) {
-      const lstAllService = currentPaymentRequestControl.value.lsAllService;
-      let uniqueRequestService3Id = _.uniqBy(
-        lstAllService,
-        (service: PaymentServiceModel) =>
-          [service.groupType, service.groupOption].join()
-      );
-      currentPaymentRequestControl.get("lsServiceSelectedOptionType3").setValidators([Validators.minLength(uniqueRequestService3Id.length), Validators.required]);
-      console.log(currentPaymentRequestControl.get("lsServiceSelectedOptionType3")  , uniqueRequestService3Id.length)
-
+      // form hợp lệ => gọi hàm tính toán phí => thay đổi validate cho lsServiceSelectedOptionType3 => số dịch vụ cần chọn = số nhóm ( mỗi nhóm chỉ được chọn 1)
       this.timeoutInputChange = setTimeout(() => {
+        this.requestListForm.disable();
         this.spinner.show();
         // các dịch vụ đã chọn => isChecked == true
         let lsRequestService = [];
+        // tạo mảng lsRequestService từ lsServiceSelectedOptionType1,2,3 => và check các lựa chọn isChecked
         lsRequestService = currentPaymentRequestControl.value.lsAllService.map(
           (service) => {
-            if (
-              currentPaymentRequestControl.value.edited == false &&
-              service.isDefault == "1"
-            ) {
+            if (currentPaymentRequestControl.value.edited == false && service.isDefault == "1" ) {
               // lần đầu load => isDefault => isChecked
               service.isChecked = true;
             } else if (
               currentPaymentRequestControl.value.edited == true &&
-              (currentPaymentRequestControl.value.lsServiceSelectedOptionType1
-                .map((s) => s.serviceId)
-                .includes(service.serviceId) ||
+              (
+                currentPaymentRequestControl.value.lsServiceSelectedOptionType1
+                  .map((s) => s.serviceId)
+                  .includes(service.serviceId) ||
                 currentPaymentRequestControl.value.lsServiceSelectedOptionType2
                   .map((s) => s.serviceId)
                   .includes(service.serviceId) ||
@@ -223,10 +241,11 @@ export class EditPaymentComponent implements OnInit {
                   .includes(service.serviceId))
             ) {
               service.isChecked = true;
+            } else {
+              service.isChecked = false;
             }
             return service;
           }
-
         );
         const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
@@ -242,20 +261,14 @@ export class EditPaymentComponent implements OnInit {
               let lsServiceSelectedOptionType2 = [];
               let lsServiceSelectedOptionType3 = [];
               let lsAllService = [];
-              if (currentPaymentRequestControl.value.edited) {
+
+              // tính toán lsAllService: Lưu trữ danh sách service => cập nhật vào từng danh sách nhỏ  lsServiceSelectedOptionType1, lsServiceSelectedOptionType2, lsServiceSelectedOptionType3
+              if (currentPaymentRequestControl.value.edited == true) {
                 lsAllService = resServiceOfPaymentType.result.data.lsService;
                 // Đã edit => lấy theo isChecked
-                lsServiceSelectedOptionType1 = lsAllService.filter(
-                  (service) => service.isOption == "1"
-                );
-                lsServiceSelectedOptionType2 = lsAllService.filter(
-                  (service) =>
-                    service.isChecked == true && service.isOption == "2"
-                );
-                lsServiceSelectedOptionType3 = lsAllService.filter(
-                  (service) =>
-                    service.isChecked == true && service.isOption == "3"
-                );
+                lsServiceSelectedOptionType1 = lsAllService.filter( (service) => service.isOption == "1");
+                lsServiceSelectedOptionType2 = lsAllService.filter((service) => service.isChecked == true && service.isOption == "2" );
+                lsServiceSelectedOptionType3 = lsAllService.filter( (service) => service.isChecked == true && service.isOption == "3" );
               } else {
                 lsAllService = resServiceOfPaymentType.result.data.lsService.map(
                   (service) => {
@@ -266,21 +279,14 @@ export class EditPaymentComponent implements OnInit {
                   }
                 );
                 // Chưa edit => lấy theo isDefault
-                lsServiceSelectedOptionType1 = lsAllService.filter(
-                  (service) => service.isOption == "1"
+                lsServiceSelectedOptionType1 = lsAllService.filter(  (service) => service.isOption == "1" );
+                lsServiceSelectedOptionType2 = lsAllService.filter( (service) =>
+                    (service.isDefault == "1") == true && service.isOption == "2"
                 );
-                lsServiceSelectedOptionType2 = lsAllService.filter(
-                  (service) =>
-                    (service.isDefault == "1") == true &&
-                    service.isOption == "2"
-                );
-                lsServiceSelectedOptionType3 = lsAllService.filter(
-                  (service) =>
-                    (service.isDefault == "1") == true &&
-                    service.isOption == "3"
+                lsServiceSelectedOptionType3 = lsAllService.filter( (service) =>
+                    (service.isDefault == "1") == true && service.isOption == "3"
                 );
               }
-
               if (
                 resServiceOfPaymentType &&
                 resServiceOfPaymentType.result &&
@@ -288,10 +294,8 @@ export class EditPaymentComponent implements OnInit {
               ) {
                 currentPaymentRequestControl.patchValue({
                   edited: true,
-                  serviceGroupId:
-                    resServiceOfPaymentType.result.data.serviceGroupId,
-                  exchangeRate:
-                    resServiceOfPaymentType.result.data.exchangeRate,
+                  serviceGroupId: resServiceOfPaymentType.result.data.serviceGroupId,
+                  exchangeRate: resServiceOfPaymentType.result.data.exchangeRate,
                   totalAmount: resServiceOfPaymentType.result.data.totalAmount,
                   totalFee: resServiceOfPaymentType.result.data.totalFee,
                   lsAllService: lsAllService,
@@ -300,7 +304,14 @@ export class EditPaymentComponent implements OnInit {
                   lsServiceSelectedOptionType3: lsServiceSelectedOptionType3,
                 });
               }
-
+              const lstAllService = currentPaymentRequestControl.value.lsAllService;
+              // validate minLength cho service bắt buộc ( chọn mỗi phần tử trong mỗi nhóm => số phần tử tối thiểu = số nhóm)
+              let uniqueRequestService3Id = _.uniqBy(
+                lstAllService.filter( s => s.isOption == '3' ),
+                (service: PaymentServiceModel) =>
+                  [service.groupType, service.groupOption].join()
+              );
+              currentPaymentRequestControl.get("lsServiceSelectedOptionType3").setValidators([Validators.minLength(uniqueRequestService3Id.length), Validators.required]);
               this.calTotalPaymentRequest();
               this.spinner.hide();
             },
@@ -308,7 +319,28 @@ export class EditPaymentComponent implements OnInit {
               this.spinner.hide();
             }
           );
+          this.requestListForm.enable();
       }, 500);
+    } else{
+      // chưa edit form => Load lần đầu
+      let lsServiceSelectedIdOptionType1 = currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map( (s:PaymentServiceModel) => s.serviceId);
+      let lsServiceSelectedIdOptionType2 = currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map( (s:PaymentServiceModel) => s.serviceId);
+      let lsServiceSelectedIdOptionType3 = currentPaymentRequestControl.value.lsServiceSelectedOptionType1.map( (s:PaymentServiceModel) => s.serviceId);
+      let lsAllService = currentPaymentRequestControl.value.lsAllService.map( (service:PaymentServiceModel) => {
+        if(
+          lsServiceSelectedIdOptionType1.includes(service.serviceId) ||
+          lsServiceSelectedIdOptionType2.includes(service.serviceId) ||
+          lsServiceSelectedIdOptionType3.includes(service.serviceId)
+        ) {
+          service.isChecked = true
+        } else {
+          service.isChecked = false;
+        }
+        return service;
+      });
+      currentPaymentRequestControl.patchValue({
+        lsAllService: lsAllService,
+      });
     }
   }
 
@@ -444,23 +476,16 @@ export class EditPaymentComponent implements OnInit {
                   resAddCouponToPaymentRequests.result &&
                   resAddCouponToPaymentRequests.result.success
                 ) {
-                  let lstPaymentRequestAddedCoupon =
-                    resAddCouponToPaymentRequests.result.lsService;
+                  let lstPaymentRequestAddedCoupon = resAddCouponToPaymentRequests.result.data.lsPaymentRequest;
                   this.paymentRequestFormArray.controls.forEach(
                     (requestControl, index) => {
-                      let currentPaymentRequestControl = this.paymentRequestFormArray.at(
-                        index
-                      );
-                      currentPaymentRequestControl.patchValue({
+                      requestControl.patchValue({
                         couponCode: couponSelected.couponCode,
                         edited: true,
-                        serviceGroupId:
-                          lstPaymentRequestAddedCoupon[index].serviceGroupId,
-                        exchangeRate:
-                          lstPaymentRequestAddedCoupon[index].exchangeRate,
-                        totalAmount:
-                          lstPaymentRequestAddedCoupon[index].totalAmount,
-                        totalFee: lstPaymentRequestAddedCoupon[index].totalFee,
+                        serviceGroupId: lstPaymentRequestAddedCoupon[index].serviceGroupId,
+                        exchangeRate: lstPaymentRequestAddedCoupon[index].exchangeRate,
+                        totalAmount: lstPaymentRequestAddedCoupon[index].totalAmount,
+                        totalFee: lstPaymentRequestAddedCoupon[index].totalFee
                       });
                     }
                   );
@@ -483,5 +508,13 @@ export class EditPaymentComponent implements OnInit {
         "Error"
       );
     }
+  }
+
+  addServicePackage(){
+    this.showServicePacks  = true;
+  }
+
+  finishAddServicePackage(){
+    this.showServicePacks  = false;
   }
 }
