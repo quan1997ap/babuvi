@@ -41,7 +41,7 @@
                     <!--                    </div>-->
                 </div>
                 <p><span
-                        class="font-weight-bold">Ngày tạo: </span>{{deliveryRequest.createdDate | date:'hh:mm dd/mm/yyy' }}
+                        class="font-weight-bold">Ngày tạo: </span>{{deliveryRequest.createdDate | date: 'dd/MM/yyyy hh:mm:ss' }}
                 </p>
                 <p>Hình thức giao: <span class="font-weight-bold">{{ deliveryRequest.typeDisplay }}</span></p>
                 <p>Kho: <span class="font-italic">[{{ deliveryRequest.warehouseId }}

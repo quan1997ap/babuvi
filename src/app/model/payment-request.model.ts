@@ -17,12 +17,12 @@ export class PaymentRequestModel {
 }
 
 export class PaymentRequestSearchModel {
-  PaymentRequestCode?: string;
-  StartDate?: Date;
-  EndDate?: Date;
-  Type?: string;
-  Status?: string;
-  UserCode?: string;
+  paymentRequestCode?: string;
+  startDate?: Date;
+  endDate?: Date;
+  type?: string;
+  status?: string;
+  userCode?: string;
 }
 
 export class ServiceGroupPaymentRequestModel {

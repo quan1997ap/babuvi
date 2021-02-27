@@ -1,28 +1,35 @@
-import { User } from './../../model/user.model';
-import { Router } from '@angular/router';
+import { PaymentRequestSearchModel } from "./../../model/payment-request.model";
+import { User } from "./../../model/user.model";
+import { Router } from "@angular/router";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgxSpinnerService } from "ngx-spinner";
 
 // Service
 import { PaymentService } from "./../../services/payment.service";
 import { MessageService } from "primeng/api";
-import { UserService } from './../../services/user.service';
-
+import { UserService } from "./../../services/user.service";
+import { DataTable } from "primeng/primeng";
 // RXJS
 import { forkJoin } from "rxjs";
 @Component({
   selector: "app-list-payment",
   templateUrl: "./list-payment.component.html",
   styleUrls: ["./list-payment.component.scss"],
-  providers: [UserService]
+  providers: [UserService],
 })
 export class ListPaymentComponent implements OnInit {
   filterForm: FormGroup;
   paymentTypeList = [];
   paymentStatusList = [];
   paymentList = [];
+  paymentListStatistic = {
+    totalAmount: 0,
+    totalAmountRequest: 0,
+    dataCount: 0,
+  };
   currentUser = new User();
+  @ViewChild("dt") public dataTable: DataTable;
   constructor(
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
@@ -39,13 +46,21 @@ export class ListPaymentComponent implements OnInit {
       toDate: [],
     });
     this.userService.getInfoUser().subscribe(
-      resUserInfor => {
-        if (resUserInfor && resUserInfor.result && resUserInfor.result.success === true) {
+      (resUserInfor) => {
+        if (
+          resUserInfor &&
+          resUserInfor.result &&
+          resUserInfor.result.success === true
+        ) {
           this.currentUser = resUserInfor.result.data;
         }
       },
-      err => {
-        this.showMessage("error", "Không thể lấy dữ liệu User", "Có lỗi xảy ra!");
+      (err) => {
+        this.showMessage(
+          "error",
+          "Không thể lấy dữ liệu User",
+          "Có lỗi xảy ra!"
+        );
       }
     );
   }
@@ -55,10 +70,21 @@ export class ListPaymentComponent implements OnInit {
   }
 
   addPayment() {
-    this.router.navigate(['/payment/add']);
+    this.router.navigate(["/payment/add"]);
   }
 
-  removeSelectedPayment() {}
+  removeSelectedPayment() {
+    console.log(this.dataTable._selection);
+    const lsId = this.dataTable._selection.map(
+      (request) => request.paymentRequestId
+    );
+    this.paymentService.deletePaymentRequest(lsId.toString()).subscribe(
+      (resDel) => {
+        this.showMessage("success", "Thành công", "Xóa  yêu cầu thanh toán thành công");
+      },
+      (errDel) => { this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra khi xóa yêu cầu thanh toán!");}
+    );
+  }
 
   getInitFormData() {
     this.spinner.show();
@@ -81,15 +107,16 @@ export class ListPaymentComponent implements OnInit {
             }));
           }
         }
-        this.spinner.hide();
-        let patchFromVal = { };
-        if(this.paymentTypeList.length && this.paymentTypeList[0].value){
-          patchFromVal['paymentType'] = this.paymentTypeList[0].value
+        let patchFromVal = {};
+        if (this.paymentTypeList.length && this.paymentTypeList[0].value) {
+          patchFromVal["paymentType"] = this.paymentTypeList[0].value;
         }
-        if(this.paymentStatusList.length && this.paymentStatusList[0].value){
-          patchFromVal['paymentStatus'] = this.paymentStatusList[0].value
+        if (this.paymentStatusList.length && this.paymentStatusList[0].value) {
+          patchFromVal["paymentStatus"] = this.paymentStatusList[0].value;
         }
         this.filterForm.patchValue(patchFromVal);
+        this.filterPayment();
+        this.spinner.hide();
       },
       (error) => {
         this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
@@ -98,34 +125,40 @@ export class ListPaymentComponent implements OnInit {
     );
   }
 
-  filterPayment(){
-    this.filterPaymentWithPagination(1, 10);
+  filterPayment() {
+    this.filterPaymentWithPagination(1, 1000);
   }
 
   filterPaymentWithPagination(pageIndex, pageSize) {
     this.spinner.show();
     const formVal = this.filterForm.getRawValue();
-    const parmas = {
-      // PaymentRequestCode: formVal.paymentCode,
-      // StartDate: formVal.fromDate,
-      // EndDate: formVal.toDate,
-      // Type: formVal.paymentType,
-      // Status: formVal.paymentStatus,
-      // UserCode: this.currentUser.userCode
+    const parmas: PaymentRequestSearchModel = {
+      paymentRequestCode: formVal.paymentCode,
+      startDate: formVal.fromDate,
+      endDate: formVal.toDate,
+      type: formVal.paymentType,
+      status: formVal.paymentStatus,
+      userCode: this.currentUser.userCode,
     };
-    console.log(parmas);
-    this.paymentService.searchPaymentRequest(pageIndex, pageSize, parmas ).subscribe(
-      (resPayment) => {
-        if(resPayment && resPayment.result && resPayment.result.success){
-          this.paymentList = resPayment.result.data.lsData;
-        } 
-        this.spinner.hide();
-      },
-      (err) => {
-        this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
-        this.spinner.hide();
-      }
-    );
+    this.paymentService
+      .searchPaymentRequest(pageIndex, pageSize, parmas)
+      .subscribe(
+        (resPayment) => {
+          if (resPayment && resPayment.result && resPayment.result.success) {
+            this.paymentList = resPayment.result.data.lsData;
+            this.paymentListStatistic = {
+              totalAmount: resPayment.result.data.totalAmount,
+              totalAmountRequest: resPayment.result.data.totalAmountRequest,
+              dataCount: resPayment.result.data.dataCount,
+            };
+          }
+          this.spinner.hide();
+        },
+        (err) => {
+          this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
+          this.spinner.hide();
+        }
+      );
   }
 
   showMessage(type, message, summary) {

@@ -2,8 +2,8 @@
 <p-toast key="toast-message"></p-toast>
 <div class="payment-container">
   <div>
-    <button pButton  label="Thêm mới" class="primary-btn mr-right-8" (click)="addPayment()"></button>
-    <button pButton  label="Xóa" class="primary-btn" (click)="removeSelectedPayment()"></button>
+    <button pButton label="Thêm mới" class="primary-btn mr-right-8" (click)="addPayment()"></button>
+    <button pButton label="Xóa" class="primary-btn" (click)="removeSelectedPayment()"></button>
   </div>
   <div class="title">
     Danh sách yêu cầu thanh toán hộ
@@ -17,68 +17,96 @@
       <p-dropdown [options]="paymentTypeList" formControlName="paymentType" placeholder="Loại yêu cầu"></p-dropdown>
     </div>
     <div class="mr-right-8 mr-bottom-8 d-inline-block">
-      <p-dropdown [options]="paymentStatusList" formControlName="paymentStatus" placeholder="Trạng thái yêu cầu"></p-dropdown>
+      <p-dropdown [options]="paymentStatusList" formControlName="paymentStatus" placeholder="Trạng thái yêu cầu">
+      </p-dropdown>
     </div>
     <div class="mr-right-8 mr-bottom-8 d-inline-block">
-      <p-calendar formControlName="fromDate" placeholder="Từ ngày"></p-calendar>
+      <p-calendar formControlName="fromDate" placeholder="Từ ngày" dateFormat="dd/mm/yy" showButtonBar="true"></p-calendar>
     </div>
     <div class="mr-right-8 mr-bottom-8 d-inline-block">
-      <p-calendar formControlName="toDate" placeholder="Đến ngày"></p-calendar>
+      <p-calendar formControlName="toDate" placeholder="Đến ngày" dateFormat="dd/mm/yy" showButtonBar="true"></p-calendar>
     </div>
     <div class="mr-right-8 mr-bottom-8 d-inline-block">
-      <button pButton  label="Lọc" style="min-width: 80px;" class="primary-btn" (click)="filterPayment()"></button>
+      <button pButton label="Lọc" style="min-width: 80px;" class="primary-btn" (click)="filterPayment()"></button>
     </div>
 
   </form>
 
   <div class="statistic">
     <div class="statistic-detail mr-right-8">
-      Tổng số giao dịch: <span class="detail-number">{{paymentList.length}}</span>
+      Tổng số giao dịch: <span class="detail-number">{{paymentListStatistic.dataCount}}</span>
+    </div>
+    <div>
+      &nbsp;&nbsp; | &nbsp;&nbsp;
     </div>
     <div class="statistic-detail mr-right-8">
-      Tổng tiền thanh toán hộ <span class="detail-number">{{paymentList.length}}</span>
+      Tổng tiền thanh toán hộ: <span class="detail-number">{{paymentListStatistic.totalAmountRequest}}</span>
+    </div>
+    <div>
+      &nbsp;&nbsp; | &nbsp;&nbsp;
     </div>
     <div class="statistic-detail mr-right-8">
-      Tổng tiền phí <span class="detail-number">{{paymentList.length}}</span>
+      Quy đổi: <span class="detail-number">{{paymentListStatistic.totalAmount}}</span>
     </div>
   </div>
 
   <div class="table">
-    <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true" >
+    <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true">
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 3rem">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
           </th>
-          <th> Mã yêu cầu </th>
-          <th> Ngày yêu cầu </th>
-          <th>Cần TT</th>
-          <th>Tổng tiền (VND)</th>
-          <th>Nội dung</th>
-          <th>Loại Y/C</th>
-          <th>Trạng thái</th>
+          <th>Thanh toán hộ </th>
+          <th>Mô tả</th>
+          <th>Chi phí</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-payment>
-        <tr class="p-selectable-row">
+        <tr class="p-selectable-row"  [pSelectableRow]="payment">
           <td>
-            <p-tableCheckbox [value]="payment.selected"></p-tableCheckbox>
+            <p-tableCheckbox [value]="payment"></p-tableCheckbox>
           </td>
-          <th> Mã yêu cầu </th>
-          <th> Ngày yêu cầu </th>
-          <th>Cần TT</th>
-          <th>Tổng tiền (VND)</th>
-          <th>Nội dung</th>
-          <th>Loại Y/C</th>
-          <th>
-            <button pButton type="button" label="Primary"></button>
-            <button pButton type="button" label="Secondary" class="ui-button-secondary"></button>
-            <button pButton type="button" label="Success" class="ui-button-success"></button>
-            <button pButton type="button" label="Info" class="ui-button-info"></button>
-            <button pButton type="button" label="Warning" class="ui-button-warning"></button>
-            <button pButton type="button" label="Danger" class="ui-button-danger"></button>
-          </th>
-          
+          <td>
+            <p>
+              <span>Mã yêu cầu :</span> <strong> {{payment.paymentRequestCode}}</strong>
+            </p>
+            <p>
+              <span>Ngày yêu cầu :</span> <strong> {{payment.paymentRequestDate | date: 'dd/MM/yyyy hh:mm:ss' }}</strong>
+            </p>
+            <p>
+              <span>Loại yêu cầu :</span> <strong> {{payment.paymentRequestCode}}</strong>
+            </p>
+            <p>
+              <span>Trạng thái : </span>
+              <span>
+                <button pButton *ngIf="payment.status == 1" type="button" [label]="payment.statusDisplay"></button>
+                <button pButton *ngIf="payment.status == 2" [label]="payment.statusDisplay" class="ui-button-success"></button>
+                <button pButton *ngIf="payment.status == 3" [label]="payment.statusDisplay" class="ui-button-warning"></button>
+                <button pButton *ngIf="payment.status == 4" [label]="payment.statusDisplay" class="ui-button-danger"></button>
+              </span>
+            </p>
+          </td>
+          <td>
+            <div>
+              {{payment.description }}
+            </div>
+          </td>
+          <td>
+            <p>
+              <span>Tỉ giá :</span> <strong> {{payment.exchangeRate}}</strong>
+            </p>
+            <p>
+              <span>Số tiền :</span> <strong> {{payment.totalAmount}}</strong>
+            </p>
+            <p>
+              <span>Phí dịch vụ :</span> <strong> {{payment.totalFee}}</strong>
+            </p>
+            <p>
+              <span>Tổng tiền :</span> <strong> {{payment.totalAmount}}</strong>
+            </p>
+          </td>
+
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
