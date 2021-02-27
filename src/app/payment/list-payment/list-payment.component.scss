@@ -1,6 +1,13 @@
 tr:focus{
   outline: none;
 }
+.link{
+  cursor: pointer;
+  color: #007ad9;
+  &:focus{
+    outline: none;
+  }
+}
 .payment-container {
   .primary-btn {
     background-color: #ec5d37;

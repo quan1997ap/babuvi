@@ -14,6 +14,7 @@ import {
 } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
 import { NgxSpinnerService } from "ngx-spinner";
+import {Router, ActivatedRoute} from '@angular/router';
 
 // Services
 import { PaymentService } from "./../../services/payment.service";
@@ -21,6 +22,7 @@ import { MessageService } from "primeng/api";
 import { UserService } from "./../../services/user.service";
 import { CouponServices } from "app/services/coupon.service";
 import { DialogService } from "primeng/api";
+import { ConfirmationService } from 'primeng/api';
 
 // Models
 import { ClientProfile } from "app/model/client-profile.model";
@@ -37,6 +39,7 @@ import { forkJoin, Subscription } from "rxjs";
 // Components
 import { ListCouponComponent } from "./../list-coupon/list-coupon.component";
 import * as _ from "lodash";
+
 @Component({
   selector: "app-edit-payment",
   templateUrl: "./edit-payment.component.html",
@@ -52,6 +55,7 @@ export class EditPaymentComponent implements OnInit {
   timeoutInputChange: any;
   account: ClientProfile;
   currentCoupon;
+  currentRequestIdEdited = "";
   constructor(
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
@@ -59,9 +63,21 @@ export class EditPaymentComponent implements OnInit {
     private messageService: MessageService,
     private userService: UserService,
     private dialogService: DialogService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private route: ActivatedRoute
   ) {
+  }
+
+  ngOnInit() {
     this.account = JSON.parse(localStorage.getItem("userData")); //this.account.userId
+    this.currentRequestIdEdited = this.route.snapshot.paramMap.get('id')
+    this.getInitFormData( this.currentRequestIdEdited );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   totalPaymentRequest = {
@@ -99,7 +115,11 @@ export class EditPaymentComponent implements OnInit {
   }
 
   addPaymentRequest(): void {
-    this.paymentRequestFormArray.push(this.createPaymentRequest());
+    if(this.paymentRequestFormArray.controls.length == 0){
+      this.paymentRequestFormArray.push(this.createPaymentRequest());
+    } else if(this.requestListForm.valid){
+      this.paymentRequestFormArray.push(this.createPaymentRequest());
+    }
   }
 
   removePaymentRequest(rowIndex: number): void {
@@ -115,35 +135,41 @@ export class EditPaymentComponent implements OnInit {
     return result;
   }
 
-  ngOnInit() {
-    this.getInitFormData();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   savePaymentRequestToDb() {
-    const lsPaymentRequest = 
+    this.spinner.show();
     this.paymentService.addPaymentRequest({
       lsPaymentRequest : this.paymentRequestFormArray.value
     }).subscribe( 
       resAddPaymentRequest => {
-      this.showMessage("success", "Success", "Thêm yêu cầu thành công");
+      if(resAddPaymentRequest && resAddPaymentRequest.result && resAddPaymentRequest.result.success  ){
+        if(resAddPaymentRequest){
+          this.showMessage("success", "Success", "Thêm yêu cầu thành công");
+          setTimeout( () => {
+            this.router.navigateByUrl('/payment');
+          }, 500)
+        } else {
+          this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
+        }
+        this.spinner.hide();
+      }
     }, err=> {
       this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
+      this.spinner.hide();
     })
   }
 
   removePaymentRequestToDb() {}
 
-  getInitFormData() {
-    this.spinner.show();
-    this.subscription = forkJoin([
+  getInitFormData(requestId) {
+    const lstRequest = [
       this.paymentService.getLsServiceGroupPaymentRequest(),
-      this.paymentService.getPaymentRequestStatus(),
-      this.userService.getInfoUser(),
-    ]).subscribe(
+      this.paymentService.getPaymentRequestStatus()
+    ] ;
+    if(requestId){
+      lstRequest.push( this.paymentService.getPaymentRequestById(requestId))
+    }
+    this.spinner.show();
+    this.subscription = forkJoin(lstRequest).subscribe(
       (res) => {
         if (res && res.length) {
           if (res[0] && res[0].result && res[0].result.success) {
@@ -157,13 +183,26 @@ export class EditPaymentComponent implements OnInit {
           if (res[1] && res[1].result && res[1].result.success) {
             this.currentUser = res[1].result.data;
           }
-          // https://www.c-sharpcorner.com/article/creating-table-with-reactive-forms-in-angular-9-using-primeng-table2/
-          this.requestListForm = this.fb.group({
-            lsPaymentRequest: this.fb.array(
-              [this.createPaymentRequest()],
-              Validators.required
-            ),
-          });
+
+
+          if (requestId && res[2] && res[2].result && res[2].result.success) {
+            // form edit
+            this.requestListForm = this.fb.group({
+              lsPaymentRequest: this.fb.array(
+                [this.createPaymentRequest()],
+                Validators.required
+              ),
+            });
+            this.paymentRequestFormArray.patchValue([res[2].result.data])
+          } else{
+            // https://www.c-sharpcorner.com/article/creating-table-with-reactive-forms-in-angular-9-using-primeng-table2/
+            this.requestListForm = this.fb.group({
+              lsPaymentRequest: this.fb.array(
+                [this.createPaymentRequest()],
+                Validators.required
+              ),
+            });
+          }
         }
         this.spinner.hide();
       },
@@ -516,5 +555,18 @@ export class EditPaymentComponent implements OnInit {
 
   finishAddServicePackage(){
     this.showServicePacks  = false;
+  }
+
+  removePaymentRequests(){
+    this.confirmationService.confirm({
+      message: 'Bạn muốn xóa các request đã chọn?',
+      accept: () => {
+        this.paymentRequestFormArray.value.forEach( (request, index) => {
+          if(request.checked == true){
+            this.paymentRequestFormArray.removeAt(index);
+          }
+        })
+      }
+  });
   }
 }

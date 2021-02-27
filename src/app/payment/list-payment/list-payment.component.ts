@@ -30,6 +30,7 @@ export class ListPaymentComponent implements OnInit {
   };
   currentUser = new User();
   @ViewChild("dt") public dataTable: DataTable;
+  
   constructor(
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,

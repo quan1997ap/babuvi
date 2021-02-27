@@ -1,5 +1,13 @@
 <ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
 <p-toast key="toast-message"></p-toast>
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd
+  [baseZIndex]="50000">
+  <p-footer>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
+      (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div style="position: relative;">
   <div *ngIf="showServicePacks">
@@ -30,7 +38,7 @@
               <ng-container formArrayName="lsPaymentRequest">
                 <tr [formGroupName]="paymentRequestIndex">
                   <td style="width: 50px;">
-                    <p-checkbox formControlName="checked" binary="true" inputId="binary"></p-checkbox>
+                    <p-checkbox [disabled]="currentRequestIdEdited" formControlName="checked" binary="true" inputId="binary"></p-checkbox>
                   </td>
                   <td>
                     <div class="d-flex">
@@ -108,7 +116,7 @@
                     </div>
                   </td>
                   <td>
-                    <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"
+                    <button [disabled]="currentRequestIdEdited" pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger"
                       (click)="removePaymentRequest(paymentRequestIndex)"></button>
                   </td>
                 </tr>
@@ -122,8 +130,12 @@
             <ng-template pTemplate="footer">
               <tr>
                 <td colspan="4">
-                  <div class="add-request-item">
-                    <p-button [disabled]="requestListForm.invalid" icon="pi pi-plus" label="Thêm yêu cầu"
+                  <div class="add-remove-request-item" *ngIf="!currentRequestIdEdited">
+                    <button pButton type="button" label="Xóa các yêu cầu đã chọn" icon="pi pi-times" class="ui-button-raised ui-button-danger" (click)="removePaymentRequests()"></button>
+
+                    <p-button *ngIf="paymentRequestFormArray.controls.length >= 1" [disabled]="paymentRequestFormArray.invalid" icon="pi pi-plus" label="Thêm yêu cầu"
+                      (click)="addPaymentRequest()"></p-button>
+                    <p-button *ngIf="paymentRequestFormArray.controls.length == 0" icon="pi pi-plus" label="Thêm yêu cầu"
                       (click)="addPaymentRequest()"></p-button>
                   </div>
                 </td>
@@ -165,7 +177,7 @@
                   </div>
                 </div>
   
-                <div class="statistic" style="justify-content: space-between;">
+                <div class="statistic" style="justify-content: space-between;" *ngIf="!currentRequestIdEdited">
                   <button  class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()" ></button>
                   <button class="action highlight-btn" [disabled]="requestListForm.invalid" pButton type="button" label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
                 </div>

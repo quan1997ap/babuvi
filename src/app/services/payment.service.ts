@@ -12,6 +12,13 @@ export class PaymentService extends ApiService {
     super(ApiApplication.shipManager.controller, http, _router);
   }
 
+  getPaymentRequestById(requestId){
+    return this.get(
+      ApiApplication.paymentRequest.controller +
+        ApiApplication.paymentRequest.getPaymentRequestById +
+        `?paymentRequestId=${requestId}`
+    );
+  }
   searchPaymentRequest(pageIndex, pageSize, params: PaymentRequestSearchModel) {
     // /Merchandise/searchPaymentRequest?page=1&perPage=1
     return this.post(

@@ -92,9 +92,9 @@ textarea:focus{
     p-multiselect{
       width: 100%;
     }
-    .add-request-item {
+    .add-remove-request-item {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       margin-top: 20px;
       margin-bottom: 20px;
     }

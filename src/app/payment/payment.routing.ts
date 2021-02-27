@@ -12,5 +12,9 @@ export const PaymentRoutes: Routes = [
   {
     path: "add",
     component: EditPaymentComponent,
+  },
+  {
+    path: "detail/:id",
+    component: EditPaymentComponent,
   }
 ];

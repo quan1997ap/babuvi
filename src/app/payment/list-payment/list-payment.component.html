@@ -69,7 +69,7 @@
           </td>
           <td>
             <p>
-              <span>Mã yêu cầu :</span> <strong> {{payment.paymentRequestCode}}</strong>
+              <span>Mã yêu cầu :</span> <strong class="link" pTooltip="Chi tiết yêu cầu thanh toán" [routerLink]="['/payment/detail', payment.paymentRequestId ]"> {{payment.paymentRequestCode}}</strong>
             </p>
             <p>
               <span>Ngày yêu cầu :</span> <strong> {{payment.paymentRequestDate | date: 'dd/MM/yyyy hh:mm:ss' }}</strong>
