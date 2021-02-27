@@ -167,7 +167,7 @@
   
                 <div class="statistic" style="justify-content: space-between;">
                   <button  class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()" ></button>
-                  <button class="action highlight-btn" pButton type="button" label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
+                  <button class="action highlight-btn" [disabled]="requestListForm.invalid" pButton type="button" label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
                 </div>
               </div>
   

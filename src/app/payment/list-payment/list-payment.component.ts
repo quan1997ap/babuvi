@@ -106,12 +106,12 @@ export class ListPaymentComponent implements OnInit {
     this.spinner.show();
     const formVal = this.filterForm.getRawValue();
     const parmas = {
-      PaymentRequestCode: formVal.paymentCode,
-      StartDate: formVal.fromDate,
-      EndDate: formVal.toDate,
-      Type: formVal.paymentType,
-      Status: formVal.paymentStatus,
-      UserCode: this.currentUser.userCode
+      // PaymentRequestCode: formVal.paymentCode,
+      // StartDate: formVal.fromDate,
+      // EndDate: formVal.toDate,
+      // Type: formVal.paymentType,
+      // Status: formVal.paymentStatus,
+      // UserCode: this.currentUser.userCode
     };
     console.log(parmas);
     this.paymentService.searchPaymentRequest(pageIndex, pageSize, parmas ).subscribe(
