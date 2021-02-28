@@ -567,6 +567,6 @@ export class EditPaymentComponent implements OnInit {
           }
         })
       }
-  });
+    });
   }
 }

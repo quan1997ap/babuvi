@@ -7,11 +7,12 @@ import { NgxSpinnerService } from "ngx-spinner";
 
 // Service
 import { PaymentService } from "./../../services/payment.service";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { UserService } from "./../../services/user.service";
 import { DataTable } from "primeng/primeng";
 // RXJS
 import { forkJoin } from "rxjs";
+
 @Component({
   selector: "app-list-payment",
   templateUrl: "./list-payment.component.html",
@@ -37,7 +38,8 @@ export class ListPaymentComponent implements OnInit {
     private paymentService: PaymentService,
     private messageService: MessageService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private confirmationService: ConfirmationService
   ) {
     this.filterForm = this.fb.group({
       paymentCode: [""],
@@ -76,15 +78,24 @@ export class ListPaymentComponent implements OnInit {
 
   removeSelectedPayment() {
     console.log(this.dataTable._selection);
-    const lsId = this.dataTable._selection.map(
-      (request) => request.paymentRequestId
-    );
-    this.paymentService.deletePaymentRequest(lsId.toString()).subscribe(
-      (resDel) => {
-        this.showMessage("success", "Thành công", "Xóa  yêu cầu thanh toán thành công");
-      },
-      (errDel) => { this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra khi xóa yêu cầu thanh toán!");}
-    );
+    if(this.dataTable._selection && this.dataTable._selection.length > 0){
+      const lsRequest = this.dataTable._selection.map(
+        (request) =>  this.paymentService.deletePaymentRequest(request.paymentRequestId) 
+      );
+      this.confirmationService.confirm({
+        message: 'Bạn muốn xóa các request đã chọn?',
+        accept: () => {
+          forkJoin(lsRequest).subscribe(
+            (resDel) => {
+              console.log(resDel)
+              this.showMessage("success", "Thành công", "Xóa  yêu cầu thanh toán thành công");
+            },
+            (errDel) => { this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra khi xóa yêu cầu thanh toán!");}
+          );
+        }
+      });
+    }
+
   }
 
   getInitFormData() {

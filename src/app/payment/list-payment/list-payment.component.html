@@ -1,5 +1,14 @@
 <ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
 <p-toast key="toast-message"></p-toast>
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd
+  [baseZIndex]="50000">
+  <p-footer>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
+      (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
 <div class="payment-container">
   <div>
     <button pButton label="Thêm mới" class="primary-btn mr-right-8" (click)="addPayment()"></button>
@@ -69,7 +78,9 @@
           </td>
           <td>
             <p>
-              <span>Mã yêu cầu :</span> <strong class="link" pTooltip="Chi tiết yêu cầu thanh toán" [routerLink]="['/payment/detail', payment.paymentRequestId ]"> {{payment.paymentRequestCode}}</strong>
+              <span>Mã yêu cầu :</span> 
+              <strong> {{payment.paymentRequestId}}</strong>
+              <!-- <strong class="link" pTooltip="Chi tiết yêu cầu thanh toán" [routerLink]="['/payment/detail', payment.paymentRequestId ]"> {{payment.paymentRequestCode}}</strong> -->
             </p>
             <p>
               <span>Ngày yêu cầu :</span> <strong> {{payment.paymentRequestDate | date: 'dd/MM/yyyy hh:mm:ss' }}</strong>
