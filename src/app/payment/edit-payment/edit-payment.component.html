@@ -82,9 +82,9 @@
                       inputId="binary"></p-checkbox>
                   </td>
                   <td>
-                    <div>
+                    <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )">
                       <span>Mã yêu cầu: </span>
-                      <strong *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )">
+                      <strong>
                         {{paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )}}
                       </strong>
                     </div>
