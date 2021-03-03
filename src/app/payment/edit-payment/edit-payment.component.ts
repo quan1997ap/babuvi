@@ -162,7 +162,7 @@ export class EditPaymentComponent implements OnInit {
           this.paymentRequestFormArray.controls.forEach(
             (requestControl, index) => {
               requestControl.patchValue({
-                amountRequest: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestCode,
+                paymentRequestCode: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestCode,
                 paymentRequestId: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestId,
                 paymentRequestDate: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestDate
               });
@@ -174,6 +174,7 @@ export class EditPaymentComponent implements OnInit {
         this.spinner.hide();
       }
     }, err=> {
+      console.log(err)
       this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
       this.spinner.hide();
     })
@@ -485,7 +486,10 @@ export class EditPaymentComponent implements OnInit {
   }
 
   selectCoupon() {
-    if (this.paymentRequestFormArray.valid) {
+    if(this.requestListForm.getRawValue().isSubmited){
+      console.log('form đã submit')
+    }
+    else if (this.paymentRequestFormArray.valid) {
       const ref = this.dialogService.open(ListCouponComponent, {
         header: "Mã khuyến mại của bạn",
         style: {

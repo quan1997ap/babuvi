@@ -82,7 +82,7 @@
                       inputId="binary"></p-checkbox>
                   </td>
                   <td>
-                    <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )">
+                    <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )" class="paymentRequestId">
                       <span>Mã yêu cầu: </span>
                       <strong>
                         {{paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )}}
@@ -152,7 +152,7 @@
                       class="ui-button-raised ui-button-danger" (click)="removePaymentRequests()"></button>
 
                     <p-button *ngIf="paymentRequestFormArray.controls.length >= 1"
-                      [disabled]="paymentRequestFormArray.invalid" icon="pi pi-plus" label="Thêm yêu cầu"
+                      [disabled]="paymentRequestFormArray.invalid || requestListForm.getRawValue().isSubmited == true" icon="pi pi-plus" label="Thêm yêu cầu"
                       (click)="addPaymentRequest()"></p-button>
                     <p-button *ngIf="paymentRequestFormArray.controls.length == 0" icon="pi pi-plus"
                       label="Thêm yêu cầu" (click)="addPaymentRequest()"></p-button>
@@ -198,7 +198,7 @@
 
                 <div class="statistic" style="justify-content: space-between;" *ngIf="!currentRequestIdEdited">
                   <button class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()"></button>
-                  <button class="action highlight-btn" [disabled]="requestListForm.invalid" pButton type="button"
+                  <button class="action highlight-btn" [disabled]="requestListForm.invalid || requestListForm.getRawValue().isSubmited == true" pButton type="button"
                     label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
                 </div>
               </div>

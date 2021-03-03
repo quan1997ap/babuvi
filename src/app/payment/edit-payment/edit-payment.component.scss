@@ -62,6 +62,10 @@ textarea:focus{
 }
 .payment-container {
   background: #fff;
+  .paymentRequestId{
+    margin-bottom: 4px;
+    color: #007ad9;
+  }
   .require-service{
     flex-direction: row;
     display: flex;
