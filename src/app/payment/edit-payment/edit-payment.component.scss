@@ -63,17 +63,11 @@ textarea:focus{
 .payment-container {
   background: #fff;
   .require-service{
-    padding-left: 16px;
-    flex-direction: column;
+    flex-direction: row;
     display: flex;
     align-items: flex-start;
     .require-service-item{
-      margin-bottom: 4px;
-      .gr-name{
-        color: #007ad9;
-        margin: 4px 0 8px 0;
-        font-weight: bold;
-      }
+      margin-right: 12px;
     }
   }
   .form-title {

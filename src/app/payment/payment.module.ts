@@ -19,6 +19,7 @@ import { MessagesModule } from "primeng/primeng";
 import { DialogService, MessageService } from "primeng/api";
 import { DropdownModule } from "primeng/dropdown";
 import { ButtonModule } from "primeng/button";
+import { OverlayPanelModule } from "primeng/overlaypanel";
 // 3rd libs
 import { NgxMaskModule } from "ngx-mask";
 import { NgxSpinnerModule } from "ngx-spinner";
@@ -34,15 +35,16 @@ import { EditPaymentComponent } from "./edit-payment/edit-payment.component";
 import { ListPaymentComponent } from "./list-payment/list-payment.component";
 import { DetailCouponComponent } from "./detail-coupon/detail-coupon.component";
 import { ListCouponComponent } from "./list-coupon/list-coupon.component";
-import { ListServicePackComponent } from './../service-pack/list-service-pack/list-service-pack.component';
-import { DetailServicePackComponent } from './../service-pack/detail-service-pack/detail-service-pack.component';
+import { ListServicePackComponent } from "./../service-pack/list-service-pack/list-service-pack.component";
+import { DetailServicePackComponent } from "./../service-pack/detail-service-pack/detail-service-pack.component";
 // Services
 import { CouponServices } from "app/services/coupon.service";
 import { PaymentService } from "./../services/payment.service";
-import { ServicePackService } from './../services/service-pack.service';
+import { ServicePackService } from "./../services/service-pack.service";
 
 @NgModule({
   imports: [
+    OverlayPanelModule,
     ConfirmDialogModule,
     DynamicDialogModule,
     NgxMaskModule.forRoot(),
@@ -64,7 +66,7 @@ import { ServicePackService } from './../services/service-pack.service';
     AccordionModule,
     MultiSelectModule,
     TooltipModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   declarations: [
     EditPaymentComponent,
@@ -72,13 +74,22 @@ import { ServicePackService } from './../services/service-pack.service';
     ListCouponComponent,
     DetailCouponComponent,
     ListServicePackComponent,
-    DetailServicePackComponent 
+    DetailServicePackComponent,
   ],
   providers: [
-    MessageService, PaymentService, CouponServices, DialogService, ConfirmationService, ServicePackService,
+    MessageService,
+    PaymentService,
+    CouponServices,
+    DialogService,
+    ConfirmationService,
+    ServicePackService,
     { provide: MAT_DIALOG_DATA, useValue: {} },
     { provide: MatDialogRef, useValue: {} },
   ],
-  entryComponents: [ListCouponComponent, DetailCouponComponent, DetailServicePackComponent],
+  entryComponents: [
+    ListCouponComponent,
+    DetailCouponComponent,
+    DetailServicePackComponent,
+  ],
 })
 export class PaymentModule {}

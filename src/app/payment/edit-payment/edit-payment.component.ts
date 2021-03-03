@@ -89,6 +89,7 @@ export class EditPaymentComponent implements OnInit {
   private createPaymentRequest(): FormGroup {
     return this.fb.group({
       checked: new FormControl(true),
+      paymentRequestId: new FormControl(null),
       description: new FormControl(""),
       serviceGroupId: new FormControl(this.paymentTypeList[0].value, [
         Validators.required,
@@ -123,7 +124,12 @@ export class EditPaymentComponent implements OnInit {
   }
 
   removePaymentRequest(rowIndex: number): void {
-    this.paymentRequestFormArray.removeAt(rowIndex);
+    this.confirmationService.confirm({
+      message: 'Bạn muốn xóa các request đã chọn?',
+      accept: () => {
+        this.paymentRequestFormArray.removeAt(rowIndex);
+      }
+    });
   }
 
   isPaymentControlHasError(control: any, validationType: string): boolean {
@@ -138,15 +144,30 @@ export class EditPaymentComponent implements OnInit {
   savePaymentRequestToDb() {
     this.spinner.show();
     this.paymentService.addPaymentRequest({
-      lsPaymentRequest : this.paymentRequestFormArray.value
+      lsPaymentRequest : this.paymentRequestFormArray.value.map( request => {
+        if( !request.paymentRequestId) {
+          delete request.paymentRequestId
+        }
+        return  request;
+      })
     }).subscribe( 
       resAddPaymentRequest => {
       if(resAddPaymentRequest && resAddPaymentRequest.result && resAddPaymentRequest.result.success  ){
         if(resAddPaymentRequest){
           this.showMessage("success", "Success", "Thêm yêu cầu thành công");
-          setTimeout( () => {
-            this.router.navigateByUrl('/payment');
-          }, 500)
+          // setTimeout( () => {
+          //   this.router.navigateByUrl('/payment');
+          // }, 500)
+          this.requestListForm.patchValue({isSubmited: true});
+          this.paymentRequestFormArray.controls.forEach(
+            (requestControl, index) => {
+              requestControl.patchValue({
+                amountRequest: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestCode,
+                paymentRequestId: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestId,
+                paymentRequestDate: resAddPaymentRequest.result.data.lsPaymentRequest[index].paymentRequestDate
+              });
+            }
+          );
         } else {
           this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra!");
         }
@@ -188,6 +209,7 @@ export class EditPaymentComponent implements OnInit {
           if (requestId && res[2] && res[2].result && res[2].result.success) {
             // form edit
             this.requestListForm = this.fb.group({
+              isSubmited: new FormControl( false, []),
               lsPaymentRequest: this.fb.array(
                 [this.createPaymentRequest()],
                 Validators.required
@@ -197,6 +219,7 @@ export class EditPaymentComponent implements OnInit {
           } else{
             // https://www.c-sharpcorner.com/article/creating-table-with-reactive-forms-in-angular-9-using-primeng-table2/
             this.requestListForm = this.fb.group({
+              isSubmited: new FormControl( false, []),
               lsPaymentRequest: this.fb.array(
                 [this.createPaymentRequest()],
                 Validators.required
@@ -223,7 +246,11 @@ export class EditPaymentComponent implements OnInit {
     });
   }
 
-  calPaymentRequest(event, rowIndex, changeGroupPaymentRequest?: boolean) {
+  calPaymentRequest(event, rowIndex, changeGroupPaymentRequest?: boolean, changeRequiredService?: boolean, currentRequiredService?: any) {
+    // rowIndex: số thứ tự của yêu cầu thanh toán hiện tại
+    // changeGroupPaymentRequest: check có phải đang thay đổi dropdown Loại yêu cầu không?
+    // changeRequiredService:  check có phải đang thay đổi lựa chọn nhóm dịch vụ bắt buộc không ?
+    // currentRequiredService: dịch vụ vừa chọn
     this.subscription.unsubscribe();clearTimeout(this.timeoutInputChange);
     let currentPaymentRequestControl = this.paymentRequestFormArray.at( rowIndex );
     // nếu đổi loại yêu cầu => đổi các control đi kèm = Dịch vụ bắt buộc ( đổi validate ) + Dịch vụ không bắt buộc
@@ -242,6 +269,15 @@ export class EditPaymentComponent implements OnInit {
       this.cd.detectChanges();
     }
 
+    // Nếu thay đổi dịch vụ bắt buộc => check chỉ được chọn 1
+    if(changeRequiredService && currentRequiredService.isOption == '3'){
+      let _lsServiceSelectedOptionType3 = currentPaymentRequestControl.get("lsServiceSelectedOptionType3").value.filter( service => service.group !== currentRequiredService.group).concat([currentRequiredService]);
+      currentPaymentRequestControl.patchValue({
+        lsServiceSelectedOptionType3: _lsServiceSelectedOptionType3
+      });
+    }
+
+    // Tính toán phí dịch vụ
     if (
       currentPaymentRequestControl.value.serviceGroupId &&
       currentPaymentRequestControl.value.amountRequest &&
@@ -402,14 +438,13 @@ export class EditPaymentComponent implements OnInit {
     return currentPaymentRequestControl.value[field];
   }
 
-  makeDataForDropdownService(rowIndex, field, isOption: string) {
-    if (isOption == "3") {
+  makeDataForDropdownService(rowIndex, field) {
       // option = 3 => chia theo các nhóm, mỗi nhóm chỉ được chọn 1
       // tạo group và xắp xếp theo thứ tự => bind ra html
       const lstAllService = _.sortBy(this.paymentValAtIndex(rowIndex, field), [
         "groupType",
         "groupOption",
-      ]).filter((service) => service.isOption == isOption);
+      ]).filter((service) => service.isOption != '1');
       let uniqueRequestService3Id = _.uniqBy(
         lstAllService,
         (service: PaymentServiceModel) =>
@@ -427,14 +462,6 @@ export class EditPaymentComponent implements OnInit {
         });
       });
       return lstAllService;
-    } else {
-      return this.paymentValAtIndex(rowIndex, field)
-        .filter((service) => service.isOption == isOption)
-        .map((service) => ({
-          label: service.serviceName,
-          value: service,
-        }));
-    }
   }
 
   checkBoxServiceOptionType3Disabled(paymentRequestIndex, currentService) {
