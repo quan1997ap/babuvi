@@ -100,7 +100,7 @@
                             </div>
                             <div class="input-fullwidth">
                               <label>Số tiền(¥) <span style="color: red;">*</span></label>
-                              <input type="text" mask="comma_separator" formControlName="amountRequest"
+                              <input type="text" mask="separator" thousandSeparator="." formControlName="amountRequest"
                                 [style]="{'width.px': '100%'}" pInputText
                                 (ngModelChange)="calPaymentRequest($event,paymentRequestIndex )" placeholder="Nhập số tiền" />
                             </div>
@@ -125,13 +125,13 @@
                         <div class="chiphi">
                           <p><strong style="color: #f44233;">Tổng hợp chi phí</strong></p>
                           <p> <span class="label">Tỷ giá:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | number}} </span></p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | mask: 'separator':'.'}} </span></p>
                           <p> <span class="label">Quy đổi:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| number }} </span></p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| mask: 'separator':'.' }} </span></p>
                           <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,
-                              'totalFee' ) | number}} </span></p>
+                              'totalFee' ) |  mask: 'separator':'.' }} </span></p>
                           <p> <span class="label">Tổng tiền:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | number }} </span> </p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | mask: 'separator':'.' }} </span> </p>
                         </div>
 
                     </div>
@@ -182,15 +182,15 @@
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng tiền:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay | number}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalPay |  mask: 'separator':'.'}}</div>
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng phí:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalFee | number}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalFee |  mask: 'separator':'.'}}</div>
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng thanh toán:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay | number}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalPay |  mask: 'separator':'.'}}</div>
                 </div>
                 <div class=" statistic ">
                   <div class="title-detail">Mã khuyễn mãi:</div>
