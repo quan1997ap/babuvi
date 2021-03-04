@@ -1,9 +1,9 @@
-<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cdConfirm
   [baseZIndex]="50000">
   <p-footer>
     <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
-      (click)="cd.reject()"></button>
-    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
+      (click)="cdConfirm.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cdConfirm.accept()"></button>
   </p-footer>
 </p-confirmDialog>
 <p-toast></p-toast>

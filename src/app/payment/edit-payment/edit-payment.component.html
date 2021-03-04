@@ -23,14 +23,14 @@
     </div>
 
     <div class="row form-layout">
-      <div class="col-sm-12 col-md-12 col-lg-8" *ngIf="requestListForm && paymentRequestFormArray">
-        <div class="table padding-8" [formGroup]="requestListForm">
+      <div class="col-sm-12 col-md-12 col-lg-8  col-xl-9" *ngIf="requestListForm && paymentRequestFormArray">
+        <div class="table" [formGroup]="requestListForm">
           <p-table class="request-table" #dt [value]="paymentRequestFormArray.controls" [rowHover]="true" [rows]="10"
             [paginator]="true" [autoLayout]="true">
             <ng-template pTemplate="body" let-paymentControl let-paymentRequestIndex="rowIndex">
               <ng-container formArrayName="lsPaymentRequest">
                 <tr *ngIf="paymentRequestIndex > 0">
-                  <td style="border: none;" colspan="4"></td>
+                  <td style="border: none;" colspan="3"></td>
                 </tr>
                 <p-overlayPanel #op appendTo="body" baseZIndex=500>
                     <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'lsAllService' ).length; else no_service2" style="padding-top: 8px;">
@@ -58,7 +58,7 @@
                   <td style="width: 50px;">
                     <i class="pi pi-bars" style="font-size: 20px; cursor: pointer;" (click)="op.toggle($event)"></i>
                   </td>
-                  <td style="min-width: 180px;" colspan="2">
+                  <td style="min-width: 180px;" colspan="1">
                     <div class="require-service"
                     *ngIf="paymentValAtIndex(paymentRequestIndex, 'lsAllService' ).length; else no_service2">
                     <div class="require-service-item"
@@ -82,53 +82,58 @@
                       inputId="binary"></p-checkbox>
                   </td>
                   <td>
-                    <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )" class="paymentRequestId">
-                      <span>Mã yêu cầu: </span>
-                      <strong>
-                        {{paymentValAtIndex(paymentRequestIndex, 'paymentRequestId' )}}
-                      </strong>
-                    </div>
-                    <div class="d-flex">
-                      <div class="input-fullwidth" style="margin-right: 8px;">
-                        <label>Loại yêu cầu <span style="color: red;">*</span></label>
-                        <p-dropdown scrollHeight="124px" formControlName="serviceGroupId"
-                          (onChange)="calPaymentRequest($event,paymentRequestIndex, true )" [style]="{'width': '100%'}"
-                          maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
-                        </p-dropdown>
-                      </div>
-                      <div class="input-fullwidth">
-                        <label>Số tiền(¥) <span style="color: red;">*</span></label>
-                        <input type="text" mask="comma_separator" formControlName="amountRequest"
-                          [style]="{'width.px': '100%'}" pInputText
-                          (ngModelChange)="calPaymentRequest($event,paymentRequestIndex )" placeholder="Nhập số tiền" />
-                      </div>
-                    </div>
-                    <div class="error-label"
-                      *ngIf="isPaymentControlHasError( paymentControl.get('serviceGroupId'), 'required')">
-                      Loại yêu cầu là bắt buộc
-                    </div>
-                    <div class="error-label"
-                      *ngIf="isPaymentControlHasError( paymentControl.get('amountRequest'), 'min') || isPaymentControlHasError( paymentControl.get('amountRequest'), 'required') ">
-                      Số tiền phải lớn hơn 0
-                    </div>
-                    <div style="margin-top: 10px;">
-                      <div class="input-fullwidth ">
-                        <label>Nội dung</label>
-                        <textarea [rows]="3" formControlName="description" autoResize="autoResize" pInputTextarea
-                          style="width: 100%; padding: 4px;" placeholder="Nhập nội dung"></textarea>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="input-fullwidth chiphi" style="max-width: 300px;min-width: 200px;">
-                      <p> <span class="label">Tỷ giá:</span> <span class="number">
-                          {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | number}} </span></p>
-                      <p> <span class="label">Quy đổi:</span> <span class="number">
-                          {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| number }} </span></p>
-                      <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,
-                          'totalFee' ) | number}} </span></p>
-                      <p> <span class="label">Tổng tiền:</span> <span class="number">
-                          {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | number}} </span> </p>
+                    <div class="request-item">
+                        <div class="request-item-form">
+                          <div *ngIf="paymentValAtIndex(paymentRequestIndex, 'paymentRequestCode' )" class="paymentRequestId">
+                            <span>Mã yêu cầu: </span>
+                            <strong>
+                              {{paymentValAtIndex(paymentRequestIndex, 'paymentRequestCode' )}}
+                            </strong>
+                          </div>
+                          <div class="d-flex">
+                            <div class="input-fullwidth" style="margin-right: 8px;">
+                              <label>Loại yêu cầu <span style="color: red;">*</span></label>
+                              <p-dropdown scrollHeight="124px" formControlName="serviceGroupId"
+                                (onChange)="calPaymentRequest($event,paymentRequestIndex, true )" [style]="{'width': '100%'}"
+                                maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
+                              </p-dropdown>
+                            </div>
+                            <div class="input-fullwidth">
+                              <label>Số tiền(¥) <span style="color: red;">*</span></label>
+                              <input type="text" mask="comma_separator" formControlName="amountRequest"
+                                [style]="{'width.px': '100%'}" pInputText
+                                (ngModelChange)="calPaymentRequest($event,paymentRequestIndex )" placeholder="Nhập số tiền" />
+                            </div>
+                          </div>
+                          <div class="error-label"
+                            *ngIf="isPaymentControlHasError( paymentControl.get('serviceGroupId'), 'required')">
+                            Loại yêu cầu là bắt buộc
+                          </div>
+                          <div class="error-label"
+                            *ngIf="isPaymentControlHasError( paymentControl.get('amountRequest'), 'min') || isPaymentControlHasError( paymentControl.get('amountRequest'), 'required') ">
+                            Số tiền phải lớn hơn 0
+                          </div>
+                          <div style="margin-top: 10px;">
+                            <div class="input-fullwidth ">
+                              <label>Nội dung</label>
+                              <textarea [rows]="3" formControlName="description" autoResize="autoResize" pInputTextarea
+                                style="width: 100%; padding: 4px;" placeholder="Nhập nội dung"></textarea>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="chiphi">
+                          <p><strong style="color: #f44233;">Tổng hợp chi phí</strong></p>
+                          <p> <span class="label">Tỷ giá:</span> <span class="number">
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | number}} </span></p>
+                          <p> <span class="label">Quy đổi:</span> <span class="number">
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| number }} </span></p>
+                          <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,
+                              'totalFee' ) | number}} </span></p>
+                          <p> <span class="label">Tổng tiền:</span> <span class="number">
+                              {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | number }} </span> </p>
+                        </div>
+
                     </div>
                   </td>
                   <td>
@@ -141,18 +146,18 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="8">No payments found.</td>
+                <td colspan="3">No payments found.</td>
               </tr>
             </ng-template>
             <ng-template pTemplate="footer">
               <tr>
-                <td colspan="4">
+                <td colspan="3">
                   <div class="add-remove-request-item" *ngIf="!currentRequestIdEdited">
-                    <button pButton type="button" label="Xóa các yêu cầu đã chọn" icon="pi pi-times"
+                    <button pButton type="button" label="Xóa tất cả" icon="pi pi-times" [disabled]="loading == true"
                       class="ui-button-raised ui-button-danger" (click)="removePaymentRequests()"></button>
 
                     <p-button *ngIf="paymentRequestFormArray.controls.length >= 1"
-                      [disabled]="paymentRequestFormArray.invalid || requestListForm.getRawValue().isSubmited == true" icon="pi pi-plus" label="Thêm yêu cầu"
+                      [disabled]="paymentRequestFormArray.invalid || requestListForm.getRawValue().isSubmited == true || loading == true" icon="pi pi-plus" label="Thêm yêu cầu"
                       (click)="addPaymentRequest()"></p-button>
                     <p-button *ngIf="paymentRequestFormArray.controls.length == 0" icon="pi pi-plus"
                       label="Thêm yêu cầu" (click)="addPaymentRequest()"></p-button>
@@ -163,8 +168,8 @@
           </p-table>
         </div>
       </div>
-      <div class="col-sm-12 col-md-12 col-lg-4 d-flex flex-column">
-        <div class="padding-8 d-flex flex-column" style="height: 100%;">
+      <div class="col-sm-12 col-md-12 col-lg-4  col-xl-3 d-flex flex-column">
+        <div class="padding-8 d-flex flex-column" style="height: 100%; min-width: 270px;">
           <div class="statistic-title">
             Tổng hợp chi phí
           </div>
@@ -198,7 +203,7 @@
 
                 <div class="statistic" style="justify-content: space-between;" *ngIf="!currentRequestIdEdited">
                   <button class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()"></button>
-                  <button class="action highlight-btn" [disabled]="requestListForm.invalid || requestListForm.getRawValue().isSubmited == true" pButton type="button"
+                  <button class="action highlight-btn" [disabled]="loading == true || requestListForm.invalid || requestListForm.getRawValue().isSubmited == true" pButton type="button"
                     label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
                 </div>
               </div>

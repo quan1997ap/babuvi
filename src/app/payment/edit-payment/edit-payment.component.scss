@@ -37,12 +37,20 @@ textarea:focus{
   }
 }
 
-.chiphi{
-  .label{
-    width: 120px;
-  }
-  .number{
-    color: #f44336;
+::ng-deep.request-item{
+  display: flex;
+  .chiphi{
+    max-width: 300px;
+    min-width: 200px;
+    margin-left: 16px;
+    border-left: 1px solid #ddd;
+    padding-left: 16px;
+    .label{
+      width: 120px;
+    }
+    .number{
+      color: #f44336;
+    }
   }
 }
 .error-label {
@@ -151,5 +159,29 @@ textarea:focus{
 @media (max-width: 800px) {
   .form-layout {
     flex-direction: column-reverse;
+  }
+  ::ng-deep .ui-table-auto-layout>.ui-table-wrapper{
+    overflow-x: hidden;
+  }
+  ::ng-deep.request-item{
+    display: flex;
+    flex-direction: column;
+    .chiphi{
+      max-width: unset;
+      min-width: 200px;
+      margin-left: 0;
+      border-left: none;
+      padding-left: 0;
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      padding-top: 16px;
+      .label{
+        width: 120px;
+      }
+      .number{
+        color: #f44336;
+      }
+    }
   }
 }

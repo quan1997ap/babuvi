@@ -57,7 +57,9 @@ export class ListCouponComponent implements OnInit, OnDestroy {
               summary: "Success",
               detail: "Mã hợp lệ",
             });
-            this.coupons.unshift(res.result.data);
+            setTimeout( () => {
+              this.dynamicDialogRefLstCoupon.close(res.result.data);
+            }, 500)
           } else {
             this.msgs.push({
               severity: "error",
@@ -115,7 +117,6 @@ export class ListCouponComponent implements OnInit, OnDestroy {
       event.target.className !== "use-now" &&
       event.target.className !== "text"
     ) {
-      console.log(this.dynamicDialogRefLstCoupon)
       const refDetail = this.dialogServiceLstCoupon.open(DetailCouponComponent, {
         header: "Chi tiết mã khuyến mại",
         style: {

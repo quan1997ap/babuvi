@@ -38,9 +38,7 @@ export class ListServicePackComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
       if(result && result.paymentSuccess){
-        console.log('success')
         this.showMessage("success","Success","Thanh toán thành công");
       }
     });

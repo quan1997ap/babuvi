@@ -56,6 +56,7 @@ export class EditPaymentComponent implements OnInit {
   account: ClientProfile;
   currentCoupon;
   currentRequestIdEdited = "";
+  loading = false;
   constructor(
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
@@ -90,6 +91,7 @@ export class EditPaymentComponent implements OnInit {
     return this.fb.group({
       checked: new FormControl(true),
       paymentRequestId: new FormControl(null),
+      paymentRequestCode: new FormControl(null),
       description: new FormControl(""),
       serviceGroupId: new FormControl(this.paymentTypeList[0].value, [
         Validators.required,
@@ -146,7 +148,8 @@ export class EditPaymentComponent implements OnInit {
     this.paymentService.addPaymentRequest({
       lsPaymentRequest : this.paymentRequestFormArray.value.map( request => {
         if( !request.paymentRequestId) {
-          delete request.paymentRequestId
+          delete request.paymentRequestId;
+          delete request.paymentRequestCode;
         }
         return  request;
       })
@@ -252,6 +255,7 @@ export class EditPaymentComponent implements OnInit {
     // changeGroupPaymentRequest: check có phải đang thay đổi dropdown Loại yêu cầu không?
     // changeRequiredService:  check có phải đang thay đổi lựa chọn nhóm dịch vụ bắt buộc không ?
     // currentRequiredService: dịch vụ vừa chọn
+    this.loading = true;
     this.subscription.unsubscribe();clearTimeout(this.timeoutInputChange);
     let currentPaymentRequestControl = this.paymentRequestFormArray.at( rowIndex );
     // nếu đổi loại yêu cầu => đổi các control đi kèm = Dịch vụ bắt buộc ( đổi validate ) + Dịch vụ không bắt buộc
@@ -294,7 +298,7 @@ export class EditPaymentComponent implements OnInit {
       // form hợp lệ => gọi hàm tính toán phí => thay đổi validate cho lsServiceSelectedOptionType3 => số dịch vụ cần chọn = số nhóm ( mỗi nhóm chỉ được chọn 1)
       this.timeoutInputChange = setTimeout(() => {
         this.requestListForm.disable();
-        this.spinner.show();
+        this.cd.detectChanges();
         // các dịch vụ đã chọn => isChecked == true
         let lsRequestService = [];
         // tạo mảng lsRequestService từ lsServiceSelectedOptionType1,2,3 => và check các lựa chọn isChecked
@@ -389,13 +393,22 @@ export class EditPaymentComponent implements OnInit {
               );
               currentPaymentRequestControl.get("lsServiceSelectedOptionType3").setValidators([Validators.minLength(uniqueRequestService3Id.length), Validators.required]);
               this.calTotalPaymentRequest();
-              this.spinner.hide();
+              this.requestListForm.enable();
+              this.loading = false;
+              this.cd.detectChanges();
+
             },
             (err) => {
-              this.spinner.hide();
+              this.loading = false;
+              this.requestListForm.enable();
+              this.cd.detectChanges();
+
             }
           );
+          this.loading = false;
           this.requestListForm.enable();
+          this.cd.detectChanges();
+
       }, 500);
     } else{
       // chưa edit form => Load lần đầu

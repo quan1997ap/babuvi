@@ -8,6 +8,7 @@ import { NgxSpinnerService } from "ngx-spinner";
   selector: "app-detail-service-pack",
   templateUrl: "./detail-service-pack.component.html",
   styleUrls: ["./detail-service-pack.component.scss"],
+  providers: [ConfirmationService]
 })
 export class DetailServicePackComponent implements OnInit {
   constructor(
@@ -31,7 +32,6 @@ export class DetailServicePackComponent implements OnInit {
           .paymentServicePack(this.servicePack.servicePackId)
           .subscribe(
             (resPaymentServicePack) => {
-              console.log(resPaymentServicePack);
               if (
                 resPaymentServicePack &&
                 resPaymentServicePack.result &&
