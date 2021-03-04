@@ -157,9 +157,6 @@ textarea:focus{
 }
 
 @media (max-width: 800px) {
-  .form-layout {
-    flex-direction: column-reverse;
-  }
   ::ng-deep .ui-table-auto-layout>.ui-table-wrapper{
     overflow-x: hidden;
   }
