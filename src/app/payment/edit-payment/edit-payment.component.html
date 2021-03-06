@@ -90,7 +90,7 @@
                               {{paymentValAtIndex(paymentRequestIndex, 'paymentRequestCode' )}}
                             </strong>
                           </div>
-                          <div class="d-flex">
+                          <div class="d-flex lst-input">
                             <div class="input-fullwidth" style="margin-right: 8px;">
                               <label>Loại yêu cầu <span style="color: red;">*</span></label>
                               <p-dropdown scrollHeight="124px" formControlName="serviceGroupId"
@@ -98,7 +98,7 @@
                                 maxSelectedLabels=3 [options]="paymentTypeList" placeholder="Loại yêu cầu">
                               </p-dropdown>
                             </div>
-                            <div class="input-fullwidth">
+                            <div class="input-fullwidth title-sotien">
                               <label>Số tiền(¥) <span style="color: red;">*</span></label>
                               <input type="text" mask="separator" thousandSeparator="." formControlName="amountRequest"
                                 [style]="{'width.px': '100%'}" pInputText
@@ -125,13 +125,12 @@
                         <div class="chiphi">
                           <p><strong style="color: #f44233;">Tổng hợp chi phí</strong></p>
                           <p> <span class="label">Tỷ giá:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | mask: 'separator':'.'}} </span></p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | currencyChina}} </span></p>
                           <p> <span class="label">Quy đổi:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| mask: 'separator':'.' }} </span></p>
-                          <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,
-                              'totalFee' ) |  mask: 'separator':'.' }} </span></p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| currencyChina }} </span></p>
+                          <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,'totalFee' ) | currencyChina }} </span></p>
                           <p> <span class="label">Tổng tiền:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | mask: 'separator':'.' }} </span> </p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | currencyChina }} </span> </p>
                         </div>
 
                     </div>
@@ -182,15 +181,15 @@
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng tiền:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay |  mask: 'separator':'.'}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalPay | currencyChina}}</div>
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng phí:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalFee |  mask: 'separator':'.'}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalFee | currencyChina}}</div>
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng thanh toán:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay |  mask: 'separator':'.'}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalPay | currencyChina}}</div>
                 </div>
                 <div class=" statistic ">
                   <div class="title-detail">Mã khuyễn mãi:</div>

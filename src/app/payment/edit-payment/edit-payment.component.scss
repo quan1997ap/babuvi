@@ -81,6 +81,10 @@ textarea:focus{
     .require-service-item{
       margin-right: 12px;
     }
+    p-checkbox{
+      display: flex;
+      flex-wrap: nowrap;
+    }
   }
   .form-title {
     display: flex;
@@ -127,7 +131,7 @@ textarea:focus{
         .statistic {
           display: flex;
           flex-direction: row;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
           .select-coupon{
             cursor: pointer;
           }
@@ -156,10 +160,11 @@ textarea:focus{
   }
 }
 
+::ng-deep .ui-table-auto-layout>.ui-table-wrapper{
+  overflow-x: unset !important;
+}
+
 @media (max-width: 800px) {
-  ::ng-deep .ui-table-auto-layout>.ui-table-wrapper{
-    overflow-x: hidden;
-  }
   ::ng-deep.request-item{
     display: flex;
     flex-direction: column;
@@ -173,11 +178,20 @@ textarea:focus{
       border-top: 1px solid #ddd;
       width: 100%;
       padding-top: 16px;
+      p{
+        margin-bottom: 8px;
+      }
       .label{
         width: 120px;
       }
       .number{
         color: #f44336;
+      }
+    }
+    .lst-input{
+      flex-direction: column;
+      .title-sotien{
+        margin-top: 8px;
       }
     }
   }
