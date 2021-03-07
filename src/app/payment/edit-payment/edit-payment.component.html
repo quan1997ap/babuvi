@@ -155,7 +155,7 @@
                     <button pButton type="button" label="Xóa tất cả" icon="pi pi-times" [disabled]="loading == true"
                       class="ui-button-raised ui-button-danger" (click)="removePaymentRequests()"></button>
 
-                    <p-button *ngIf="paymentRequestFormArray.controls.length >= 1"
+                    <p-button *ngIf="paymentRequestFormArray.controls.length >= 1 && formSubmited() == false"
                       [disabled]="paymentRequestFormArray.invalid || requestListForm.getRawValue().isSubmited == true || loading == true" icon="pi pi-plus" label="Thêm yêu cầu"
                       (click)="addPaymentRequest()"></p-button>
                     <p-button *ngIf="paymentRequestFormArray.controls.length == 0" icon="pi pi-plus"
@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="statistic" style="justify-content: space-between;" *ngIf="!currentRequestIdEdited">
-                  <button class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()"></button>
+                  <button [disabled]="formSubmited() == true" class="action" pButton type="button" label="Mua gói" (click)="addServicePackage()"></button>
                   <button class="action highlight-btn" [disabled]="loading == true || requestListForm.invalid || requestListForm.getRawValue().isSubmited == true" pButton type="button"
                     label="Gửi yêu cầu" (click)="savePaymentRequestToDb($event)"></button>
                 </div>

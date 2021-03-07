@@ -63,7 +63,7 @@ export class PaymentService extends ApiService {
   }
 
   deletePaymentRequest(paymentRequestId) {
-    return this.delete(
+    return this.put(
       ApiBaseUrl +
         `paymentRequest/deletePaymentRequest?paymentRequestId=${paymentRequestId}`
     );

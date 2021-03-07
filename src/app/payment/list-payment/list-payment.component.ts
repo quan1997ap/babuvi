@@ -1,15 +1,18 @@
-import { PaymentRequestSearchModel } from "./../../model/payment-request.model";
-import { User } from "./../../model/user.model";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { NgxSpinnerService } from "ngx-spinner";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 
 // Service
 import { PaymentService } from "./../../services/payment.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UserService } from "./../../services/user.service";
 import { DataTable } from "primeng/primeng";
+import { NgxSpinnerService } from "ngx-spinner";
+
+// Models
+import { PaymentRequestSearchModel } from "./../../model/payment-request.model";
+import { User } from "./../../model/user.model";
+
 // RXJS
 import { forkJoin } from "rxjs";
 
@@ -31,8 +34,9 @@ export class ListPaymentComponent implements OnInit {
   };
   currentUser = new User();
   @ViewChild("dt") public dataTable: DataTable;
-  
+
   constructor(
+    public cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     private paymentService: PaymentService,
@@ -77,25 +81,54 @@ export class ListPaymentComponent implements OnInit {
   }
 
   removeSelectedPayment() {
-    console.log(this.dataTable._selection);
-    if(this.dataTable._selection && this.dataTable._selection.length > 0){
-      const lsRequest = this.dataTable._selection.map(
-        (request) =>  this.paymentService.deletePaymentRequest(request.paymentRequestId) 
+    if (this.dataTable._selection && this.dataTable._selection.length > 0) {
+      const lsDeletedId = this.dataTable._selection.map(
+        (request) => request.paymentRequestId
+      );
+      const lsRequest = lsDeletedId.map((requestId) =>
+        this.paymentService.deletePaymentRequest(requestId)
       );
       this.confirmationService.confirm({
-        message: 'Bạn muốn xóa các request đã chọn?',
+        message: "Bạn muốn xóa các request đã chọn?",
         accept: () => {
           forkJoin(lsRequest).subscribe(
             (resDel) => {
-              console.log(resDel)
-              this.showMessage("success", "Thành công", "Xóa  yêu cầu thanh toán thành công");
+              if (
+                resDel &&
+                resDel
+                  .map((res: any) => res.result.success)
+                  .every((status) => status == true)
+              ) {
+                this.paymentList = this.paymentList.filter(
+                  (payment) =>
+                    lsDeletedId.includes(payment.paymentRequestId) == false
+                );
+                this.cdr.detectChanges();
+                this.showMessage(
+                  "success",
+                  "Thành công",
+                  "Xóa  yêu cầu thanh toán thành công"
+                );
+              }
+              else{
+                this.showMessage(
+                  "error",
+                  "Không thể lấy dữ liệu",
+                  "Có lỗi xảy ra khi xóa yêu cầu thanh toán!"
+                );
+              }
             },
-            (errDel) => { this.showMessage("error", "Không thể lấy dữ liệu", "Có lỗi xảy ra khi xóa yêu cầu thanh toán!");}
+            (errDel) => {
+              this.showMessage(
+                "error",
+                "Không thể lấy dữ liệu",
+                "Có lỗi xảy ra khi xóa yêu cầu thanh toán!"
+              );
+            }
           );
-        }
+        },
       });
     }
-
   }
 
   getInitFormData() {
