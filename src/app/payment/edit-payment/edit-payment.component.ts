@@ -81,7 +81,8 @@ export class EditPaymentComponent implements OnInit {
   }
 
   totalPaymentRequest = {
-    totalPay: 0,
+    totalAmountRequestExchange: 0,
+    totalAmountRequest: 0,
     totalFee: 0,
     totalAmount: 0,
   };
@@ -102,6 +103,7 @@ export class EditPaymentComponent implements OnInit {
       exchangeRate: new FormControl(0, []),
       totalAmount: new FormControl(0, []),
       totalFee: new FormControl(0, []),
+      amountRequestExchange: new FormControl(0, []),
       lsServiceSelectedOptionType1: new FormControl([]),
       lsServiceSelectedOptionType2: new FormControl([]),
       lsServiceSelectedOptionType3: new FormControl([], [Validators.required]),
@@ -344,6 +346,7 @@ export class EditPaymentComponent implements OnInit {
         exchangeRate: 0,
         totalAmount: 0,
         totalFee: 0,
+        amountRequestExchange: 0,
         lsAllService: [],
         lsServiceSelectedOptionType1: [],
         lsServiceSelectedOptionType2: [],
@@ -413,7 +416,7 @@ export class EditPaymentComponent implements OnInit {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
           couponCode: currentPaymentRequestControl.value.couponCode,
           lsService: lsRequestService,
-          amountRequest: currentPaymentRequestControl.value.amountRequest,
+          amountRequest: currentPaymentRequestControl.value.amountRequest
         };
         this.subscription = this.paymentService
           .calPaymentRequest(params)
@@ -476,6 +479,7 @@ export class EditPaymentComponent implements OnInit {
                     resServiceOfPaymentType.result.data.exchangeRate,
                   totalAmount: resServiceOfPaymentType.result.data.totalAmount,
                   totalFee: resServiceOfPaymentType.result.data.totalFee,
+                  amountRequestExchange: resServiceOfPaymentType.result.data.amountRequestExchange,
                   lsAllService: lsAllService,
                   lsServiceSelectedOptionType1: lsServiceSelectedOptionType1,
                   lsServiceSelectedOptionType2: lsServiceSelectedOptionType2,
@@ -544,18 +548,17 @@ export class EditPaymentComponent implements OnInit {
 
   calTotalPaymentRequest() {
     this.totalPaymentRequest = {
-      totalPay: 0,
-      totalFee: 0,
-      totalAmount: 0,
+      totalAmountRequestExchange: 0,
+      totalAmountRequest: 0,
+      totalFee: 0, // tổng phí
+      totalAmount: 0, // là sum của số tiền khách yêu cầu thanh toán hộ
     };
     this.paymentRequestFormArray.value.map((paymentRequest) => {
-      this.totalPaymentRequest.totalFee += paymentRequest.totalFee;
-      this.totalPaymentRequest.totalAmount += paymentRequest.totalAmount;
+      this.totalPaymentRequest.totalFee += Number(paymentRequest.totalFee);
+      this.totalPaymentRequest.totalAmount +=  Number(paymentRequest.totalAmount);
+      this.totalPaymentRequest.totalAmountRequestExchange +=  Number(paymentRequest.amountRequestExchange);
+      this.totalPaymentRequest.totalAmountRequest +=  Number(paymentRequest.amountRequest);
     });
-    this.totalPaymentRequest.totalPay +=
-      this.totalPaymentRequest.totalAmount - this.totalPaymentRequest.totalFee;
-    console.log(this.totalPaymentRequest)
-      this.cd.detectChanges();
   }
 
   paymentValAtIndex(index, field) {
@@ -634,6 +637,7 @@ export class EditPaymentComponent implements OnInit {
                   newPaymentRequest.couponCode = couponSelected.couponCode;
                   newPaymentRequest.totalAmount = paymentRequest.totalAmount;
                   newPaymentRequest.totalFee = paymentRequest.totalFee;
+                  newPaymentRequest.amountRequestExchange = paymentRequest.amountRequestExchange;
                   newPaymentRequest.serviceGroupId =
                     paymentRequest.serviceGroupId;
                   newPaymentRequest.amountRequest =
@@ -683,6 +687,7 @@ export class EditPaymentComponent implements OnInit {
                         totalAmount:
                           lstPaymentRequestAddedCoupon[index].totalAmount,
                         totalFee: lstPaymentRequestAddedCoupon[index].totalFee,
+                        amountRequestExchange: lstPaymentRequestAddedCoupon[index].amountRequestExchange,
                       });
                     }
                   );

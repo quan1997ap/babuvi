@@ -127,7 +127,7 @@
                           <p> <span class="label">Tỷ giá:</span> <span class="number">
                               {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' ) | currencyChina}} </span></p>
                           <p> <span class="label">Quy đổi:</span> <span class="number">
-                              {{paymentValAtIndex(paymentRequestIndex, 'exchangeRate' )| currencyChina }} </span></p>
+                              {{paymentValAtIndex(paymentRequestIndex, 'amountRequestExchange' )| currencyChina }} </span></p>
                           <p> <span class="label">Phí:</span> <span class="number"> {{paymentValAtIndex(paymentRequestIndex,'totalFee' ) | currencyChina }} </span></p>
                           <p> <span class="label">Tổng tiền:</span> <span class="number">
                               {{paymentValAtIndex(paymentRequestIndex, 'totalAmount' ) | currencyChina }} </span> </p>
@@ -168,7 +168,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-12 col-lg-4  col-xl-3 d-flex flex-column" style="margin-bottom: 12px;">
-        <div class="d-flex flex-column" style="height: 100%; min-width: 270px;">
+        <div class="d-flex flex-column" style="height: 100%; min-width: 300px;">
           <div class="statistic-title">
             Tổng hợp chi phí
           </div>
@@ -180,8 +180,8 @@
                   <div class="detail-number"> {{paymentRequestFormArray.controls.length}}</div>
                 </div>
                 <div class=" statistic">
-                  <div class="title-detail">Tổng tiền:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay | currencyChina}}</div>
+                  <div class="title-detail">Tổng tiền: <span>( x {{totalPaymentRequest.totalAmountRequest | currencyChina}} )</span></div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalAmountRequestExchange | currencyChina}}</div>
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng phí:</div>
@@ -189,7 +189,7 @@
                 </div>
                 <div class=" statistic">
                   <div class="title-detail">Tổng thanh toán:</div>
-                  <div class="detail-number"> {{totalPaymentRequest.totalPay | currencyChina}}</div>
+                  <div class="detail-number"> {{totalPaymentRequest.totalAmount | currencyChina}}</div>
                 </div>
                 <div class=" statistic ">
                   <div class="title-detail">Mã khuyễn mãi:</div>

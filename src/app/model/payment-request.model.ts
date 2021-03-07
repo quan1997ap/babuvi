@@ -4,6 +4,7 @@ export class PaymentRequestModel {
   paymentRequestCode?: string;
   paymentRequestDate?: Date;
   userId?: number;
+  amountRequestExchange?: number;
   amountRequest?: number;
   totalFee?: number;
   totalAmount?: number;

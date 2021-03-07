@@ -45,6 +45,9 @@ textarea:focus{
     margin-left: 16px;
     border-left: 1px solid #ddd;
     padding-left: 16px;
+    p{
+      margin-bottom: 8px;
+    }
     .label{
       width: 120px;
     }
@@ -121,7 +124,7 @@ textarea:focus{
       border: 1px solid #c8c8c8;
       flex: 1;
       background: #fff;
-      padding: 8px 16px;
+      padding: 8px 8px;
       flex: 1;
       display: flex;
       .cal-fee-content{
@@ -140,6 +143,7 @@ textarea:focus{
           }
           .title-detail{
             width: 130px;
+            white-space: nowrap;
           }
           .detail-number {
             color: #ec5d37;
