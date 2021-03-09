@@ -15,6 +15,7 @@ export class PaymentRequestModel {
   serviceId?: number;
   lsService?: PaymentServiceModel[];
   couponCode?: string;
+  coupon ?: string;
 }
 
 export class PaymentRequestSearchModel {

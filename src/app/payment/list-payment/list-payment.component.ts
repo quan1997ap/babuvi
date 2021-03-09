@@ -80,6 +80,12 @@ export class ListPaymentComponent implements OnInit {
     this.router.navigate(["/payment/add"]);
   }
 
+  getServiceGrName(serviceGroupId){
+    console.log(serviceGroupId, this.paymentTypeList)
+    let payment = this.paymentTypeList.find( item => item.value == serviceGroupId);
+    return payment ? payment.label : '---'
+  }
+  
   removeSelectedPayment() {
     if (this.dataTable._selection && this.dataTable._selection.length > 0) {
       const lsDeletedId = this.dataTable._selection.map(

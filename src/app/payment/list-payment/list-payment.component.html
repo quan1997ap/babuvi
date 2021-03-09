@@ -43,19 +43,19 @@
 
   <div class="statistic">
     <div class="statistic-detail mr-right-8">
-      Tổng số giao dịch: <span class="detail-number">{{paymentListStatistic.dataCount}}</span>
+      Tổng số giao dịch: <span class="detail-number">{{paymentListStatistic.dataCount | currencyChina}}</span>
     </div>
     <div>
       &nbsp;&nbsp; | &nbsp;&nbsp;
     </div>
     <div class="statistic-detail mr-right-8">
-      Tổng tiền thanh toán hộ: <span class="detail-number">{{paymentListStatistic.totalAmountRequest}}</span>
+      Tổng tiền thanh toán hộ: <span class="detail-number">{{paymentListStatistic.totalAmountRequest| currencyChina}}</span>
     </div>
     <div>
       &nbsp;&nbsp; | &nbsp;&nbsp;
     </div>
     <div class="statistic-detail mr-right-8">
-      Quy đổi: <span class="detail-number">{{paymentListStatistic.totalAmount}}</span>
+      Quy đổi: <span class="detail-number">{{paymentListStatistic.totalAmount| currencyChina}}</span>
     </div>
   </div>
 
@@ -79,14 +79,14 @@
           <td>
             <p>
               <span>Mã yêu cầu :</span> 
-              <strong> {{payment.paymentRequestId}}</strong>
+              <strong> {{payment.paymentRequestCode}}</strong>
               <!-- <strong class="link" pTooltip="Chi tiết yêu cầu thanh toán" [routerLink]="['/payment/detail', payment.paymentRequestId ]"> {{payment.paymentRequestCode}}</strong> -->
             </p>
             <p>
               <span>Ngày yêu cầu :</span> <strong> {{payment.paymentRequestDate | date: 'dd/MM/yyyy hh:mm:ss' }}</strong>
             </p>
             <p>
-              <span>Loại yêu cầu :</span> <strong> {{payment.paymentRequestCode}}</strong>
+              <span>Loại yêu cầu :</span> <strong> {{payment.serviceGroupDisplay}}</strong>
             </p>
             <p>
               <span>Trạng thái : </span>
@@ -105,16 +105,16 @@
           </td>
           <td>
             <p>
-              <span>Tỉ giá :</span> <strong> {{payment.exchangeRate}}</strong>
+              <span>Tỉ giá :</span> <strong> {{payment.exchangeRate | currencyChina}}</strong>
             </p>
             <p>
-              <span>Số tiền :</span> <strong> {{payment.totalAmount}}</strong>
+              <span>Số tiền :</span> <strong> {{payment.totalAmount | currencyChina}}</strong>
             </p>
             <p>
-              <span>Phí dịch vụ :</span> <strong> {{payment.totalFee}}</strong>
+              <span>Phí dịch vụ :</span> <strong> {{payment.totalFee| currencyChina}}</strong>
             </p>
             <p>
-              <span>Tổng tiền :</span> <strong> {{payment.totalAmount}}</strong>
+              <span>Tổng tiền :</span> <strong> {{payment.totalAmount| currencyChina}}</strong>
             </p>
           </td>
 

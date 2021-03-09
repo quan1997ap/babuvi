@@ -89,7 +89,20 @@ export class ListCouponComponent implements OnInit, OnDestroy {
     this.couponServices.getMyCoupon(1, 1000).subscribe(
       (resCoupons) => {
         if (resCoupons && resCoupons.result && resCoupons.result.success) {
-          this.coupons = resCoupons.result.data.lsData;
+          this.coupons = resCoupons.result.data.lsData.filter(coupon => {
+            if(
+              coupon && 
+              coupon.quantityRemaining > 0 &&
+              coupon.quantityPerUser > 0 &&
+              new Date(coupon.endDate).getTime() - new Date().getTime() > 0
+             ){
+              return true;
+            } else {
+              console.log(coupon)
+              return false;
+            }
+          });
+
         }
         this.spinner.hide();
       },

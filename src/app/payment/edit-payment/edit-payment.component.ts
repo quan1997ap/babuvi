@@ -414,7 +414,7 @@ export class EditPaymentComponent implements OnInit {
         );
         const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
-          couponCode: currentPaymentRequestControl.value.couponCode,
+          coupon : currentPaymentRequestControl.value.couponCode,
           lsService: lsRequestService,
           amountRequest: currentPaymentRequestControl.value.amountRequest
         };
