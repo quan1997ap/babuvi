@@ -98,7 +98,6 @@ export class ListCouponComponent implements OnInit, OnDestroy {
              ){
               return true;
             } else {
-              console.log(coupon)
               return false;
             }
           });

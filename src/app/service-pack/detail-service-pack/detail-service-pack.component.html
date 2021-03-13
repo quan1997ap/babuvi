@@ -26,7 +26,7 @@
       </div>
       <div class="cost">
         <i class="pi pi-tags icon"></i>
-        <span class="text">{{servicePack.price}}</span>
+        <span class="text">{{servicePack.price | currencyChina}}</span>
       </div>
     </div>
   </div>
@@ -34,15 +34,17 @@
 <div class="detail">
   <div class="infor bold"> <span class="title">Tên gói : </span> <span
       class="bold highlight">{{servicePack.servicePackTitle}}</span> </div>
+
   <div class="infor bold"> <span class="title">Mô tả : </span> <span
       class="highlight">{{servicePack.servicePackSubTitle}} </span>
   </div>
-  <div class="infor bold"> <span class="title">Kì hạn : </span> <span
-      class="highlight">{{servicePack.servicePackTerm}}</span> </div>
+
+  <div class="infor"><span class="bold title">Điều khoản sử dụng : </span> <span
+    class="bold highlight">{{servicePack.servicePackTerm}}</span> </div>
+
   <div class="infor"><span class="bold title">Giá gói : </span> <span
-      class="bold highlight">{{servicePack.price}}</span> </div>
-  <div class="infor bold"> <span class="title">Chi tiết giá : </span> <span
-      class="highlight">{{servicePack.priceDescription}}</span> </div>
-  <div class="infor bold"> <span class="title">Ngày bắt đầu : </span> <span
-      class="bold highlight">{{servicePack.startDate | date: 'dd/MM/yyyy hh:mm:ss'}}</span> </div>
+      class="bold highlight">{{servicePack.price | currencyChina}}</span> </div>
+
+  <div class="infor bold"> <span class="title">Hiệu lực : </span> <span
+      class="bold highlight">{{servicePack.startDate | date: 'dd/MM/yyyy hh:mm:ss'}} - {{servicePack.endDate | date: 'dd/MM/yyyy hh:mm:ss'}} </span> </div>
 </div>

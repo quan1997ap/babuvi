@@ -54,7 +54,7 @@ export class EditPaymentComponent implements OnInit {
   private subscription: Subscription;
   timeoutInputChange: any;
   account: ClientProfile;
-  currentCoupon;
+  currentCoupon: any;
   currentRequestIdEdited = "";
   loading = false;
   constructor(
@@ -81,6 +81,7 @@ export class EditPaymentComponent implements OnInit {
   }
 
   totalPaymentRequest = {
+    totalPromotionVoucherAll: 0,
     totalAmountRequestExchange: 0,
     totalAmountRequest: 0,
     totalFee: 0,
@@ -104,6 +105,7 @@ export class EditPaymentComponent implements OnInit {
       totalAmount: new FormControl(0, []),
       totalFee: new FormControl(0, []),
       amountRequestExchange: new FormControl(0, []),
+      totalPromotionVoucher: new FormControl(0, []),
       lsServiceSelectedOptionType1: new FormControl([]),
       lsServiceSelectedOptionType2: new FormControl([]),
       lsServiceSelectedOptionType3: new FormControl([], [Validators.required]),
@@ -347,10 +349,12 @@ export class EditPaymentComponent implements OnInit {
         totalAmount: 0,
         totalFee: 0,
         amountRequestExchange: 0,
+        totalPromotionVoucher: 0,
         lsAllService: [],
         lsServiceSelectedOptionType1: [],
         lsServiceSelectedOptionType2: [],
         lsServiceSelectedOptionType3: [],
+        couponCode: this.currentCoupon && this.currentCoupon.couponCode ? this.currentCoupon.couponCode : null,
       });
       this.cd.detectChanges();
     }
@@ -414,9 +418,9 @@ export class EditPaymentComponent implements OnInit {
         );
         const params: PaymentRequestModel = {
           serviceGroupId: currentPaymentRequestControl.value.serviceGroupId,
-          coupon : currentPaymentRequestControl.value.couponCode,
+          coupon: this.currentCoupon && this.currentCoupon.couponCode ? this.currentCoupon.couponCode : null,
           lsService: lsRequestService,
-          amountRequest: currentPaymentRequestControl.value.amountRequest
+          amountRequest: currentPaymentRequestControl.value.amountRequest,
         };
         this.subscription = this.paymentService
           .calPaymentRequest(params)
@@ -479,11 +483,15 @@ export class EditPaymentComponent implements OnInit {
                     resServiceOfPaymentType.result.data.exchangeRate,
                   totalAmount: resServiceOfPaymentType.result.data.totalAmount,
                   totalFee: resServiceOfPaymentType.result.data.totalFee,
-                  amountRequestExchange: resServiceOfPaymentType.result.data.amountRequestExchange,
+                  amountRequestExchange:
+                    resServiceOfPaymentType.result.data.amountRequestExchange,
+                  totalPromotionVoucher:
+                    resServiceOfPaymentType.result.data.totalPromotionVoucher,
                   lsAllService: lsAllService,
                   lsServiceSelectedOptionType1: lsServiceSelectedOptionType1,
                   lsServiceSelectedOptionType2: lsServiceSelectedOptionType2,
                   lsServiceSelectedOptionType3: lsServiceSelectedOptionType3,
+                  couponCode: this.currentCoupon && this.currentCoupon.couponCode ? this.currentCoupon.couponCode : null,
                 });
               }
               const lstAllService =
@@ -548,6 +556,7 @@ export class EditPaymentComponent implements OnInit {
 
   calTotalPaymentRequest() {
     this.totalPaymentRequest = {
+      totalPromotionVoucherAll: 0,
       totalAmountRequestExchange: 0,
       totalAmountRequest: 0,
       totalFee: 0, // tổng phí
@@ -555,9 +564,18 @@ export class EditPaymentComponent implements OnInit {
     };
     this.paymentRequestFormArray.value.map((paymentRequest) => {
       this.totalPaymentRequest.totalFee += Number(paymentRequest.totalFee);
-      this.totalPaymentRequest.totalAmount +=  Number(paymentRequest.totalAmount);
-      this.totalPaymentRequest.totalAmountRequestExchange +=  Number(paymentRequest.amountRequestExchange);
-      this.totalPaymentRequest.totalAmountRequest +=  Number(paymentRequest.amountRequest);
+      this.totalPaymentRequest.totalAmount += Number(
+        paymentRequest.totalAmount
+      );
+      this.totalPaymentRequest.totalAmountRequestExchange += Number(
+        paymentRequest.amountRequestExchange
+      );
+      this.totalPaymentRequest.totalAmountRequest += Number(
+        paymentRequest.amountRequest
+      );
+      this.totalPaymentRequest.totalPromotionVoucherAll += Number(
+        paymentRequest.totalPromotionVoucher
+      );
     });
   }
 
@@ -637,7 +655,10 @@ export class EditPaymentComponent implements OnInit {
                   newPaymentRequest.couponCode = couponSelected.couponCode;
                   newPaymentRequest.totalAmount = paymentRequest.totalAmount;
                   newPaymentRequest.totalFee = paymentRequest.totalFee;
-                  newPaymentRequest.amountRequestExchange = paymentRequest.amountRequestExchange;
+                  newPaymentRequest.amountRequestExchange =
+                    paymentRequest.amountRequestExchange;
+                  newPaymentRequest.promotionVoucher =
+                    paymentRequest.promotionVoucher;
                   newPaymentRequest.serviceGroupId =
                     paymentRequest.serviceGroupId;
                   newPaymentRequest.amountRequest =
@@ -687,11 +708,17 @@ export class EditPaymentComponent implements OnInit {
                         totalAmount:
                           lstPaymentRequestAddedCoupon[index].totalAmount,
                         totalFee: lstPaymentRequestAddedCoupon[index].totalFee,
-                        amountRequestExchange: lstPaymentRequestAddedCoupon[index].amountRequestExchange,
+                        amountRequestExchange:
+                          lstPaymentRequestAddedCoupon[index]
+                            .amountRequestExchange,
+                        totalPromotionVoucher:
+                          lstPaymentRequestAddedCoupon[index]
+                            .totalPromotionVoucher,
                       });
                     }
                   );
                 }
+                this.calTotalPaymentRequest();
               },
               (error) => {
                 this.showMessage(
@@ -758,12 +785,10 @@ export class EditPaymentComponent implements OnInit {
                     .map((res: any) => res.result.success)
                     .every((status) => status == true)
                 ) {
-                  lsDeletedId.forEach(reqId => {
+                  lsDeletedId.forEach((reqId) => {
                     this.paymentRequestFormArray.controls.forEach(
                       (reqControl: any, index) => {
-                        if (
-                          reqControl.value.paymentRequestId == reqId
-                        ) {
+                        if (reqControl.value.paymentRequestId == reqId) {
                           this.paymentRequestFormArray.removeAt(index);
                         }
                       }

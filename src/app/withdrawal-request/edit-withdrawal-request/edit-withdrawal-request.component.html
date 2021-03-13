@@ -19,9 +19,9 @@
         <th>Số dư khả dụng</th>
       </tr>
       <tr>
-        <td>{{walletSelected?.totalAmount | number }} {{ walletSelected?.symbolsDisplay}}</td>
-        <td>{{walletSelected?.blockedAmount | number }} {{ walletSelected?.symbolsDisplay}}</td>
-        <td>{{walletSelected?.availableAmount | number}} {{ walletSelected?.symbolsDisplay}}</td>
+        <td>{{walletSelected?.totalAmount | currencyChina }} {{ walletSelected?.symbolsDisplay}}</td>
+        <td>{{walletSelected?.blockedAmount | currencyChina }} {{ walletSelected?.symbolsDisplay}}</td>
+        <td>{{walletSelected?.availableAmount | currencyChina}} {{ walletSelected?.symbolsDisplay}}</td>
       </tr>
     </table>
   </div>
@@ -62,19 +62,19 @@
           <div class="mr-right-8 mr-bottom-8 form-row">
             <div class="form-row-title">Số tiền tối đa</div>
             <div class="static-text">
-              {{withdrawalRequestForm.getRawValue().maxWithdrawAmount | number}}
+              {{withdrawalRequestForm.getRawValue().maxWithdrawAmount | currencyChina}}
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row">
             <div class="form-row-title">Phí rút tiền</div>
             <div class="static-text">
-              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | currencyChina}}
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row">
             <div class="form-row-title">Tổng số tiền rút</div>
             <div class="static-text highlight">
-              {{withdrawalRequestForm.getRawValue().totalAmount | number}}
+              {{withdrawalRequestForm.getRawValue().totalAmount | currencyChina}}
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row" style="display: flex;justify-content: flex-end;">
@@ -90,7 +90,7 @@
             <div class="form-row-title">Thông tin ví</div>
             <div class="static-text" style="height: 72px;">
               <div>Tên ví: <span class="highlight">{{walletSelected.walletName}}</span> </div>
-              <div>Số dư <span class="highlight">{{walletSelected.totalAmount | number}}
+              <div>Số dư <span class="highlight">{{walletSelected.totalAmount | currencyChina}}
                   {{walletSelected.symbolsDisplay}} </span></div>
             </div>
           </div>
@@ -115,13 +115,13 @@
           <div class="mr-right-8 mr-bottom-8 form-row">
             <div class="form-row-title">Số tiền rút</div>
             <div class="static-text highlight">
-              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | currencyChina}}
             </div>
           </div>
           <div class="mr-right-8 mr-bottom-8 form-row">
             <div class="form-row-title">Phí rút tiền</div>
             <div class="static-text highlight">
-              {{withdrawalRequestForm.getRawValue().withdrawalFee | number}}
+              {{withdrawalRequestForm.getRawValue().withdrawalFee | currencyChina}}
             </div>
           </div>
           <div class="notify">

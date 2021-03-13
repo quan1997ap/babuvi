@@ -23,7 +23,7 @@
     <div class="coupon-item" *ngFor="let coupon of coupons" (click)="showDetailCoupon($event, coupon)">
         <div class="img-section">
             <div class="total-use">
-                {{coupon.quantityRemaining}}
+                {{coupon.quantityRemaining | currencyChina }}
             </div>
             <img class="img-service" src="assets/coupon.jpg">
         </div>
