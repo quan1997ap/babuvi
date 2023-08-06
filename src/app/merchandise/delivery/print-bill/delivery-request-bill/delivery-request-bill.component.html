@@ -1,0 +1,40 @@
+<div id="print-ycvc-bill-50-50" style="display: none;" *ngIf="dataPrint">
+  <div class="page"  >
+    <h1 style="text-align: center;" *ngIf="dataPrint.transporterName"> 
+      <strong> {{dataPrint.transporterName}}  </strong>
+    </h1>
+    <div class="barcode-section" style="text-align: center;" *ngIf="dataPrint.transporterName">
+      <ngx-barcode [bc-value]="dataPrint.transporterPackageNumber" bc-height="30" bc-font-size="15" bc-width="1.8"
+        [bc-display-value]="true" [bc-margin-top]="1" [bc-margin-bottom]="1">
+      </ngx-barcode>
+    </div>
+
+    <div class="delivery-request" >
+      <div>{{dataPrint.contactName}} </div>
+      <div>{{dataPrint.contactPhone}} </div>
+      <div>
+        {{dataPrint.address
+          + ' - ' + dataPrint.wardDisplay
+          + ' - ' + dataPrint.districtDisplay
+          + ' - ' + dataPrint.cityDisplay
+          + ' - ' + dataPrint.countryDisplay}}
+      </div>
+    </div>
+    <div>
+      <span>COD: {{dataPrint.codAmount}} đ / Ship: {{dataPrint.totalAmount}} đ </span>
+    </div>
+
+    <!-- <div class="barcode-section" style="text-align: center;" *ngIf="dataPrint.transporterName">
+      <ngx-barcode [bc-value]="dataPrint.transporterPackageNumber" bc-height="50" bc-font-size="15" bc-width="2.2"
+        [bc-display-value]="true" [bc-margin-top]="1" [bc-margin-bottom]="1">
+      </ngx-barcode>
+    </div> -->
+  </div>
+</div>
+
+<button style="display: none;" #printDelivery ngxPrint printSectionId="print-ycvc-bill-50-50"
+[styleSheetFile]="styleSheetFile"></button>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

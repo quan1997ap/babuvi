@@ -1,0 +1,53 @@
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="small"></ngx-spinner>
+
+<div class="coupon-item">
+  <div class="img-section">
+    <div class="img-infor">
+      <div class="total-use">
+        {{currentCoupon.quantityRemaining}}
+      </div>
+      <img class="img-service" src="assets/coupon.jpg">
+    </div>
+  </div>
+  <div class="main-infor">
+    <div class="use-now" >
+      <div class="text" *ngIf="!inUse; else UseAfter" (click)="useCurrentCoupon()">
+        <span>SỬ </span>
+        <span>DỤNG </span>
+        <span>NGAY </span>
+      </div>
+      <ng-template #UseAfter>
+        <div class="text" (click)="cancelUseCurrentCoupon()">
+          <span>SỬ </span>
+          <span>DỤNG </span>
+          <span>SAU </span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<div class="description">
+  <div class="text highlight">
+    Tên mã khuyến mại:
+  </div>
+  <div class="text">
+    {{currentCoupon.couponTitle}}
+  </div>
+  <div class="text highlight">
+    Điều kiện sử dụng:
+  </div>
+  <div class="text" [innerHTML]="currentCoupon.couponTerm">
+  </div>
+  <div class="text highlight">
+    Số lượng:
+  </div>
+  <div class="text">
+    {{currentCoupon.quantityPerUser}}
+  </div>
+  <div class="text highlight">
+    Ngày hết hạn
+  </div>
+  <div class="text">
+    {{currentCoupon.endDate | date: 'dd/MM/yyyy hh:mm:ss' }}
+  </div>
+</div>

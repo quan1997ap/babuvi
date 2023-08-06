@@ -1,0 +1,55 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<p-toast key="shipment"></p-toast>
+
+<div [ngClass]="{ 'loading': isLoading}" class="wrap-dialog">
+  <p-toast></p-toast>
+
+  <div mat-dialog-title>
+    <mat-toolbar class="dialog-header">
+      <span> Gộp yêu cầu giao hàng </span>
+      <span class="fx-spacer"></span>
+      <button mat-icon-button (click)="close()">
+        <mat-icon mat-list-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+
+  <div mat-dialog-content>
+    <p-table #dt [columns]="colSelectedTables" [value]="lsDelivery" [(selection)]="selectedDelivery"
+          dataKey="deliveryRequestCode">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th *ngFor="let col of columns">
+                {{col.name}}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+              <td>
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+              </td>
+              <td *ngFor="let col of columns">
+                <span *ngIf="col.id != 'address'?true:false">{{rowData[col.id]}} </span>
+                <span *ngIf="col.id == 'address'?true:false">{{rowData.address}} 
+                                                    - {{rowData.wardDisplay}} 
+                                                    - {{rowData.districtDisplay}}
+                                                    - {{rowData.cityDisplay}}
+                                                    - {{rowData.countryDisplay}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+  </div>
+
+  <div mat-dialog-actions>
+    <button pButton label="Gộp yêu cầu" (click)="mergeDeliveryRequest()"></button>
+  </div>
+</div>

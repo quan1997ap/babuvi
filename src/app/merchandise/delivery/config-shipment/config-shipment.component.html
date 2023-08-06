@@ -1,0 +1,56 @@
+<p-toast key="shipment"></p-toast>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
+<div [ngClass]="{ 'loading': isLoading}" class="wrap-dialog">
+  <p-toast></p-toast>
+
+  <div mat-dialog-title>
+    <mat-toolbar class="dialog-header">
+      <span> Thông tin ship hàng </span>
+      <span class="fx-spacer"></span>
+      <button mat-icon-button (click)="close()">
+        <mat-icon mat-list-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="shipmentForm" class="shipment-form" *ngIf="shipmentForm">
+
+      <div class="control">
+        <div class="label">Đơn vị vận chuyển: <span class="required"> * </span></div>
+        <p-dropdown formControlName="TransporterId" [style]="{'width':'100%'}" [options]="transporters" ></p-dropdown>
+      </div>
+      <div class="col alert alert-danger" role="alert" *ngIf="shipmentForm.controls.TransporterId?.errors?.required
+         && shipmentForm.controls.TransporterId?.touched">
+        Đơn vị vận chuyển là bắt buộc nhập
+      </div>
+
+      <div style="color: #f44336;margin-bottom: 12px; font-size: 12px;">
+        <i >
+          <strong>Note: </strong>Sử dụng đơn vị vận chuyển BABUVI không cần nhập mã vận đơn
+        </i>
+      </div>
+      <div class="control">
+        <div class="label">Mã vận đơn: </div>
+        <input pInputText type="text" formControlName="TransporterPackageNumber">
+      </div>
+
+      <div class="control">
+        <div class="label">Tiền code:</div>
+        <input pInputText type="text"  mask="separator.0" thousandSeparator="." formControlName="CodAmount">
+      </div>
+
+      <div class="control">
+        <div class="label">Tiền ship: </div>
+        <input pInputText type="text"  mask="separator.0" thousandSeparator="." formControlName="TotalAmount">
+      </div>
+
+    </form>
+
+  </div>
+
+  <div mat-dialog-actions>
+    <button pButton (click)="addOrUpdateShipment()" [disabled]="shipmentForm.invalid" label="Hoàn tất"></button>
+  </div>
+</div>

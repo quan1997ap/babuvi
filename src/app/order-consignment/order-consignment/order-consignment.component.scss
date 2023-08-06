@@ -1,0 +1,214 @@
+// format style
+.no-padding {
+  padding: 0 0 !important;
+}
+.no-margin {
+  margin: 0 0 !important;
+}
+input[type="text"] {
+  border: 1px solid #a6a6a6;
+  padding-left: 10px;
+  border-radius: 3px;
+  min-height: 36px;
+  &:focus {
+    outline: none !important;
+  }
+}
+
+button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.order-consignment {
+  background: #fff;
+  padding: 0;
+  margin-top: 10px;
+  height: 100%;
+  min-height: 100vh;
+  .requied {
+    color: #f05922;
+  }
+
+  .tab-title {
+    border-top: 5px solid #f05922;
+    font-size: 16px;
+    height: 40px;
+    border-right: 1px solid #ddd;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: 290px;
+    padding-left: 20px;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .border-tab {
+    border-bottom: 1px solid #ddd;
+    height: 40px;
+    flex: 1;
+  }
+  .add-merchandise {
+    background: #daba71;
+    color: #fff;
+    margin-top: 10px;
+    color: #8b3f16;
+    border: none;
+  }
+  
+  .form-container {
+    background: #fff;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 15px;
+    padding-bottom: 70px;
+    .title {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .formcontrol {
+      p-dropdown {
+        width: 90%;
+      }
+    }
+    .btn-save-section {
+      height: 70px;
+      padding-left: 5px;
+    }
+    .saveBtn {
+      margin-top: 10px;
+      margin-left: 0px;
+      min-width: 150px;
+      width: 90% !important;
+      border-radius: 5px;
+      max-width: 180px;
+    }
+
+    .control-array {
+      border: 1px solid #a6a6a6;
+      padding: 10px 14px;
+      width: 90%;
+      border-radius: 3px;
+      min-height: 40px;
+    }
+    .edit-delivery-address {
+      cursor: pointer;
+      color: #1b82d7;
+      margin-left: 10px;
+    }
+  }
+  .delete-merchandise {
+    background: #ea5c37;
+    color: #fff;
+    border: none;
+  }
+  .bk-header {
+    background: #ea5c37;
+    color: #fff;
+    text-align: center;
+  }
+  .bk-table-col {
+    background-color: #f4f4f4;
+  }
+
+  .message-section {
+    max-width: calc(40%);
+    padding: 0 0px 0 20px !important;
+    p-messages {
+      width: 100%;
+    }
+  }
+  .note-message {
+    max-width: calc(40% - 30px);
+    color: #ea5c37;
+    text-align: justify;
+    padding-left: 5px;
+  }
+  .reset-merchandises {
+    color: #ea5c37;
+    font-size: 16px;
+    cursor: pointer;
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    float: right;
+  }
+
+  .update-success {
+    color: #1dbc58;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20% auto;
+    .content {
+      display: flex;
+      justify-content: center;
+      margin: 10px;
+      align-items: center;
+      flex-direction: column;
+      .icon {
+        font-size: 60px !important;
+      }
+      .success-message {
+        color: #397be1;
+        font-size: 20px;
+      }
+    }
+    .next {
+      cursor: pointer;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      font-size: 16px;
+      color: #fff;
+      width: 150px;
+      margin: 10px auto;
+      text-align: center;
+      background: #f05922;
+      border-radius: 3px;
+    }
+  }
+}
+
+// responsive
+.dropdown-style {
+  width: 90%;
+}
+@media (max-width: 769px) {
+  .note-message {
+    width: 100% !important;
+  }
+  .form-container .control-array {
+    width: 100% !important;
+  }
+  .dropdown-style {
+    width: 100% !important;
+  }
+  .order-consignment .message-section {
+    padding: 0 0 !important;
+    margin-right: 0;
+    width: 100% !important;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .note-message {
+    width: 100% !important;
+  }
+  .order-consignment .message-section {
+    max-width: calc(100%) !important;
+    margin-right: 0;
+    margin-left: 0;
+    width: 100% !important;
+    padding: 0px 5px !important;
+  }
+  .order-consignment .note-message{
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 5px;
+  }
+}

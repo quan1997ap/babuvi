@@ -1,0 +1,219 @@
+.highlight-btn{
+  background: #f44233;
+  color: #fff;
+}
+.row{
+  margin:  0 0;
+}
+.table{
+  margin-bottom: 0 !important;
+}
+label {
+  white-space: nowrap;
+}
+.mr-right-8 {
+  margin-right: 8px;
+}
+.mr-bottom-8 {
+  margin-bottom: 8px;
+}
+.padding-8 {
+  padding: 8px;
+}
+.d-inline-block {
+  display: inline-block;
+}
+
+textarea:focus{
+  outline: none;
+}
+.w-100{
+  width: 100%;
+}
+::ng-deep{
+  body .request-table .ui-table .ui-table-thead > tr > th{
+    background-color: #f44233;
+    color: #fff;
+  }
+}
+
+::ng-deep.request-item{
+  display: flex;
+  .chiphi{
+    max-width: 300px;
+    min-width: 200px;
+    margin-left: 16px;
+    border-left: 1px solid #ddd;
+    padding-left: 16px;
+    p{
+      margin-bottom: 8px;
+    }
+    .label{
+      width: 120px;
+    }
+    .number{
+      color: #f44336;
+    }
+  }
+
+  .noidung{
+    max-width: 300px;
+    min-width: 200px;
+    margin-left: 16px;
+    border-left: 1px solid #ddd;
+    padding-left: 16px;
+    p{
+      margin-bottom: 8px;
+    }
+    .label{
+      width: 120px;
+    }
+    .number{
+      color: #f44336;
+    }
+  }
+}
+.error-label {
+  color: #fff;
+  background: #f44336;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+.title {
+  font-size: 16px;
+  color: #333;
+  border-top: 3px solid #ec5d37;
+  width: fit-content;
+  padding: 8px;
+  font-weight: bold;
+}
+.payment-container {
+  background: #fff;
+  .paymentRequestId{
+    margin-bottom: 4px;
+    color: #007ad9;
+  }
+  .require-service{
+    flex-direction: row;
+    display: flex;
+    align-items: flex-start;
+    .require-service-item{
+      margin-right: 12px;
+    }
+    p-checkbox{
+      display: flex;
+      flex-wrap: nowrap;
+    }
+  }
+  .form-title {
+    display: flex;
+  }
+  .input-fullwidth {
+    .ui-inputtext {
+      width: 100% !important;
+    }
+  }
+  .primary-btn {
+    background-color: #ec5d37;
+    color: #fff;
+  }
+  .form-layout {
+    p-multiselect{
+      width: 100%;
+    }
+    .add-remove-request-item {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .statistic-title{
+      height: 40px;
+      line-height: 40px;
+      background: #f44233;
+      padding: 0 8px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .cal-fee {
+      border-radius: 4px;
+      border: 1px solid #c8c8c8;
+      flex: 1;
+      background: #fff;
+      padding: 8px 8px;
+      flex: 1;
+      display: flex;
+      .cal-fee-content{
+        // max-width: 400px;
+        min-width: 200px;
+        width: 100%;
+        .statistic {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 8px;
+          .select-coupon{
+            cursor: pointer;
+          }
+          .action{
+            width: 46%;
+          }
+          .title-detail{
+            width: 130px;
+            white-space: nowrap;
+          }
+          .detail-number {
+            color: #ec5d37;
+            font-weight: bold;
+            flex: 1;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  .btns-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 19px;
+    margin-top: 20px;
+  }
+}
+
+::ng-deep .ui-table-auto-layout>.ui-table-wrapper{
+  overflow-x: unset !important;
+}
+
+@media (max-width: 800px) {
+  ::ng-deep.request-item{
+    display: flex;
+    flex-direction: column;
+    .chiphi{
+      max-width: unset;
+      min-width: 200px;
+      margin-left: 0;
+      border-left: none;
+      padding-left: 0;
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+      padding-top: 16px;
+      p{
+        margin-bottom: 8px;
+      }
+      .label{
+        width: 120px;
+      }
+      .number{
+        color: #f44336;
+      }
+    }
+    .lst-input{
+      flex-direction: column;
+      .title-sotien{
+        margin-top: 8px;
+      }
+    }
+  }
+}

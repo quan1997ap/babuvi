@@ -1,0 +1,21 @@
+<ngx-spinner zIndex="99999" type="line-spin-fade" [fullScreen]="true" size="medium"></ngx-spinner>
+<form class="pr-form-check"  [formGroup]="searchForm" *ngIf="showForm" >
+  <div class="row ">
+    <input class="input-search" style="width: calc(100vw - 140px); max-width: 300px; padding: 0px 60px 0 12px; min-height: 36px;" formControlName="searchUrl" 
+    placeholder="Nhập link sản phẩm cần mua"  type="text" pInputText />
+    <i style="position: absolute; cursor: pointer; right: 40px;top: 6px;" 
+    *ngIf="searchForm.getRawValue().searchUrl != '' " 
+    (click)="clearSearch()"
+    class="pi pi-times-circle"></i>
+    <button type="submit"  icon="pi pi-search"  class="submit-btn"
+    [disabled]="searchForm.getRawValue().searchUrl == ''"
+    (click)="getDataProduct()" pButton ></button>
+  </div>
+  <div style="position: absolute; margin-top: 8px;">
+    <p-message  severity="error" text="Không tìm thấy sản phẩm" 
+    *ngIf="isControlHasError( 'searchUrl', 'notFound')"
+    ></p-message>
+  </div>
+</form>
+
+<!-- padding: 0.429em 62px 0.429em 12px -->

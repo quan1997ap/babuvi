@@ -1,0 +1,222 @@
+// format style
+body .ui-confirmdialog {
+    z-index: 1001 !important;
+  }
+  .order-complaint {
+    min-height: 100vh;
+    background-color: #fff;
+    width: 100%;
+    top: 0;
+    position: absolute;
+    top: 10px;
+  }
+  .no-padding {
+    padding: 0 0 !important;
+  }
+  .no-margin {
+    margin: 0 0 !important;
+  }
+  input[type="text"] {
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    border-radius: 5px;
+    &:focus {
+      outline: none !important;
+    }
+  }
+  
+  .form-title {
+    padding: 5px 20px;
+    border-top: 4px solid #f44335;
+    width: fit-content;
+    margin-left: -20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .dr-title {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .dr-product-img {
+    vertical-align: middle;
+    height: 100px;
+    width: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+  }
+  
+  .dr-product-infor {
+    padding-left: 10px;
+    flex: 1;
+    .ui-state-highlight {
+      background-color: #f6fbff !important;
+    }
+    .item-nane {
+      color: #7eb1c1;
+      margin-bottom: 10px;
+      text-indent: 0 !important;
+    }
+    .item-des {
+      color: #333;
+      text-indent: 0 !important;
+    }
+  }
+  
+  .form-container {
+    background: #fff;
+    padding: 20px;
+    padding-right: 40px;
+    padding-top: 0;
+    form {
+      max-width: 1200px;
+      .input-textarea {
+        padding: 5px;
+      }
+    }
+  }
+  
+  .complaint-section {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+    .complaintBtn {
+      margin: 0;
+      margin-top: 15px;
+    }
+  }
+  
+  .update-success {
+    color: #1dbc58;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20% auto;
+    .content {
+      display: flex;
+      justify-content: center;
+      margin: 10px;
+      align-items: center;
+      flex-direction: column;
+      .icon {
+        font-size: 60px !important;
+      }
+      .success-message {
+        color: #397be1;
+        font-size: 20px;
+      }
+    }
+    .next {
+      cursor: pointer;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      font-size: 16px;
+      color: #fff;
+      width: 150px;
+      margin: 10px auto;
+      text-align: center;
+      background: #f05922;
+      border-radius: 3px;
+    }
+  }
+  
+  @media (max-width: 769px) {
+    .mobile-table {
+      max-height: unset !important;
+    }
+    .form-container {
+      padding-right: 30px;
+    }
+    .complaint-section {
+      display: flex;
+      margin-bottom: 20px;
+      justify-content: flex-start !important;
+      .complaintBtn {
+        margin: 0;
+        margin-top: 15px;
+        min-width: 150px;
+      }
+    }
+    .dr-title {
+      margin-top: 10px;
+    }
+  }
+  
+  .mobile-table {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    .num-complaint {
+      text-align: right;
+      font-size: 16px;
+      background: #fafafa;
+      padding: 10px;
+      border: 1px solid #dddd;
+    }
+    .complaint-item:nth-child(odd) {
+      background: #fafafa;
+    }
+    .complaint-item:nth-child(even) {
+      background: #fff;
+      border-top: none;
+    }
+    .code {
+      color: #007ad9 !important;
+    }
+
+    .complaint-item {
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+     
+      p {
+        margin-bottom: 5px;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        .title {
+          min-width: 90px;
+          width: 90px;
+          display: inline-block;
+        }
+        .detail {
+          flex: 1;
+          display: inline-block;
+          width: calc(100% - 150px);
+          text-align: left;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+  .headerDinhkem {
+    padding: 4px;
+    background-color: #d1d1d1;
+    cursor: pointer;
+    :hover {
+       color: orangered;
+    }
+ }
+ .fileDinhkem {
+    padding: 2px 2px 2px 10px;
+    height: 15vh;
+    overflow-y: scroll;
+    border: 1px solid #d1d1d1;
+    .everyLink {
+       font-size: 13px;
+       border-radius:5px;
+       color: black;
+       padding: 3px;
+       margin: 5px;
+       background-color: #cacaca;
+       a:link,
+       a:visited,
+       a:hover,
+       a:active {
+          color: black;
+          font-weight: bold;
+       }
+    }
+ }
+  

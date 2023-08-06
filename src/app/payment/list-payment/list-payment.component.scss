@@ -1,0 +1,43 @@
+tr:focus{
+  outline: none;
+}
+.link{
+  cursor: pointer;
+  color: #007ad9;
+  &:focus{
+    outline: none;
+  }
+}
+.payment-container {
+  .primary-btn {
+    background-color: #ec5d37;
+    color: #fff;
+  }
+  .title {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    margin: 10px 0;
+
+  }
+}
+
+.mr-right-8{
+    margin-right: 8px;
+}
+.mr-bottom-8{
+    margin-bottom: 8px; 
+}
+.d-inline-block{
+  display: inline-block;
+}
+.statistic{
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    .detail-number{
+        color: #ec5d37; 
+        font-weight: bold;
+    }
+}

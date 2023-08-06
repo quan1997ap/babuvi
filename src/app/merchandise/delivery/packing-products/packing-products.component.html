@@ -1,0 +1,202 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<div [ngClass]="{ 'loading': isLoading}" class="wrap-dialog">
+  <p-toast></p-toast>
+  <p-confirmDialog appendTo="body" header="Confirmation" [autoZIndex]="false" [baseZIndex]="5000"
+    icon="pi pi-exclamation-triangle" global="false">
+  </p-confirmDialog>
+
+  <div mat-dialog-title>
+    <mat-toolbar class="dialog-header">
+      <span> Đóng gói kiện hàng </span>
+      <span class="fx-spacer"></span>
+      <button mat-icon-button (click)="close()">
+        <mat-icon mat-list-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 p-margin-20px">
+        <div class="title">
+          Danh sách kiện hàng
+        </div>
+        <p-table #dt [columns]="colSelectedTables" [value]="products" [(selection)]="selectedProducts"
+          dataKey="merchandiseCode">
+          <ng-template pTemplate="caption">
+            <div style="display: flex; flex-direction: column;">
+              <div
+                style=" display: flex; width: 100%; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <span>Đang chọn {{selectedProducts.length}} / {{products.length}} sản phẩm</span>
+                <p-button [disabled]="selectedProducts && selectedProducts.length == 0" iconPos="right"
+                  icon="pi pi-angle-double-right" label="Thêm vào kiện đang chọn  " (click)="addProductToPackage()">
+                </p-button>
+              </div>
+              <div style=" display: flex; width: 100%; align-items: center;">
+                <i class="fa fa-search" style="margin: 4px 9px 0 0; font-size: 20px;"></i>
+                <input type="text" pInputText size="50" placeholder="Tìm kiếm" #filterGlobalProduct id="searchMechandise"
+                  (keydown.enter)="addProductToGr(dt, $event.target.value)"  
+                  (input)="dt.filter($event.target.value, 'merchandiseCode' ,'contains' )"
+                  style="flex: 1; max-width: calc( 100% - 30px );">
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th *ngFor="let col of columns">
+                {{col.name}}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+              <td>
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+              </td>
+              <td *ngFor="let col of columns">
+                <span >{{rowData[col.id]}} </span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="col-sm-12 col-md-6 p-bottom-20px">
+        <div class="title">
+          Danh sách gói kiện hàng
+        </div>
+        <div class="filter-pr-in-gr">
+          <i class="fa fa-search" style="margin: 4px 9px 0 0; font-size: 20px;"></i>
+          <input type="text" pInputText size="50" placeholder="Tìm kiếm" [(ngModel)]="searchPrTxt"
+            style="flex: 1; max-width: calc( 100% - 30px );">
+        </div>
+        <div *ngFor="let package of productGrouped; let i = index;" class="package-config">
+          <div class="package-header" [ngClass]="{ 'active':  packageIndexSelected == i }">
+            <div class="package-infor">
+              <div class="option">
+                <p-radioButton name="packages" [value]="i" [(ngModel)]="packageIndexSelected" [disabled]="true">
+                </p-radioButton>
+              </div>
+              <div>
+                <span> Kiện số <strong>{{ productGrouped.length - i }}</strong> </span>
+                <strong *ngIf="package['merchandiseCode']" > - {{package['merchandiseCode']}} </strong>
+                <span *ngIf="package['products'] && package['products'].length;">
+                  - <strong> {{package['products'].length}} </strong> mã -
+                  <strong>{{package['sumNetWeight']}} kg</strong>
+                </span>
+              </div>
+            </div>
+            <div class="gr-btn">
+              <button pButton pRipple type="button" class="button-icon" icon="pi pi-camera" (click)="captureMerchandise(i)"
+              *ngIf="!package.merchandiseWarehouseId && package['products'] && package['products'].length"
+               matTooltip="Chụp ảnh" matTooltipPosition="above"></button>
+              
+              <button pButton pRipple type="button" class="button-icon"  icon="pi pi-image" (click)="viewImgs(i)" 
+              *ngIf="package['merchandiseCode']"
+               matTooltip="Xem ảnh" matTooltipPosition="above"></button>
+            
+              <button pButton pRipple type="button" class="button-icon"  icon="pi pi-save" (click)="saveGr(i)"
+                *ngIf="!package.merchandiseWarehouseId && package['products'] && package['products'].length"
+                matTooltip="Lưu nhóm" matTooltipPosition="above"></button>
+              
+              <button pButton pRipple icon="pi pi-print" type="button"  class="ui-button-success button-icon" (click)="printGr(i)" 
+              *ngIf="package['merchandiseCode']"
+                matTooltip="In hóa đơn" matTooltipPosition="above" styleSheetFile="{{styleSheetFile}}" ngxPrint
+                printSectionId="print-packing-product-50-50-{{i}}"></button>
+              
+              <button pButton pRipple icon="pi pi-trash" type="button" class="ui-button-danger"
+                *ngIf="package['products'].length" (click)="removeGr(i, package.merchandiseWarehouseId)" matTooltip="Xóa nhóm"
+                matTooltipPosition="above"></button>
+
+
+              <!-- bill print -->
+              <app-packing-product-bill [printBillData]="{
+                  index: i,
+                  numOfBill: productGrouped.length,
+                  merchandiseCode : package.merchandiseCode,
+                  package: package,
+                  shipment: package.shipment,
+                  deliveryRequest: data
+                }">
+              </app-packing-product-bill>
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-sm">
+                <input type="number" class="form-control" id="length" name="length" ngModel placeholder="Dài"
+                [(ngModel)]="package.length" 
+                #inputToFocus tabindex="1"
+                (keyup.enter)="nextFocus($event)"
+                (keydown.Tab)="nextFocus($event)">
+            </div>
+            <div class="form-group col-sm">
+                <input type="number" class="form-control" id="width" name="width" ngModel placeholder="Rộng"
+                [(ngModel)]="package.width" #inputToFocus tabindex="2" 
+                (keyup.enter)="nextFocus($event)"
+                (keydown.Tab)="nextFocus($event)">
+            </div>
+            <div class="form-group col-sm">
+                <input type="number" class="form-control" id="height" name="height" ngModel placeholder="Cao"
+                [(ngModel)]="package.height" #inputToFocus tabindex="3" 
+                (keyup.enter)="nextFocus($event)"
+                (keydown.Tab)="nextFocus($event)">
+            </div>
+          </div>
+          <div>
+                <input type="text" class="form-control" id="description" name="description" ngModel placeholder="Ghi chú" 
+                [(ngModel)]="package.description" #inputToFocus tabindex="4" 
+                (keyup.enter)="nextFocus($event)"
+                (keydown.Tab)="nextFocus($event)">
+          </div>
+
+          <div *ngIf="package['products'] && package['products'].length; else grEmpty;" class="table-grouped">
+            <p-table [columns]="colSelectedTables" [value]="package['products']" dataKey="merchandiseCode">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns">
+                    {{col.name}}
+                  </th>
+                  <th style="width: 50px">
+                    
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns"  let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="rowData" *ngIf="searchPrTxt == '' || searchPrTxt.includes(rowData.merchandiseCode) ">
+                  <td *ngFor="let col of columns">
+                    <div *ngIf="col.id == 'merchandiseCode'?true:false">
+                     <div> {{rowData[col.id]}} </div>
+                     <div class="description">  {{rowData.description}}</div>
+                    </div>
+                    <span *ngIf="col.id != 'merchandiseCode'?true:false">{{rowData[col.id]}}</span>
+                  </td>
+                  <td>
+                    <button style="transform: scale(0.8);" pButton pRipple type="button" icon="pi pi-trash" class="ui-button-danger"
+                    (click)="removeProductInGr(i, package.merchandiseWarehouseId, rowData.merchandiseWarehouseId, rowIndex, package['products'].length)" matTooltip="Xóa kiện"
+                    matTooltipPosition="above"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+
+          <ng-template #grEmpty>
+            <div class="empty-section">
+              Không có sản phẩm nào
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions>
+    <button pButton (click)="close()" label="Hoàn tất"></button>
+  </div>
+</div>

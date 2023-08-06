@@ -1,0 +1,113 @@
+<div style="background-color: #f4f4f4;">
+    <h6 class="header-main">DANH SÁCH KIỆN HÀNG</h6>
+ 
+    <div class="totalFunc">
+       <button class="func" (click)="OpenFormAdd()">Thêm</button>
+       <button class="func">Sửa</button>
+       <button class="func" (click)="FuncXoa()">Xóa</button>
+    </div>
+    <div style="border-top: 3px solid rgba(228, 89, 38, 0.945);padding:5px;margin:5px;">
+       <div class="totalLoc">
+          <form #formFilter="ngForm">
+             <input type="text" pInputText class="dkloc" ngModel name="merchandiseCode" placeholder="Mã kiện hàng" style="padding:6px">
+             <input type="text" pInputText class="dkloc" ngModel name="orderCode" placeholder="Mã đơn hàng" style="padding:6px">
+             <span class="dkloc">
+                <p-calendar [(ngModel)]="StartDate" name="StartDate" ngModel placeholder="Từ ngày"
+                   [style]="{'width':'100%'}" dateFormat="dd/mm/yy" [inputStyle]="{'width':'100%'}"
+                   [showButtonBar]="true" [locale]="vn"></p-calendar>
+             </span>
+             <span class="dkloc">
+                <p-calendar [(ngModel)]="EndDate" name="EndDate" ngModel placeholder="Đến ngày"
+                   [style]="{'width':'100%'}" dateFormat="dd/mm/yy" [inputStyle]="{'width':'100%'}"
+                   [showButtonBar]="true" [locale]="vn"></p-calendar>
+             </span>
+             <p-dropdown [options]="DropdownTrangthai" class="dkloc" ngModel name="Status"
+                placeholder="Trạng thái đơn" [itemSize]="27" [filter]="false" [style]="{'width':'100%'}"></p-dropdown>
+             <div class="btnGroup">
+                <p-button icon="fa fa-search" label="Lọc" class="btnSearch" (click)="FuncLoc(formFilter)"></p-button>
+                <p-button icon="fa fa-refresh" label="Làm lại" class="btnSearch" (click)="ResetForm(formFilter)">
+                </p-button>
+             </div>
+          </form>
+       </div>
+       <div>
+          <p style="margin:0">Số kiện hàng:
+             <span style="font-weight: bold;color: rgba(228, 89, 38, 0.945);">{{datas.data.dataCount}}</span>
+          </p>
+          <p-table [value]="lsDetail" [columns]="columns" [resizableColumns]="true" [paginator]="true" [rows]="10"
+             [rowHover]="true" [responsive]="true">
+             <ng-template pTemplate="header" let-columns>
+                <tr>
+                   <th style="text-align: center;width:40px" pResizableColumn>
+                      <p-checkbox [(ngModel)]="checkedAll" binary="true" (click)="ChonTatCa(datas)">
+                      </p-checkbox>
+                   </th>
+                   <th *ngFor="let col of columns" class="table-th" [pSortableColumn]="col.field" pResizableColumn
+                      style="text-align: left;font-size: 12px;" [style.width]="col.width">
+                      {{col.header}}
+ 
+                   </th>
+                </tr>
+             </ng-template>
+             <ng-template pTemplate="body" let-data let-i="rowIndex">
+                <tr class="ui-selectable-row">
+                   <td style="text-align: center;"
+                      [style.background-color]="RowCheckedbox.indexOf(data['merchandiseId']) != -1?'#e2e2e2':'white' ">
+                      <p-checkbox name="ID{{data.merchandiseId}}"
+                         id="ID{{data.merchandiseId}}" value="{{data.merchandiseId}}"
+                         [(ngModel)]="RowCheckedbox">
+                      </p-checkbox>
+                   </td>
+                   <td *ngFor="let col of columns" class="table-tb"
+                      [style.background-color]="RowCheckedbox.indexOf(data['code']) != -1?'#e2e2e2':'white' ">
+                      <span class="ui-column-title">{{col.header}}: </span>
+                      <span *ngIf="col.field=='lichsu' ||col.field=='thetich' ||col.field=='orderCode'?false:true" 
+                      [class]="col.field=='merchandiseCode'? 'classBold classBlue CursorPointer':col.field=='statusDisplay'?'classBold classBlue':''">
+                        {{data[col.field]}}<span *ngIf="col.field =='netWeight'?true:false"> kg</span>
+                      </span>
+                      <span *ngIf="col.field=='thetich'?true:false">
+                         {{data.width}} x {{data.length}} x {{data.height}}
+                      </span>
+                      <span *ngIf="col.field=='orderCode'?true:false">
+                        <a (mousedown)="redirect(data.orderId)" target="_blank" href="{{returnLinkOrder}}">
+                           {{data.orderCode}}
+                        </a>
+                     </span>
+                      <span *ngIf="col.field=='lichsu'?true:false">
+                         <div *ngFor="let history of data.lsHistory;let i = index" 
+                         [class]="i == data.lsHistory.length-1?'always-mark Xmark':'always-mark font-normal'">
+                            <span>{{history.merchandiseStatusDisplay}}</span>
+                            <span>{{returnTimeFormatInHistory(history.historyDate)}}</span>
+                         </div>
+                      </span>
+                   </td>
+                </tr>
+             </ng-template>
+          </p-table>
+          <div style="text-align:center;">
+             <button (click)="selectPage('f')" [disabled]="numbPage==1?true:false" class="paginator">
+                <i class="fa fa-step-backward"></i>
+             </button>
+             <button (click)="selectPage('p')" [disabled]="numbPage==1?true:false" class="paginator">
+                <i class="fa fa-caret-left"></i>
+             </button>
+             <button *ngFor="let page of pages" type="button" tabindex="-1" class="" (click)="selectPage(page)"
+                [class]="numbPage - page === 0 ?'pageActive paginator':'selectpage paginator'">{{ page }}</button>
+             <button (click)="selectPage('n')" [disabled]="numbPage==maxPage?true:false" class="paginator">
+                <i class="fa fa-caret-right"></i>
+             </button>
+             <button (click)="selectPage('l')" [disabled]="numbPage==maxPage?true:false" class="paginator">
+                <i class="fa fa-step-forward"></i>
+             </button>
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+ 
+ <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="dskienhang"></p-confirmDialog>
+ <p-toast key="dskienhang"></p-toast>
+ 
+ <div class="spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+ </div>

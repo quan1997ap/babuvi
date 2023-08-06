@@ -1,0 +1,84 @@
+.page-header{
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 4px solid #f15922;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    width: fit-content;
+    padding-right: 20px;
+}
+.count-note{
+    background: #f2632f;
+    padding: 4px 12px;
+    color: #fff;
+    width: 100%;
+    margin-top: 12px;
+}
+.pr-form-check{
+    min-width: fit-content;
+    margin-bottom: 4px;
+    .row{
+        margin-left: 0;
+        margin-right: 0;
+        position: relative;
+        width: fit-content;
+        .submit-btn{
+            position: absolute;
+            cursor: pointer;
+            right: 4px;
+            top: 2px;
+            transform: scale(0.9);
+        }
+    }
+}
+:host ::ng-deep .ui-message.ui-message-error{
+    width: calc(100vw - 140px);
+    max-width: 300px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+::ng-deep{
+
+    .clear-button{
+        position: absolute;
+        right: -100px;
+    }
+    .ng-toast {
+        z-index: 100000; // I don't have any ideia why, but worked! 
+    }
+    .form p-message > div{
+        width: calc(100vw - 100px);
+        max-width: 300px;
+    }
+    input{
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .block-only-mobile{
+        display: block;
+    }
+    .tr-only-mobile {
+        display: table-row;
+    }
+    .bl-hide-on-mobile, .tr-hide-on-mobile{
+        display: none;
+    }
+}
+  
+@media only screen and (min-width: 600px) {
+    .block-hide-on-mobile{
+        display: block;
+    }
+    .tr-hide-on-mobile {
+        display: table-row;
+    }
+    .bl-only-mobile, .tr-only-mobile{
+        display: none;
+    }
+}
+  

@@ -1,0 +1,311 @@
+<p-toast key="toast-message"></p-toast>
+
+<div autoscroll="true" class="ng-scope">
+    <section class="content-header dp-inBlock w100">
+        <div class="content-inline w30">
+            <h3>Giỏ hàng</h3>
+        </div>
+        <div class="content-inline w70 txt-alignRight pad-top10">
+            <span> <a class="cor5F6368"> <i class="fa fa-dashboard"></i> Giỏ hàng </a> </span>
+            <span class="mar-left5">></span>
+            <span class="mar-left5 cur-point">Chọn địa chỉ đặt hàng</span>
+            <span class="mar-left5">></span>
+            <span class="active mar-left5 cor5F6368 ">Đặt hàng</span>
+        </div>
+    </section>
+
+    <div class="w100">
+        <p-messages [(value)]="msgs" (click)="clear()"></p-messages>
+    </div>
+
+    <div class="row clearfix" style="margin-top: 15px !important;">
+        <div class="col-md-6">
+            <div class="col-md-12" style="padding: 0">
+                <div class="box-header with-border box-ls">
+                    <i class="fa fa-map-marker"></i>
+                    <span class="box-title"> Chọn địa chỉ nhận hàng</span>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body box-body-content">
+                    <p class="padding ng-binding">
+                        <!-- <mat-error>
+                            Bạn chỉ có thể thêm tối đa 5 địa chỉ nhận hàng.
+                        </mat-error> -->
+                    </p>
+                    <p class="padding ng-binding">
+                        <mat-error *ngIf="bookingProduct.validate.errAddress">
+                            {{bookingProduct.validate.messAddress}}
+                        </mat-error>
+                        <mat-error *ngIf="checkAddress">
+                            {{errorMessAddress}}
+                        </mat-error>
+
+                    </p>
+                    <div class="description">
+                        <div class="addressbox">
+                            <div class="adr-oms radio ng-scope" *ngFor="let address of lstAddress; let i = index">
+                                <div class="address">
+                                    <div class="radio-check-address">
+                                        <input type="radio" name="r1" class="minimal"
+                                            value="{{address.deliveryAddressId}}" [checked]="address.isDefault"
+                                            (change)="changeLocation($event.target.value, address)">
+                                    </div>
+                                    <div class="content-address">
+                                        <p><strong class="item-name ng-binding">{{address.receiver}}</strong> - <span
+                                                class="item-mobile ng-binding">{{address.phone}}</span></p>
+                                        <p class="ng-binding">{{address.address}} - {{address.districtDisplay}} -
+                                            {{address.cityDisplay}}</p>
+                                        <p class="text-red ng-binding"></p>
+                                        <ul class="d-block d-sm-none sm-action-address">
+                                            <li (click)="updateAddress(address, i)"><a href="javascript:;"><i
+                                                        class="fa fa-edit"></i> Sửa </a></li>
+                                            <li (click)="delAddress(address)"><a><i class="fa fa-trash"></i> Xoá </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="action-address d-none d-sm-block">
+                                        <ul class="list-inline">
+                                            <li (click)="updateAddress(address, i)"><a href="javascript:;"><i
+                                                        class="fa fa-edit"></i> Sửa </a></li>
+                                            <li (click)="delAddress(address)"><a><i class="fa fa-trash"></i> Xoá </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- </label> -->
+                            </div><!-- end ngRepeat: address in listAddress -->
+                            <div class="adr-oms radio" data-address="add">
+                                <p class="mar-left9 mar-bot15">
+                                    <span class="mar-right10"><input type="radio" name="r1" value="-1"
+                                            (change)="changeLocation($event.target.value)" /></span>
+                                    <span class="item-name">Thêm địa chỉ nhận hàng</span>
+                                </p>
+                                <div class="add_address hidden" *ngIf="edited">
+                                    <form class="form ng-pristine ng-valid" id="user_address">
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label">Người nhận <span
+                                                    class="text-red">*</span> </label>
+                                            <div class="col-8">
+                                                <input type="text" name="receiverName" class="w100"
+                                                    [(ngModel)]="receiverName" placeholder="Nguyễn văn A">
+                                            </div>
+                                        </div>
+                                        <!-- <div class="w100">
+
+                                        </div> -->
+                                        <div class="form-group clearfix box-tel row">
+                                            <label class="col-4 control-label">Điện thoại <span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <input type="tel" name="Phone" class="w100" [(ngModel)]="receiverPhone"
+                                                    placeholder="nhập số điện thoại">
+                                                <div class="text-lastchild ng-binding">Nhân viên giao nhận Babuvi sẽ
+                                                    liên hệ với SĐT này.</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label">Email<br><small class="text-nomal">(không
+                                                    bắt buộc)</small></label>
+                                            <div class="col-8">
+                                                <input type="text" name="Email" class="w100" [(ngModel)]="receiverEmail"
+                                                    placeholder="nhập địa chỉ email"
+                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label pad-t20">Quốc gia<span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <mat-form-field class="w100">
+                                                    <mat-select placeholder="chọn quốc gia"
+                                                        (selectionChange)="changeNational($event.value)">
+                                                        <mat-option>---</mat-option>
+                                                        <mat-option *ngFor="let country of nation" [value]="country">
+                                                            {{ country.areaName }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label pad-t20">Thành phố<span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <mat-form-field class="w100">
+                                                    <mat-select placeholder="chọn Thành phố"
+                                                        (selectionChange)="changeCity($event.value)">
+                                                        <mat-option>---</mat-option>
+                                                        <mat-option *ngFor="let country of lstDataCountry"
+                                                            [value]="country">
+                                                            {{ country.areaName }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label pad-t20">Quận huyện<span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <mat-form-field class="w100">
+                                                    <mat-select placeholder="chọn Quận huyện"
+                                                        (selectionChange)="changeDistrict($event.value)">
+                                                        <mat-option>---</mat-option>
+                                                        <mat-option *ngFor="let country of district" [value]="country">
+                                                            {{ country.areaName }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label pad-t20">Xã Phường<span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <mat-form-field class="w100">
+                                                    <mat-select placeholder="chọn Xã Phường"
+                                                        (selectionChange)="changeWards($event.value)">
+                                                        <mat-option>---</mat-option>
+                                                        <mat-option *ngFor="let ward of wards" [value]="ward">
+                                                            {{ ward.areaName }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label">Số nhà <span
+                                                    class="text-red">*</span></label>
+                                            <div class="col-8">
+                                                <input placeholder="nhập địa chỉ" type="text" class="w100"
+                                                    name="Address" [(ngModel)]="receiverAddress" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <label class="col-4 control-label">Ghi chú <small class="text-nomal">(không
+                                                    bắt buộc)</small></label>
+                                            <div class="col-8">
+                                                <textarea placeholder="nhập ghi chú" class="w100" cols="30" rows="4"
+                                                    name="description" [(ngModel)]="receiverDescription"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix row">
+                                            <div class="col-12 pull-right">
+                                                <button type="button" class="btn btn-block btn-danger"
+                                                    (click)="btnAddNewAdrress()">Thêm địa chỉ</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div><!-- end .add_address-->
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end .box-body-->
+            </div>
+            <!-- ngIf: checkWarehouseVN -->
+        </div>
+        <div class="col-md-6">
+            <div class="box-header with-border box-ls">
+                <i class="fa fa-th-list"></i>
+                <span class="box-title"> Danh Sách Shop Kết Đơn</span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body box-body-content" ng-init="totalAmount = 0">
+                <form name="form" class="ng-pristine ng-valid">
+                    <div class="list-order-bond tbl-checkout-sd table-responsive pad-l10 pad-r10">
+                        <table id="table-shops" class="w100">
+                            <thead>
+                                <tr>
+                                    <th width="20%" class="txt-alignCen">Ảnh</th>
+                                    <th width="30%" class="txt-alignCen">Shop</th>
+                                    <th width="20%" class="txt-alignCen">Số lượng</th>
+                                    <th width="30%" class="txt-alignRight">Tiền hàng</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="_allItemsSelect">
+                                <tr class="shop ng-scope" *ngFor="let data of _allItemsSelect">
+                                    <td>
+                                        <img class="img-order-product" alt="" src="{{data.itemImage}}">
+                                    </td>
+                                    <td class="ng-binding">{{data.shopName}} <br> {{data.website}}</td>
+                                    <td class="txt-alignCen">
+                                        <span data-toggle="tooltip" data-placement="top" title="" class="ng-binding"
+                                            data-original-title="Số lượng / Link">
+                                            {{data.quantity}}
+                                        </span>
+                                    </td>
+                                    <td class="text-red money-text ng-binding txt-alignRight">{{data.quantity *
+                                        data.itemPriceNdt * rating | currencyFormat }} VNĐ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Custom Tabs -->
+                    <div class="nav-tabs-custom">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="box-total-amount-order">
+                                    <div class="ls-total left-box-total">
+                                        <div class="w100 dp-inBlock" *ngIf="currentCoupon && currentCoupon.couponCode">
+                                            <b class="tt-price total_price money-text ng-binding content-inline w100 txt-alignRight"
+                                                id="totalAmount">Tổng tiền hàng : {{ totalPriceWithNdt | currencyFormat }} VNĐ</b>
+                                        </div>
+                                        <div class="w100 dp-inBlock"  *ngIf="currentCoupon && currentCoupon.couponCode">
+                                            <b class="tt-price deposit_price money-text ng-binding content-inline w100 txt-alignRight"
+                                                id="totalDeposit">
+                                                Tổng tiền khuyến mại : {{ totalPromotionVoucher | currencyFormat }} VNĐ
+                                            </b>
+                                        </div>
+                                        <div class="w100 dp-inBlock">
+                                            <!-- <label class="content-inline w40">Số dư hiện tại : </label>  -->
+                                            <b
+                                                class="tt-price money-text ng-binding content-inline w100 txt-alignRight">
+                                                Mã giảm giá : <span (click)="selectCoupon()"
+                                                    style="color: #007bff; cursor: pointer;"> {{ currentCoupon ?
+                                                    currentCoupon.couponCode : 'Nhập mã' }} </span>
+                                            </b>
+                                        </div>
+                                        <div class="w100 dp-inBlock">
+                                            <b class="tt-price deposit_price money-text ng-binding content-inline w100 txt-alignRight"
+                                                id="totalDeposit">
+                                                Tổng tiền thanh toán : {{ totalPriceWithNdt - totalPromotionVoucher | currencyFormat }} VNĐ
+                                            </b>
+                                        </div>
+                                        <div class="w100 dp-inBlock">
+                                            <b class="tt-price deposit_price money-text ng-binding content-inline w100 txt-alignRight"
+                                                id="totalDeposit">
+                                                Đặt cọc ({{userLevelValue * 100 }}%) : {{ deposits | currencyFormat }} VNĐ
+                                            </b>
+                                        </div>
+                                        <div class="w100 dp-inBlock">
+                                            <b
+                                                class="tt-price money-text ng-binding content-inline w100 txt-alignRight">
+                                                Số dư hiện tại : {{ availablePrice | currencyFormat }} VNĐ
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="ls-total right-box-total col-md-offset-4 text-right lack_Of_Money">
+                                        <div class="col-md-offset-6 datcoc" *ngIf="isBill" (click)="funcDeposit()">
+                                            <a class="btn btn-block btn-danger">Đặt cọc</a>
+                                        </div>
+                                        <div class="col-md-offset-6 datcoc" *ngIf="!isBill" (click)="toWallet()">
+                                            <a class="btn btn-block btn-danger">Nạp tiền</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div>
+                    <!-- nav-tabs-custom -->
+                </form>
+            </div>
+        </div><!-- end .box-body-->
+    </div>
+</div>
+
+<div class="loading-indicator" [hidden]="!isHiddenSpinner">
+    <mat-spinner mode="indeterminate"></mat-spinner>
+</div>

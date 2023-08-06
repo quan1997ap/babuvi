@@ -1,0 +1,81 @@
+.loading {
+    cursor: progress !important;
+    button,
+    a,
+    ul,
+    li {
+      cursor: progress !important;
+    }
+  }
+  .wrap-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    color: #333;
+    margin-bottom: 8px;
+    .required {
+      color: red;
+    }
+  }
+  ::ng-deep {
+    .mat-dialog-actions {
+      margin-bottom: 0 !important;
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px 12px;
+      background: whitesmoke;
+    }
+    .ui-confirmdialog {
+      z-index: 5001 !important;
+    }
+    .ui-widget-overlay.ui-dialog-mask {
+      //z-index: 5000 !important;
+    }
+    .mat-dialog-container {
+      padding: 24px !important
+    }
+    .dialog-header {
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      &:focus {
+        outline: none !important;
+      }
+    }
+    .dialog-header,
+    .mat-dialog-content {
+      padding: 0 0;
+      margin: 0 0;
+      flex: 1;
+      max-height: unset;
+      .shipment-form{
+          .control{
+              margin-bottom: 12px;
+              input{
+                  width: 100%;
+              }
+          }
+      }
+    }
+  }
+  :host {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .p-margin-20px {
+    margin-bottom: 20px;
+  }
+  
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  

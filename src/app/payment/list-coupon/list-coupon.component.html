@@ -1,0 +1,52 @@
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="small"></ngx-spinner>
+
+<form [formGroup]="filterForm" class="filter-form" (keydown.enter)="filterRequest()">
+    <div class="controls">
+        <input placeholder="Nhập mã khuyến mãi" type="text" pInputText formControlName="code" id="deliveryRequestCode"
+            class="input-code" style="width: 100%;" />
+    </div>
+    <button class="filter-btn" pButton type="button" label="Sử dụng" (click)="filterRequest()"
+        [disabled]="!filterForm.valid || loading"></button>
+</form>
+<div *ngIf="msgs && msgs.length">
+    <p-messages [(value)]="msgs" [closable]="false" [enableService]="false"></p-messages>
+</div>
+
+<div style="padding: 10px 0;" *ngIf="!coupons || coupons.length == 0">
+    Bạn đang không có mã khuyến mại nào
+</div>
+<div style="padding: 10px 0; color: #007bff;font-weight: bold;" *ngIf="coupons && coupons.length > 0">
+    Bạn đang có {{coupons.length}} mã khuyến mại
+</div>
+
+<div class="coupons">
+    <div class="coupon-item" *ngFor="let coupon of coupons" (click)="showDetailCoupon($event, coupon)">
+        <div class="img-section" [ngStyle]="{'min-height.px': coupon.couponSubTitle ? 120: 100}">
+            <div class="total-use">
+                {{coupon.quantityRemaining | currencyChina }}
+            </div>
+            <img class="img-service" src="assets/coupon.jpg">
+        </div>
+        <div class="main-infor">
+            <div class="description">
+                <div class="name" style="-webkit-box-orient: vertical;">
+                    {{coupon.couponTitle}}
+                </div>
+                <div class="sub-title" style="-webkit-box-orient: vertical;" *ngIf="coupon.couponSubTitle">
+                    {{coupon.couponSubTitle}}
+                </div>
+                <div class="out-date">
+                    <span>Ngày hết hạn</span>
+                    <span class="highlight">
+                        {{coupon.endDate | date: 'dd/MM/yyyy hh:mm:ss' }}
+                    </span>
+                </div>
+            </div>
+            <div class="use-now">
+                <div class="text" (click)="useCoupon(coupon)">
+                    Dùng ngay
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

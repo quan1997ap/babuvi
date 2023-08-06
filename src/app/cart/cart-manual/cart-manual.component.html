@@ -1,0 +1,118 @@
+<div class="total">
+
+    <div style="margin-bottom:1px;background-color: white;">
+       <h4>Tạo đơn hàng thủ công</h4>
+    </div>
+ 
+    <div style="width: 100%;height: 3px;background-color: rgba(228, 89, 38, 0.945);"></div>
+ 
+    <div style="padding:15px;background-color: white;">
+       <div class="underTable" style="margin-bottom: 15px;">
+          <div>Danh sách sản phẩm</div>
+          <div class="xoaHetsp" (click)="xoaHetSP(formTaoDonHang)"><i class="fa fa-trash"></i>Xóa hết sản phẩm</div>
+       </div>
+       <form #formTaoDonHang="ngForm">
+          <p-table [value]="data_mock" [columns]="columns" [resizableColumns]="true" [paginator]="true" [rows]="10"
+             [rowHover]="true" [responsive]="true" [alwaysShowPaginator]="false">
+             <ng-template pTemplate="header" let-columns>
+                <tr>
+                   <th *ngFor="let col of columns" class="table-th" pResizableColumn [style.width]="col.width">
+                      {{col.header}}
+                   </th>
+                   <th style="text-align: center;width:50px" pResizableColumn>
+ 
+                   </th>
+                </tr>
+             </ng-template>
+             <ng-template pTemplate="body" let-data let-i="rowIndex">
+ 
+                <tr class="ui-selectable-row">
+                   <!-- [style.background-color]="RowCheckedbox.indexOf(data['code']) != -1?'#e2e2e2':'white' " -->
+                   <td *ngFor="let col of columns" class="table-tb">
+                      <span class="ui-column-title">{{col.header}}: </span>
+                      <span id="{{ col.field }}_{{ i }}" style="width: 100%;display: inline-block;">
+                         <!-- Mỗi dòng sẽ có ô đầu tiên là div thêm ảnh, các ô điền đăng sau là input.
+                         * trong ô thêm ảnh, có button thêm, img của ảnh, và input để ẩn có name để cho vào form submit.
+                         * khi thêm ảnh sẽ ẩn button, xóa ảnh sẽ hiện button.Input sẽ luôn ẩn những cần thiết -->
+                         <input [type]="col.field == 'Quantity' || col.field =='ItemPriceNdt'?'number':'text'" min="1" pInputText
+                            [placeholder]="col.placeholder" style="width:100%" name="{{col.field}}{{data}}" ngModel
+                            *ngIf="col.field=='sp' || col.field == 'Description'?false:true" required>
+                         
+                         <textarea pInputTextarea autoResize="autoResize" name="Description{{data}}" ngModel [rows]="3" [cols]="30"
+                            *ngIf="col.field == 'Description'?true:false" [placeholder]="col.placeholder"></textarea>
+                         
+                            
+                         <div *ngIf="col.field == 'sp'?true:false">
+                            <span class="part1sp" (click)="attackImage.show($event)">
+                               <button class="btnThemdong" *ngIf="countImage(data) == 0?true:false"><i class="fa fa-plus"></i></button>
+                               <img src='{{get1stImg(data)}}' alt='' *ngIf="countImage(data) > 0?true:false">
+                               <div style = "cursor: pointer;">{{ countImage(data) }} ảnh</div>
+                            </span>
+                            
+                            <span class="part2sp">
+                               <input type="text" pInputText *ngFor="let colPart of header_sub"  
+                                  name="{{colPart.field}}{{data}}" ngModel [placeholder]="colPart.placeholder"
+                                  [class]="colPart.field == 'ItemName'?'tensptren':'thongtinduoi'"
+                                  [required]="col.field=='ItemName'?true:false">
+                            </span>
+                         </div>
+ 
+                      </span>
+                      <!-- panel Thêm file đính kèm -->
+                      <p-overlayPanel #attackImage [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'"
+                      (onShow)="setValueWhenShow(data)">
+                         <div>
+                            <h6><b>Tải ảnh lên</b> (tối đa 5 ảnh)</h6>
+                            <hr>
+                            <form #Attachform="ngForm" *ngIf="countImage(data) >= 5?false:true">
+                               <div>
+                                  <input id = "attackData" type="file" (change)="onChangeImage($event)" name="attackFile" ngModel>
+                               </div>
+                            </form>
+                            <div style="padding:10px 0 10px 0" *ngIf="countImage(data) >= 5?false:true">
+                               <button (click)="AddAttachFile(attackImage,data)"
+                                  class="btn btn-success classBold">Thêm</button>
+                            </div>
+                            <div *ngFor="let alink of arrayContainDataForShow;let k = index" style="max-width: 100%;">
+                               <a [href]="alink.attachLink">{{ returnName(alink.attachName)}}</a> 
+                               <span *ngIf="countImage(data) > 0?true:false"> - </span>
+                               <u (click)="deleteImage(data,k)" style="cursor: pointer;" *ngIf="countImage(data) > 0?true:false">Xóa bỏ</u>
+                            </div>
+                         </div>
+                      </p-overlayPanel>
+                   </td>
+                   <td style="text-align: center;">
+                      <button class="btnX" (click)="xoaDongChon(data,i)">X</button>
+                   </td>
+                </tr>
+             </ng-template>
+          </p-table>
+       </form>
+ 
+       <div class="underTable">
+          <div class="luuy" style="color:rgba(235, 0, 0, 0.822);">
+             <b>Lưu ý: Để đơn hàng được đặt một cách thuân lợi, khách hàng cần lưu ý như sau:<br>
+                1. Tất cả sản phẩm phải cùng 1 shop bán hàng<br>
+                2. Khai báo đúng giá sản phẩm<br>
+                3. Các mục có dấu * phải điền đầy đủ
+             </b>
+          </div>
+          <div class="divThemsp">
+             <button class="btnThemdong" (click)="themSP()"><i class="fa fa-plus"></i> Thêm sản phẩm</button>
+          </div>
+       </div>
+       <div style="text-align: center;">
+          <button class="taodonhang" (click)="formSubmit(formTaoDonHang)">TẠO ĐƠN HÀNG</button>
+       </div>
+ 
+    </div>
+ </div>
+ 
+ <p-toast key="taodonhang"></p-toast>
+ <p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="taodonhang" appendTo="body"></p-confirmDialog>
+ <div class="spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+ </div>
+ <div style="display:inline-block; position: fixed; width: 100vw;height:100vh;top:0;left:0;z-index : 2000"
+    *ngIf="blockScreen">
+ </div>

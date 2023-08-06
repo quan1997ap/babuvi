@@ -1,0 +1,100 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+
+<div class="print-bill-dialog">
+  <div class="header">
+    <h2 mat-dialog-title>In phiếu</h2>
+    <button mat-mini-fab mat-dialog-close style="background: #fff;margin-right: -10px; box-shadow: none;">
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </div>
+  <mat-dialog-content class="mat-typography">
+    <div *ngFor="let message of messages" class="message alert {{message.messageClass}}" role="alert">{{message.detail}}
+    </div>
+
+    <div class="row" style="margin: 0 0;">
+      <div class="col-12" style="padding: 0 0px;">
+        <div class="control">
+          <strong class="label">Chọn phiếu in </strong>
+          <p-dropdown placeholder="Chọn" [style]="{'width':'100%' , 'margin-bottom': '12px' }" [options]="printTypes"
+            [(ngModel)]="billSelected"></p-dropdown>
+        </div>
+
+        <div class="control" *ngIf="billSelected.id == 4">
+          <strong class="label">Mã loại </strong>
+          <p-dropdown [style]="{'width':'100%' , 'margin-bottom': '12px' }" placeholder="Chọn" [options]="types" [(ngModel)]="typeSelected"></p-dropdown>
+        </div>
+      
+
+        <div class="gr-calendar">
+          <div class="control" *ngIf="billSelected.id == 4" style="width: calc( 50% - 10px );">
+            <strong class="label">Từ ngày </strong>
+            <p-calendar  appendTo="body"  [style]="{'width':'calc( 50% - 10px )' , 'margin-bottom': '12px' }" [(ngModel)]="fromDate"></p-calendar>
+          </div>
+  
+          <div class="control" *ngIf="billSelected.id == 4" style="width: calc( 50% - 10px );">
+            <strong class="label">Đến ngày </strong>
+            <p-calendar appendTo="body"  [style]="{'width':'calc( 50% - 10px )' , 'margin-bottom': '12px' }" [(ngModel)]="toDate"></p-calendar>
+          </div>
+        </div>
+
+        <button mat-button class="btn btn-primary d-block w-100 mb-3" (click)="printBill()"> In phiếu</button>
+
+      </div>
+
+      <!-- Phiếu xuất hàng -->
+      <button style="display: none;" #print ngxPrint printSectionId="{{billSelected.printSectionId}}"
+        [styleSheetFile]="billSelected.style"></button>
+
+      <div class="col-12" style="display: none;" *ngIf="loading">
+        <!-- Phiếu xuất hàng -->
+        <app-delivery-bill [printData]="{
+          deliveryRequest: deliveryRequest,
+          sumRequestWeight: sumRequestWeight,
+          deliveryRequestCode: deliveryRequestCode,
+          numOfBill: deliveryRequest.lsDetail?.length,
+          visible: true,
+          isDemo: false
+        }">
+        </app-delivery-bill>
+
+        <!-- Phiếu yêu cầu giao hàng : 50X50 -->
+        <app-request-delivery-bill [printData]="{
+          deliveryRequest: deliveryRequest,
+          sumRequestWeight: sumRequestWeight,
+          deliveryRequestCode: deliveryRequestCode,
+          numOfBill: deliveryRequest.lsDetail?.length,
+          size: '50x50',
+          visible: true
+        }">
+        </app-request-delivery-bill>
+
+        <!-- Phiếu yêu cầu giao hàng:  FULL SIZE -->
+        <app-request-delivery-bill [printData]="{
+        deliveryRequest: deliveryRequest,
+        sumRequestWeight: sumRequestWeight,
+        deliveryRequestCode: deliveryRequestCode,
+        numOfBill: deliveryRequest.lsDetail?.length,
+        size: 'full-size',
+        visible: true
+      }">
+        </app-request-delivery-bill>
+
+        <!-- Phiếu demo -->
+        <app-delivery-bill [printData]="{
+          deliveryRequest: deliveryRequest,
+          sumRequestWeight: sumRequestWeight,
+          deliveryRequestCode: deliveryRequestCode,
+          numOfBill: deliveryRequest.lsDetail?.length,
+          visible: true,
+          isDemo: true
+        }">
+        </app-delivery-bill>
+
+      </div>
+
+    </div>
+  </mat-dialog-content>
+</div>

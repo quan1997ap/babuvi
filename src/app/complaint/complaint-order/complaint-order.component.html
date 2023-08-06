@@ -1,0 +1,192 @@
+<p-toast></p-toast>
+<div class="order-complaint"  *ngIf="loadDataSuccess !== undefined && loadDataSuccess === true">
+    <div class="form-container" *ngIf="updateSuccess === false">
+        <div class="form-title"> Khiếu nại đơn hàng</div>
+        <div class="p-grid no-padding no-margin">
+            <div class="p-col-12 p-md-12 p-lg-8 p-xl-8">
+                <form [formGroup]="orderComplaintForm" *ngIf="orderComplaintForm" class="w-100">
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-6 p-col-8">
+                            <div>
+                                <p class="dr-title">Mã đơn hàng: <strong>{{currentOrder.orderCode}}</strong></p>
+                            
+                                <p-dropdown placeholder="Chọn Sản phẩm" [options]="itemsOfCurrentOrderOptions" filter="true"
+                                    [style]="{'width': '100%'}" formControlName="orderSelected"
+                                    [dropdownIcon]="'pi pi-sort-down'">
+                                    <ng-template let-item pTemplate="selectedItem">
+                                        <div class="d-flex">
+                                            <img src="{{item.label.itemImage}}" class="dr-product-img" />
+                                            <div class="dr-product-infor">
+
+                                                <p class="item-nane"><strong>Mã SP:</strong>
+                                                    {{item.label.itemCode !== undefined ? item.label.itemCode : '---'}}</p>
+                                                <p class="item-nane">
+                                                    {{item.label.itemName !== undefined ? item.label.itemName : '---'}}</p>
+                                                <p class="item-des">
+                                                    {{item.label.propetiesName !== undefined ? item.label.propetiesName : '---'}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-product pTemplate="item">
+                                        <div class="d-flex">
+                                            <img src="{{product.label.itemImage}}" class="dr-product-img" />
+                                            <div class="dr-product-infor">
+                                                <p class="item-nane"><strong>Mã SP:</strong>
+                                                    {{product.label.itemCode !== undefined ? product.label.itemCode : '---'}}
+                                                </p>
+                                                <p class="item-nane">
+                                                    {{product.label.itemName !== undefined ? product.label.itemName : '---'}}
+                                                </p>
+                                                <p class="item-des">
+                                                    {{product.label.propetiesName !== undefined ? product.label.propetiesName : '---'}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+                            <div>
+                                <div class="p-grid">
+                                    <div class="p-col-12 p-md-6 p-col-6" >
+                                        <p class="dr-title">Loại khiếu nại</p>
+                                        <p-dropdown [options]="complainTypesOptions" [style]="{'width': '100%'}"
+                                            placeholder="Chọn loại khiếu nại" formControlName="complainType"
+                                            [dropdownIcon]="'pi pi-sort-down'">
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="p-col-12 p-md-6 p-col-6" >
+                                        <p class="dr-title">Trạng thái</p>
+                                        <p-dropdown [disabled]="true" placeholder="Chọn trạng thái"
+                                            [options]="complainStatusOptions" [style]="{'width': '100%'}"
+                                            formControlName="complainStatus" [dropdownIcon]="'pi pi-sort-down'">
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+                                
+                                    <div class="hideInMB">
+                                        <div class="headerDinhkem" (click)="attack.show($event)">
+                                          <span>
+                                            <i class="fa fa-paperclip"></i>
+                                            Đính kèm
+                                          </span>
+                                        </div>
+                                  
+                                        <div class="fileDinhkem">
+                                          <div *ngFor="let link of currentComplain.lsAttachFile;let i = index" class="everyLink">
+                                            <div>
+                                              <div (click)="previewLink(link)"  pTooltip="Xem trước">
+                                                {{link.attachName}}
+                                              </div>
+                                              <a [href]="getLink(link.attachLink)" target="_blank"> <i class="fa fa-download" aria-hidden="true"></i>Tải
+                                                xuống</a> -
+                                              <u (click)="removeAttachFile(link.attachFileId)" style="cursor: pointer;">Xóa bỏ</u>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-6 p-col-8" >
+                            <div>
+                                <p class="dr-title">Khiếu nại</p>
+                                <textarea [rows]="10" formControlName="complainContent" pInputTextarea
+                                    autoResize="autoResize" class="input-group input-textarea"></textarea>
+                            </div>
+
+                            <div>
+                                <p class="dr-title">Giải quyết</p>
+                                <textarea disabled=true [rows]="10" formControlName="complainSettle"
+                                    pInputTextarea autoResize="autoResize" class="input-group input-textarea"></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="w100">
+                        <p-messages [(value)]="msgs" [closable]="false"></p-messages>
+                    </div>
+                    <div class="w100 complaint-section">
+                        <div *ngIf="orderDetailPage == true" style="background: #007ad9; margin-right: 10px;" class="content-inline w20 bor txt-alignCen ml-per10 mr-per10 bor-ra3 pb5 pt5 cur-point corffffff complaintBtn"
+                            (click)="confirm()">
+                            Hủy khiếu nại
+                        </div>
+                        <div class="content-inline w20 bor txt-alignCen ml-per10 mr-per10 bor-ra3 pb5 pt5 cur-point bgF44335 corffffff complaintBtn"
+                            (click)="submitComplaintForm()">
+                            Cập nhật
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-col-12  p-md-12 p-xl-4 p-lg-4">
+                <strong style="margin-bottom: 15px; display: block;">KHIẾU NẠI KHÁC</strong>
+                <div class="mobile-table" *ngIf="complaintList && complaintList.length > 0">
+                    <div *ngFor="let complaint of complaintList" class="complaint-item">
+                        <p style="cursor: pointer;" (click)="toDetailComplaint(complaint.complainId)">
+                            <span class="title"> Mã KN:</span> <strong class="code"> {{complaint.complainCode}}
+                            </strong>
+                        </p>
+                        <p><span class="title">Mã SP: </span> <strong class="code">{{complaint.itemCode}}</strong>
+                        </p>
+                        <p>
+                            <span class="title">Lý do: </span>
+                            <span class="detail">{{complaint.complainContent}}</span>
+                        </p>
+                        <p>
+                            <span class="title">Đề xuất: </span>
+                            <span class="detail">{{complaint.complainSettle}}</span>
+                        </p>
+                        <p style="padding-bottom: 0px;">
+                            <span class="title">Trạng thái: </span>
+                            <span
+                                [ngClass]="{'no-cancel': ['1','2','3'].includes(complaint.status) , 'cancel': complaint.status == 4}">{{complaint.statusDisplay}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="min-height: 100vh;" *ngIf="updateSuccess === true">
+        <div class="update-success">
+            <p class="content">
+                <i class="icon pi pi-check-circle" style="font-size: 2rem"></i>
+                <span class="success-message">Gửi khiếu nại thành công</span>
+            </p>
+            <span (click)="clearSuccessMessage()" class="next"> Tiếp tục </span>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="loadDataSuccess !== undefined && loadDataSuccess === false">
+    <span class="loadDataErr">
+        Có lỗi xảy ra trong quá trình load dữ liệu
+        <p class="refresh-btn" (click)="refresh()"> Thử lại </p>
+    </span>
+</div>
+
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="khieunai" appendTo="body">
+</p-confirmDialog>
+<p-toast key="khieunai"></p-toast>
+<p-overlayPanel #ghichu>
+   {{GhiChu}}
+</p-overlayPanel>
+
+<!-- panel Thêm file đính kèm -->
+<p-overlayPanel #attack [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'">
+    <div>
+      <h6><b>File đính kèm</b></h6>
+      <hr>
+      <form #Attachform="ngForm">
+        <div>
+          <input id="attackData" type="file" (change)="onChangeFile($event)" name="attackFile" ngModel>
+        </div>
+      </form>
+      <div style="padding:10px 0 10px 0">
+        <button (click)="dinhkemFile()" class="btn btn-success classBold">Tải lên</button>
+      </div>
+    </div>
+  </p-overlayPanel>
+
+  <div class="spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>

@@ -1,0 +1,48 @@
+$c_primary-color: #f15922;
+$c_alert:#d90000;
+
+button:focus{
+  outline: none;
+}
+/deep/ {
+  .mat-dialog-container{
+    padding: 24px !important; 
+  }
+  .print-bill-dialog {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .mat-dialog-content {
+      flex: 1;
+      max-height: unset !important;
+    }
+  }
+
+  .alert-no-bg {
+    border: none !important;
+    background: transparent;
+    color: $c_alert;
+  }
+
+  .header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    .mat-dialog-title{
+      margin-bottom: 0 !important;
+    }
+  }
+
+}
+.control{
+  .label{
+    margin-bottom: 8px !important;
+    display: block;
+  }
+}
+.gr-calendar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

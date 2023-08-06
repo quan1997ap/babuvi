@@ -1,0 +1,124 @@
+.loading{
+  cursor: progress !important;
+  button,a, ul,li{
+    cursor: progress !important;
+  }
+}
+.wrap-dialog {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-pr-in-gr{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  background: #f4f4f4;
+  padding: 8px 12px;
+  border: 1px solid #a6a6a6;
+  margin-bottom: 12px;
+}
+::ng-deep {
+  .ui-confirmdialog {
+    z-index: 5001 !important;
+  }
+  .mat-dialog-actions {
+    margin-bottom: 0 !important;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    background: whitesmoke;
+  }
+  // .ui-widget-overlay.ui-dialog-mask{
+  //   z-index: 5000 !important;
+  // }
+  .mat-dialog-container {
+    padding: 0 0 !important;
+  }
+  .dialog-header {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  button {
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  .button-icon {
+    margin-right: 10px !important;
+  }
+
+  .dialog-header,
+  .mat-dialog-content {
+    padding: 0 16px;
+    margin: 0 0;
+    flex: 1;
+    max-height: unset;
+  }
+}
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.p-margin-20px {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.package-config {
+  .package-header {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: whitesmoke;
+    border: 1px solid #a6a6a6;
+    width: 100%;
+    justify-content: space-between;
+    &:active {
+      background: #9fcbfb !important;
+    }
+    .option {
+      width: 46px;
+      text-align: center;
+    }
+    .package-infor {
+      display: flex;
+      flex: 1;
+    }
+    .gr-btn {
+      transform: scale(0.8);
+    }
+  }
+
+  .empty-section {
+    height: 50px;
+    line-height: 50px;
+    padding-left: 12px;
+    border: 1px solid #a6a6a6;
+    border-top: none;
+  }
+
+  .table-grouped {
+    margin-bottom: 20px;
+  }
+  .empty-section {
+    margin-bottom: 20px;
+  }
+  .form-group
+  {
+    margin-bottom: 0px !important;
+  }
+  .description {
+    color:red;
+  }
+}

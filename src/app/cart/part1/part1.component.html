@@ -1,0 +1,266 @@
+<div>
+  <section class="content-header">
+    <div class="content-inline w30">
+      <h3>Giỏ hàng</h3>
+    </div>
+    <div class="content-inline w70 txt-alignRight pad-top10">
+      <span> <a class="cor5F6368"> <i class="fa fa-dashboard"></i> Giỏ hàng </a> </span>
+      <span class="mar-left5">></span>
+      <span class="mar-left5 cor5F6368 cur-point">Chọn địa chỉ đặt hàng</span>
+      <span class="mar-left5">></span>
+      <span class="active mar-left5 cor5F6368 ">Đặt hàng</span>
+    </div>
+  </section>
+
+  <div class="box box-chipo clearfix">
+    <div class="checkout-step"></div>
+  </div>
+
+  <div class="w100">
+    <p-messages [(value)]="msgs" (click)="clear()"></p-messages>
+  </div>
+
+  <div #Elem class="demo" style="display: inline-block;">
+    <div *ngFor="let data of _allItemsCart; let inxAll = index;" class="clearfix mar-b10 bg-white">
+      <div class="w100 bgF44335 dp-inBlock pad-t10" style="border: 1px solid #d4d4d4;">
+        <p class="pad-l10 txtAlign-left w40 content-inline text-overflex-ellipsis">
+          <img alt="TMALL" *ngIf="data.website =='TMALL'"
+            src="assets/images/pages-logo/TMALL.png" />
+          <img alt="TAOBAO" *ngIf="data.website =='TAOBAO'"
+          src="assets/images/pages-logo/TAOBAO.png" />
+          <img alt="CN1688" *ngIf="data.website =='CN1688'"
+          src="assets/images/pages-logo/CN1688.png" />
+          <span *ngIf="!data.website" class="shoplink-not-match"> OT </span>
+          <a class="shoplink" href={{data.shopLink}} target="_blank" class="ng-binding corffffff fw-bold mar-l5">{{data.shopName}}</a>
+        </p>
+
+        <div class=" w60 content-inline">
+          <div class="w100 txtAlign-right">
+            <div class="content-inline-right ver-align-mid">
+              <span class="material-icons cur-point corffffff" [mat-menu-trigger-for]="user"> drag_indicator </span>
+            </div>
+            <div class="content-inline-right" *ngFor="let itemsServices of data.lstServiceCart; let inx = index;">
+              <span *ngIf="itemsServices.locationDisplay == '1' && itemsServices.isOption !== '1'">
+                <input class="mar-r10 ver-align-mid" type="checkbox"
+                  [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"
+                  (change)="isSelectedServices($event, inx, data)" />
+                <span class="mar-r10 ver-align-mid">{{itemsServices.display}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-menu #user="matMenu" class="opt-menu" x-position="before">
+          <div *ngFor="let itemsServices of data.lstServiceCart; let inx = index;">
+            <label mat-menu-item *ngIf="itemsServices.locationDisplay == '2' && itemsServices.isOption !== '1'"
+              data-toggle="tooltip" data-placement="top">
+              <div class="checker">
+                <span class="checked ng-binding">
+                  <input type="checkbox" [checked]="itemsServices.amount || itemsServices.amount === 0 ? true : false"
+                    (change)="isSelectedServices($event, inx, data)" /> {{itemsServices.display}}
+                </span>
+              </div>
+            </label>
+          </div>
+        </mat-menu>
+      </div>
+
+      <table class="tg w100">
+        <tr>
+          <td class="tg-0pky w3 txtAlign-center ver-align-mid">
+            <label>
+              <input type="checkbox" [checked]="data.isCheckedShop" (change)="checkAllOrUn($event, data)" />
+            </label>
+          </td>
+          <td class="tg-0pky txtAlign-center w39 ver-align-mid">Sản phẩm</td>
+          <td class="tg-0pky txtAlign-center w7 ver-align-mid" *ngIf="detectWidthLayout">Số lượng</td>
+          <td class="tg-0pky txtAlign-center w7 ver-align-mid" *ngIf="detectWidthLayout">Đơn giá</td>
+          <td class="tg-0pky txtAlign-center w7 ver-align-mid" *ngIf="detectWidthLayout"> Tiền hàng </td>
+          <td class="tg-0pky txtAlign-center w3 ver-align-mid">Thao tác</td>
+          <td class="w2"></td>
+          <td class="w40 txt-vert-top tg-0pky " [attr.rowspan]="data.items.length + 2" *ngIf="detectWidthLayout">
+            <div class="w100">
+              Dịch vụ
+            </div>
+            <table class="w100">
+              <tr>
+                <td class="w60 pad-unset">
+                  Tiền Hàng ( ¥{{data.totalPrice | currencyFormat }} ):
+                </td>
+                <td class="w40 pad-unset ver-align-mid txtAlign-right">
+                  {{data.totalPrice * rating | currencyFormat }}
+                </td>
+              </tr>
+              <ng-container *ngFor="let itemServices of data.lstServiceCart">
+                <tr *ngIf="itemServices.isOption === '1' || itemServices.amount">
+                  <td class="w60 pad-unset">
+                    {{itemServices.shortDisplay}}:
+                  </td>
+                  <td class="w40 pad-unset ver-align-mid txtAlign-right">
+                    {{itemServices.amount | currencyFormat }}
+                  </td>
+                </tr>
+              </ng-container>
+              <tr>
+                <td class="w60 pad-unset">Tổng Tiền: </td>
+                <td class="w40 pad-unset ver-align-mid txtAlign-right">
+                  {{getAllPrice(data) | currencyFormat }}
+                </td>
+              </tr>
+            </table>
+            <div class="w100">
+              Ghi chú đơn hàng
+              <textarea class="w100 bor-ra5" placeholder="Ghi chú cho đơn hàng" [(ngModel)]="data.description"
+                (focusout)="focusItem(data, 'cart')"></textarea>
+            </div>
+            <div class="w100 txt-alignRight">
+              <span class="cartButton">
+                <button type="button" class="btn btn-primary" (click)="refreshImageCart(data.cartId)">Tải lại ảnh</button>
+              </span>
+              <span class="cartButton"> 
+                <button type="button" class="btn btn-primary" (click)="convertToItems(data)">Đặt hàng</button>
+              </span>
+            </div>
+          </td>
+        </tr>
+        <ng-container *ngFor="let itemProducts of data.items; let inx = index;">
+          <tr>
+            <td class="tg-0lax w3 txtAlign-center ver-align-mid">
+              <label>
+                <input class="checkData" type="checkbox" [checked]="itemProducts.isChecked"
+                  (change)="isSelect($event, itemProducts)">
+              </label>
+            </td>
+            <td class="tg-0lax t1 w39">
+              <div class="w100">
+                <img class="lazy loaded w20 bor-gray pad5 content-inline" alt="" src="{{itemProducts.itemImage || 'assets/images/no-img.jpg'}}" >
+                <div class="content-inline w80 pad-l10">
+                  <div class="w100">
+                    <div class="content-inline">
+                      <div class="w100">
+                        <a href="{{itemProducts.itemLink}}" target="_blank">
+                          {{itemProducts.itemName}}
+                        </a>
+                      </div>
+                      <div class="w100">
+                        {{itemProducts.propetiesName}}
+                      </div>
+                      <div class="w100" *ngIf="!detectWidthLayout">
+                        Số lượng: <input type="text" number-only="" class="txtAlign-center cur-point pad-l3"
+                          [(ngModel)]="itemProducts.quantity">
+                      </div>
+                      <div class="w100" *ngIf="!detectWidthLayout">
+                        Đơn giá: <span class="pad-l3 pad-r3">¥{{itemProducts.itemPriceNdt.toFixed(2) }}</span>
+                        <span>/</span>
+                        <span class="pad-l3">{{itemProducts.itemPriceNdt * rating }} đ</span>
+                      </div>
+                      <div class="w100" *ngIf="!detectWidthLayout">
+                        Tiền hàng: <span class="pad-l3 pad-r3">¥{{itemProducts.itemPriceNdtWithQuan}}</span>
+                        <span>/</span>
+                        <span class="pad-l3">{{itemProducts.itemPriceNdt * rating * itemProducts.quantity |
+                          currencyFormat }} đ</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td class="tg-0lax w7 ver-align-mid txtAlign-center" *ngIf="detectWidthLayout">
+              <input type="text" number-only="" class="w100 txtAlign-center cur-point"
+                [(ngModel)]="itemProducts.quantity" (focusout)="focusItem(itemProducts, 'quanlity', inxAll)">
+            </td>
+            <td class="tg-0lax w7 ver-align-mid txtAlign-center" *ngIf="detectWidthLayout">
+              <div class="w100 dp-inBlock">
+                ¥{{itemProducts.itemPriceNdt.toFixed(2) }}
+              </div>
+              <div class="w100 dp-inBlock">
+                {{itemProducts.itemPriceNdt * rating | currencyFormat }}đ
+              </div>
+            </td> <!-- đơn giá -->
+            <td class="tg-0lax w7 ver-align-mid txtAlign-center" *ngIf="detectWidthLayout">
+              <div class="w100 dp-inBlock">
+                ¥{{ itemProducts.itemPriceNdtWithQuan }}
+              </div>
+              <div class="w100 dp-inBlock">
+                {{itemProducts.itemPriceNdt * rating * itemProducts.quantity | currencyFormat }}đ
+              </div>
+            </td> <!-- Tiền hàng -->
+            <td class="tg-0lax w3 ver-align-mid txtAlign-center pad-unset">
+              <button type="button" class="bor-unset pad-unse " (click)="removeItemShop(inx, data, inxAll)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td> <!-- Thao tác -->
+            <td class="w2"></td>
+          </tr>
+
+          <tr>
+            <td class="tg-0pky w40" [attr.colspan]="detectWidthLayout ? 6 : 3">
+              <textarea class="w100 bor-ra5" placeholder="Ghi chú cho sản phẩm" [(ngModel)]="itemProducts.description"
+                (focusout)="focusItem(itemProducts, 'item')"></textarea>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="!detectWidthLayout">
+          <!-- booking -->
+          <tr>
+            <td class="tg-0pky w100 txt-vert-top" colspan="3">
+              <div class="w100">
+                Tiền hàng: {{data.totalPrice * rating | currencyFormat }}
+              </div>
+              <div *ngFor="let itemServices of data.lstServiceCart">
+                {{itemServices.shortDisplay}}: {{itemServices.amount | currencyFormat }}
+              </div>
+              <div class="w100 bor-bottom mar-t4"></div>
+              <div class="mar-t4">
+                Tổng tiền: {{getAllPrice(data) | currencyFormat }}
+              </div>
+              <div class="w100">
+                Ghi chú đơn hàng
+                <textarea class="w100 bor-ra5" placeholder="Ghi chú cho đơn hàng" [(ngModel)]="data.description"
+                  (focusout)="focusItem(data, 'cart')"></textarea>
+              </div>
+              <div class="w100 txt-alignCen">
+                <button type="button" class="btn btn-primary" (click)="convertToItems(data)">Đặt hàng</button>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td [attr.colspan]="detectWidthLayout ? 6 : 3" class="w100 txtAlign-center ver-align-mid">
+            <span>{{data.items.length}}</span> <span>/</span> <span>1</span>
+            <span>|</span>
+            <span>
+              <a href="javascript:;" (click)="removeShop(data)">
+                <i class="fa fa-trash"></i> Xóa Shop
+              </a>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px;" *ngIf="totalPage >= page" class="w100 txt-alignCen">
+    <span (click)="getAllItemsOnCart (20, page)" class="cur-point bgF44335 corffffff bor-r5" style="padding: 10px;">Xem
+      thêm...</span>
+  </div>
+
+  <div *ngIf="page !== 1" style="margin-top: 10px;" class="w100">
+    <div class="w100 mar-t10 bgff dp-inBlock bor-d4" style="padding: 3px 5px;">
+      <div class="content-inline w50 ver-align-mid" style="padding-top: 4px;">
+        <input type="checkbox" class="minimal updateCheckALL" style="position: absolute; opacity: 0;" />
+        <span>
+          <input class="mar-r10 ver-align-mid" type="checkbox" [(ngModel)]="isDefault"
+            (change)="checkAll($event.currentTarget.checked)" />
+          Chọn tất cả
+        </span>
+        <span ng-if="totalShop &lt; 80" class="ng-scope"> | </span>
+        <a (click)="refreshPage()"> <i class="fa fa-refresh"></i> Làm mới </a>
+      </div>
+
+      <div class="content-inline w50 txt-alignRight">
+        <button type="button" class="btn btn-primary" (click)="convertToAllItems()">Đặt hàng tất cả</button>
+      </div>
+    </div>
+  </div>

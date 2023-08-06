@@ -1,0 +1,221 @@
+.text-ellipsis{
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:host p-messages{
+  width: 100%;
+}
+
+::ng-deep{
+  button:focus{
+    box-shadow: none !important;
+  }
+  body .order-table .ui-table-caption{
+    background: #fff;
+    border: none;
+    text-align: left;
+    padding: 8px 0;
+  }
+  body .order-table .ui-table-summary {
+    background: #fff;
+    border: none;
+  }
+
+  .text-ellipsis{
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .desc-name{
+    color: #007ad9;
+    font-weight: 500;
+    margin: 16px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .ui-table-scrollable-header{
+    border-right: 1px solid #c8c8c8;
+  }
+
+}
+
+:host {
+  ::ng-deep .ui-table .ui-paginator-bottom{
+    display: none;
+  } 
+}
+
+.product-general-infor {
+  ::ng-deep{
+    .properties{
+      .ui-button{
+        margin-right: 4px;
+        margin-bottom: 4px;
+        border-radius: 4px;
+        padding: 0px 2px;
+        img{
+          max-height: 42px;
+        }
+      }
+      
+      .ui-state-active{
+        border-width: 2px !important;
+      }
+    }
+  }
+  .left {
+  }
+  .right {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    .form-pr-infor {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        width: 100%;
+      .pr-name, .pr-name > a {
+        color: #0576cc;
+        font-size: 20px !important;
+        margin-bottom: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+      .pr-infor {
+        margin-bottom: 12px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        max-width: calc(100%);
+        overflow: auto;
+        .label {
+          color: #343a40;
+          font-weight: 500;
+          min-width: 100px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .sub-label{
+          color: #6c757d;
+        }
+        .name {
+          font-weight: bold;
+          color: #000;
+          font-weight: 700;
+          margin-left: 12px;
+          &.notice {
+            color: #f15922 !important;
+          }
+          &.currency{
+            margin-left: 8px;
+          }
+        }
+      }
+      .variant-form-row{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .pr-img{
+          width: 150px;
+          height: 70px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep{
+  .ui-table table{
+    border: 1px solid #c8c8c8;
+  }
+}
+.out-of-stock, .condition{
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px 8px;
+  background: red;
+  white-space: nowrap;
+}
+.count-note{
+  background: #f2632f;
+  padding: 4px 12px;
+  color: #fff;
+  margin-top: 12px;
+  margin-left: 110px;
+  border-radius: 4px;
+}
+
+.order-table{
+  tr {
+    td:not(:first-child), td:not(:last-child){
+      border-left: none;
+      border-right: none;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .min-count-note{
+    display: block !important;
+  }
+  ::ng-deep{
+    .footer-summary{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: column-reverse;
+    }
+    .show-more{
+      display: none;
+    }
+  }
+  .pr-name{
+    margin-top: 20px !important;
+  }
+  .block-only-mobile{
+      display: block;
+  }
+  .tr-only-mobile {
+      display: table-row;
+  }
+  .bl-hide-on-mobile, .tr-hide-on-mobile{
+      display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  ::ng-deep{
+    .footer-summary{
+      display: flex; justify-content: space-between; align-items: center;
+      flex-direction: row-reverse;
+      margin-bottom: -8px;
+    }
+  }
+
+  .min-count-note{
+    display: none;
+  }
+  .block-hide-on-mobile{
+      display: block;
+  }
+  .tr-hide-on-mobile {
+      display: table-row;
+  }
+  .bl-only-mobile, .tr-only-mobile{
+      display: none;
+  }
+}

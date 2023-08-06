@@ -1,0 +1,133 @@
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
+<p-toast key="toast-message"></p-toast>
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cd
+  [baseZIndex]="50000">
+  <p-footer>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
+      (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div class="payment-container">
+  <div>
+    <button pButton label="Thêm mới" class="primary-btn mr-right-8" (click)="addPayment()"></button>
+    <button pButton label="Xóa" class="primary-btn" (click)="removeSelectedPayment()"></button>
+  </div>
+  <div class="title">
+    Danh sách yêu cầu thanh toán hộ
+  </div>
+
+  <form [formGroup]="filterForm">
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <input type="text" pInputText formControlName="paymentCode" placeholder="Mã yêu cầu" />
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-dropdown [options]="paymentTypeList" formControlName="paymentType" placeholder="Loại yêu cầu"></p-dropdown>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-dropdown [options]="paymentStatusList" formControlName="paymentStatus" placeholder="Trạng thái yêu cầu">
+      </p-dropdown>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-calendar formControlName="fromDate" placeholder="Từ ngày" dateFormat="dd/mm/yy" showButtonBar="true"></p-calendar>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <p-calendar formControlName="toDate" placeholder="Đến ngày" dateFormat="dd/mm/yy" showButtonBar="true"></p-calendar>
+    </div>
+    <div class="mr-right-8 mr-bottom-8 d-inline-block">
+      <button pButton label="Lọc" style="min-width: 80px;" class="primary-btn" (click)="filterPayment()"></button>
+    </div>
+
+  </form>
+
+  <div class="statistic">
+    <div class="statistic-detail mr-right-8">
+      Tổng số giao dịch: <span class="detail-number">{{paymentListStatistic.dataCount | currencyChina}}</span>
+    </div>
+    <div>
+      &nbsp;&nbsp; | &nbsp;&nbsp;
+    </div>
+    <div class="statistic-detail mr-right-8">
+      Tổng tiền thanh toán hộ: <span class="detail-number">{{paymentListStatistic.totalAmountRequest| currencyChina}}</span>
+    </div>
+    <div>
+      &nbsp;&nbsp; | &nbsp;&nbsp;
+    </div>
+    <div class="statistic-detail mr-right-8">
+      Quy đổi: <span class="detail-number">{{paymentListStatistic.totalAmount| currencyChina}}</span>
+    </div>
+  </div>
+
+  <div class="table">
+    <p-table #dt [value]="paymentList" [rowHover]="true" [rows]="10" [paginator]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Thanh toán hộ </th>
+          <th>Mô tả</th>
+          <th>Chi phí</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-payment>
+        <tr class="p-selectable-row"  [pSelectableRow]="payment">
+          <td>
+            <p-tableCheckbox [value]="payment"></p-tableCheckbox>
+          </td>
+          <td>
+            <p>
+              <span>Mã yêu cầu :</span> 
+              <strong> {{payment.paymentRequestCode}}</strong>
+              <!-- <strong class="link" pTooltip="Chi tiết yêu cầu thanh toán" [routerLink]="['/payment/detail', payment.paymentRequestId ]"> {{payment.paymentRequestCode}}</strong> -->
+            </p>
+            <p>
+              <span>Ngày yêu cầu :</span> <strong> {{payment.paymentRequestDate | date: 'dd/MM/yyyy hh:mm:ss' }}</strong>
+            </p>
+            <p>
+              <span>Loại yêu cầu :</span> <strong> {{payment.serviceGroupDisplay}}</strong>
+            </p>
+            <p>
+              <span>Trạng thái : </span>
+              <span>
+                <button pButton *ngIf="payment.status == 1" type="button" [label]="payment.statusDisplay"></button>
+                <button pButton *ngIf="payment.status == 2" [label]="payment.statusDisplay" class="ui-button-success"></button>
+                <button pButton *ngIf="payment.status == 3" [label]="payment.statusDisplay" class="ui-button-warning"></button>
+                <button pButton *ngIf="payment.status == 4" [label]="payment.statusDisplay" class="ui-button-danger"></button>
+              </span>
+            </p>
+          </td>
+          <td>
+            <div>
+              {{payment.description }}
+            </div>
+          </td>
+          <td>
+            <p>
+              <span>Tỉ giá :</span> <strong> {{payment.exchangeRate | currencyChina}}</strong>
+            </p>
+            <p>
+              <span>Số tiền :</span> <strong> {{payment.totalAmount | currencyChina}}</strong>
+            </p>
+            <p>
+              <span>Phí dịch vụ :</span> <strong> {{payment.totalFee| currencyChina}}</strong>
+            </p>
+            <p>
+              <span>Giảm giá :</span> <strong> {{payment.totalPromotionVoucher  | currencyChina}}</strong>
+            </p>
+            <p>
+              <span>Tổng tiền :</span> <strong> {{payment.totalAmount| currencyChina}}</strong>
+            </p>
+          </td>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No payments found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

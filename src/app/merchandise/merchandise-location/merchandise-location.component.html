@@ -1,0 +1,223 @@
+<ngx-spinner
+  type="line-spin-fade"
+  [fullScreen]="true"
+  size="medium"
+></ngx-spinner>
+
+<p-toast></p-toast>
+<p-confirmDialog
+  header="Confirmation"
+  appendTo="body"
+  #cd
+  [baseZIndex]="50000"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
+
+<div class="page-header">SẮP XẾP VỊ TRÍ KIỆN HÀNG</div>
+
+<!-- YT5404899143807 -->
+<form class="form" [formGroup]="searchForm">
+  <div class="row">
+    <div style="position: relative;">
+      <input
+        style="width: calc(100vw - 100px); height: 32px; max-width: 300px;"
+        formControlName="shelfPosition"
+        placeholder="Vị trí mới"
+        type="text"
+        pInputText
+      />
+      <button style="right: 0; position: absolute;" pTooltip="Xóa giá trị" 
+      type="button" icon="pi pi-times"  (click)="clearInput('shelfPosition')" pButton ></button>
+    </div>
+    <button
+      type="submit"
+      [disabled]="searchForm.controls['shelfPosition'].value == '' || merchandises.length == 0"
+      (click)="saveNewPosition()"
+      pButton
+      label="Lưu"
+      style="margin-left: 20px;"
+    ></button>
+  </div>
+  <div class="row p-input-icon-right" style="flex-direction: column; width: fit-content;">
+    <div style="position: relative;">
+      <input
+        style="width: calc(100vw - 100px); height: 32px; max-width: 300px"
+        formControlName="merchandiseId"
+        placeholder="Mã kiện hàng"
+        type="text"
+        pInputText
+      />
+      <button type="button" icon="pi pi-times" pTooltip="Xóa giá trị" style="position: absolute;right: 0;"
+      (click)="clearInput('merchandiseId')" pButton ></button>
+    </div>
+    <div style="margin-top: 12px">
+      <p-message
+        style="width: calc(100vw - 100px)"
+        severity="error"
+        text="Không tìm thấy sản phẩm"
+        *ngIf="isControlHasError('merchandiseId', 'notFound')"
+      ></p-message>
+      <p-message
+        style="width: calc(100vw - 100px)"
+        severity="warn"
+        text="{{ 'Tìm thấy ' + countExistItem + ' sản phẩm trong danh sách' }}"
+        *ngIf="isControlHasError('merchandiseId', 'inList')"
+      ></p-message>
+    </div>
+  </div>
+</form>
+
+<div style="max-width: 800px">
+  <p-table
+    [columns]="cols"
+    [value]="merchandises"
+    #dt
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="caption">
+      <div style="display: flex; justify-content: space-between">
+        <div>
+          Số kiện hàng: <strong>{{ merchandises?.length }}</strong>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="filterGlobalTxt"
+          pInputText
+          size="30"
+          placeholder="Tìm trong bảng"
+          (input)="filterGlobal($event, dt)"
+          style="width: auto; height: 32px"
+        />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr class="tr-hide-on-mobile">
+        <th style="width: 50px">
+          <p-checkbox
+            [(ngModel)]="isCheckAll"
+            [binary]="true"
+            (onChange)="checkAll($event)"
+            [disabled]="!this.merchandises.length"
+          ></p-checkbox>
+        </th>
+        <th>Mã kiện hàng</th>
+        <th>Vị trí kệ</th>
+        <th style="width: 100px;">Action</th>
+      </tr>
+      <tr class="tr-only-mobile">
+        <th style="width: 50px">
+          <p-checkbox
+            [(ngModel)]="isCheckAll"
+            [binary]="true"
+            (onChange)="checkAll($event)"
+            [disabled]="!this.merchandises.length"
+          >
+          </p-checkbox>
+        </th>
+        <th>Thông tin</th>
+        <th style="width: 100px;">Action</th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-rowData
+      let-rowIndex
+      let-columns="columns"
+    >
+      <tr class="tr-hide-on-mobile">
+        <td style="width: 50px">
+          <p-checkbox
+            [(ngModel)]="rowData.selected"
+            [binary]="true"
+            (ngModelChange)="itemSelected($event)"
+          ></p-checkbox>
+        </td>
+        <td>
+          {{ rowData.merchandiseCode }}
+        </td>
+        <td>
+          <input
+            style="width: 100%;"
+            [(ngModel)]="rowData.shelfPosition"
+            placeholder="Nhập vị trí"
+            type="text"
+            pInputText
+          />
+        </td>
+        <td style="width: 100px;display: flex;">
+          <button
+            style="margin-right: 4px;"
+            pButton
+            [disabled]="[null, ''].includes(rowData.shelfPosition)"
+            icon="pi pi-save"
+            pTooltip="Lưu vị trí"
+            (click)="saveMerchandisePosition(rowIndex)"
+          ></button>
+
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="ui-button-danger"
+            pTooltip="Xóa kiện hàng khỏi bảng"
+            (click)="removeMerchandise(rowIndex)"
+          ></button>
+        </td>
+      </tr>
+
+      <tr class="tr-only-mobile">
+        <td style="width: 50px;">
+          <p-checkbox
+            [(ngModel)]="rowData.selected"
+            [binary]="true"
+            (ngModelChange)="itemSelected($event)"
+          ></p-checkbox>
+        </td>
+        <td>
+          <p>
+            Mã kiện hàng : <strong>{{ rowData.merchandiseCode }}</strong>
+          </p>
+          <div>
+            <p>Vị trí kiện hàng:</p>
+            <input
+              style="width: 100%;"
+              [(ngModel)]="rowData.shelfPosition"
+              placeholder="Nhập vị trí"
+              type="text"
+              pInputText
+            />
+          </div>
+        </td>
+        <td style="width: 100px;display: flex;">
+          <button
+            style="margin-right: 4px;"
+            pButton
+            [disabled]="[null, ''].includes(rowData.shelfPosition)"
+            icon="pi pi-save"
+            pTooltip="Lưu vị trí"
+            (click)="saveMerchandisePosition(rowIndex)"
+          ></button>
+
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="ui-button-danger"
+            pTooltip="Xóa kiện hàng khỏi bảng"
+            (click)="removeMerchandise(rowIndex)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div style="display: flex; justify-content: flex-start">
+        <button
+          pButton
+          type="button"
+          label="Xóa tất cả kiện hàng khỏi bảng"
+          class="ui-button-danger"
+          (click)="clearTable()"
+        ></button>
+      </div>
+    </ng-template>
+  </p-table>
+</div>

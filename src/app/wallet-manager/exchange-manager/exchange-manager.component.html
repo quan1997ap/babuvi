@@ -1,0 +1,393 @@
+<div class="w100 fr-tag pad-b20">
+   <table class="w100 tg" >
+      <tr>
+         <td [attr.colspan]="detectWidthLayoutSM ? 3 : 2" class="w100 dp-inBlock fw-7 fs-15" >Thông tin tài khoản</td>
+      </tr>
+      <tr>
+         <td [ngClass]="detectWidthLayoutSM ? 'w35' : 'w40'" >
+            <div class="w80 pad-left20per">
+               <div class="w100 pad-left10per">
+                 <div style="width: 50px;" [ngClass]="clientProfile.avatarUrl ? '' : 'h50p bgd4'" class="bor-r50 bor">
+                    {{ clientProfile.avatarUrl ? clientProfile.avatarUrl : null }}
+                 </div>
+               </div>
+              <div class="w100 fw-5 fs-20">
+                 {{ clientProfile.username }}
+              </div>
+              <div class="w100 fs-12 corb2b2b2">
+                 Mã khách hàng: <span class="bg0CA35B corffffff pad-l10 pad-r10 pad-t5 pad-b5 bor-r5">{{ clientProfile.userCode }}</span>
+              </div>
+            </div>
+         </td>
+
+         <td [ngClass]="detectWidthLayoutSM ? 'w30' : 'w60'">
+           <div class="w100 bor-top pad-t10 pad-b10" [ngClass]="clientProfile.phone ? '' : 'h35p'">
+              <span><i class="fa fa-phone info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.phone }}</span>
+           </div>
+           <div class="w100 bor-top pad-t10 pad-b10" [ngClass]="clientProfile.email ? '' : 'h35p'">
+              <span><i class="fa fa-envelope info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.email }}</span>
+           </div>
+           <div class="w100 bor-top bor-bottom pad-t10 pad-b10" [ngClass]="clientProfile.address ? '' : 'h35p'">
+              <span><i class="fa fa-map-marker info"></i></span><span class="pad-l15 corb2b2b2" >{{ clientProfile.address }}</span>
+           </div>
+         </td>
+
+         <td *ngIf="detectWidthLayoutSM" class="txt-vert-top w35" >
+            <div class="w100 pad-left10per">
+              <div class="w100">
+                 Ghi chú
+              </div>
+              <div class="w100 corb2b2b2 ">
+                 Các thông tin quan trọng của quý khách hàng như: số điện thoại, Email, dùng để nhận thông báo.
+              </div>
+              <div class="w100 corb2b2b2 ">
+                 Để bảo mật tài khoản, quý khách nên đổi tài khoản 3 tháng 1 lần, mật khẩu nên sử dụng chữ số và viết hoa.
+              </div>
+            </div>
+         </td>
+      </tr>
+   </table>
+   <div *ngIf="!detectWidthLayoutSM" class="w100 dp-inBlock txt-vert-top">
+      <div class="w100 pad-left5per pad-r5p">
+        <div class="w100">
+           Ghi chú
+        </div>
+        <div class="w100 corb2b2b2 ">
+           Các thông tin quan trọng của quý khách hàng như: số điện thoại, Email, dùng để nhận thông báo.
+        </div>
+        <div class="w100 corb2b2b2 ">
+           Để bảo mật tài khoản, quý khách nên đổi tài khoản 3 tháng 1 lần, mật khẩu nên sử dụng chữ số và viết hoa.
+        </div>
+      </div>
+   </div>
+ </div>
+
+ 
+<div class="w100 fr-tag mar-t20  pad-b20">
+   <table class="w100 tg">
+      <tr>
+         <th colspan="5">
+            <span class=" fw-7 fs-15 pad-r15">Chọn ví</span>
+            <!-- <span class="select-account-bank">
+               <mat-form-field>
+                  <select matNativeControl required [(ngModel)]="walletId" (change)="changeWallet($event.target.value)">
+                     <option  *ngFor="let wallet of lstWallet" [value]="wallet.walletId">
+                        {{wallet.walletName}}
+                     </option>
+                   </select>
+               </mat-form-field>
+            </span> -->
+            <input class="inputAdd" pInputText name="WalletSource" [(ngModel)]="findWallet.walletCode" 
+            (click)="isAndroid? showViNguonDialog() : showViNguon(searchViNguon,$event)" readonly>
+         </th>
+      </tr>
+      <tr>
+         <th colspan="5">
+            Thông tin số dư tài khoản
+         </th>
+      </tr>
+      <tr>
+         <td class="w20"></td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            <div>
+               Số dư tài khoản
+            </div>
+         </td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center" *ngIf="detectWidthLayout">
+            Số dư đóng băng
+         </td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center" *ngIf="detectWidthLayout">
+            Số dư khả dụng
+         </td>
+         <td class="w20"></td>
+      </tr>
+      <ng-container *ngIf="findWallet">
+         <tr>
+            <td class="w20"></td>
+            <td class="txtAlign-center tg-0lax" [ngClass]="detectWidthLayout ? 'w20' : 'w60'" >
+               <span [innerHTML]="findWallet.symbolsLocation === '2' ? findWallet.symbolsDisplay : ''" ></span>
+               <span>
+                  {{findWallet.totalAmount| currencyChina}}
+               </span>
+               <span [innerHTML]="findWallet.symbolsLocation === '1' ? findWallet.symbolsDisplay : ''" ></span>
+            </td>
+            <td class="w20 txtAlign-center tg-0lax" *ngIf="detectWidthLayout">
+               <span [innerHTML]="findWallet.symbolsLocation === '2' ? findWallet.symbolsDisplay : ''" ></span>
+               <span>
+                  {{findWallet.blockedAmount| currencyChina}}
+               </span>
+               <span [innerHTML]="findWallet.symbolsLocation === '1' ? findWallet.symbolsDisplay : ''" ></span>
+            </td>
+            <td class="w20 txtAlign-center tg-0lax" *ngIf="detectWidthLayout">
+               <span [innerHTML]="findWallet.symbolsLocation === '2' ? findWallet.symbolsDisplay : ''" ></span>
+               <span>
+                  {{findWallet.availableAmount| currencyChina}}
+               </span>
+               <span [innerHTML]="findWallet.symbolsLocation === '1' ? findWallet.symbolsDisplay : ''" ></span>
+            </td>
+            <td class="w20"></td>
+         </tr>
+      </ng-container>
+
+      <tr *ngIf="!detectWidthLayout">
+         <td class="w20"></td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            Số dư đóng băng
+         </td>
+         <td class="w20"></td>
+      </tr>
+      <ng-container *ngIf="findWallet && !detectWidthLayout">
+         <tr>
+            <td class="w20"></td>
+            <td class="w60 txtAlign-center tg-0lax">
+               <span [innerHTML]="findWallet.symbolsLocation === '2' ? findWallet.symbolsDisplay : ''" ></span>
+               <span>
+                  {{findWallet.blockedAmount| currencyChina}}
+               </span>
+               <span [innerHTML]="findWallet.symbolsLocation === '1' ? findWallet.symbolsDisplay : ''" ></span>
+            </td>
+            <td class="w20"></td>
+         </tr>
+      </ng-container>
+
+
+      <tr *ngIf="!detectWidthLayout">
+         <td class="w20"></td>
+         <td class="w20 bgF44335 corffffff tg-0pky txtAlign-center">
+            Số dư khả dụng
+         </td>
+         <td class="w20"></td>
+      </tr>
+      <ng-container *ngIf="findWallet && !detectWidthLayout">
+         <tr>
+            <td class="w20"></td>
+            <td class="w60 txtAlign-center tg-0lax">
+               <span [innerHTML]="findWallet.symbolsLocation === '2' ? findWallet.symbolsDisplay : ''" ></span>
+               <span>
+                  {{findWallet.availableAmount| currencyChina}}
+               </span>
+               <span [innerHTML]="findWallet.symbolsLocation === '1' ? findWallet.symbolsDisplay : ''" ></span>
+            </td>
+            <td class="w20"></td>
+         </tr>
+      </ng-container>
+   </table>
+</div>
+
+<div class="w100 fr-tag-v1 mar-t20 tg">
+
+   <div fxLayout="row wrap">
+      <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100" class="m-gap p-gap">
+         THÔNG TIN VÍ GIAO DỊCH
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <mat-form-field class="example-form-field w100">
+            <input matInput type="text" class="w100" placeholder="Mã giao dịch" [(ngModel)]="transactionCode" >
+         </mat-form-field>
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <mat-form-field class="example-form-field w100">
+            <input matInput type="text" class="w100" placeholder="Nội dung" [(ngModel)]="productCode" >
+         </mat-form-field>
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <mat-form-field class="w100">
+            <select matNativeControl required (change)="changeType($event.target.value)">
+               <label>Loại giao dịch</label>
+               <option  *ngFor="let item of itemTransaction" [value]="item.value">
+                  {{item.displayValue}}
+               </option>
+             </select>
+         </mat-form-field>
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <mat-form-field appearance="fill" class="w100"  style="padding-right: 7px;">
+            <mat-label>Từ ngày</mat-label>
+            <input matInput [matDatepicker]="picker" (dateChange)="onSChange($event.value)" [ngModel]="startDate" [ngModelOptions]="{standalone: true}">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <mat-form-field appearance="fill" class="w100">
+            <mat-label>Đến ngày</mat-label>
+            <input matInput [matDatepicker]="picker1" (dateChange)="onEChange($event.value)" [ngModel]="endDate" [ngModelOptions]="{standalone: true}">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+      </div>
+      <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="33.33" fxFlex.lg="33.33" fxFlex.xl="33.33" fxFlex="100" class="m-gap p-gap">
+         <div class="w100 bor txtAlign-center bor-r3 bg3D89B6 corffffff pad-t10 pad-b10 cur-point" (click)="searchTransaction()">
+            <span ><i class="fa fa-search info"></i></span><span class="pad-l10">tìm kiếm</span>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="w100 fr-tag-v1 mar-t20 tg">
+   <table class="tg w100">
+      <tr>
+        <th class="tg-0lax txt-alignCen font-weiBold w15" [innerHTML]="detectWidthLayout ? 'Mã giao dịch' : ''">
+            
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15" *ngIf="detectWidthLayout">
+         Số tiền
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15" *ngIf="detectWidthLayout">
+            Số dư sau giao dịch
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w15" *ngIf="detectWidthLayout">
+            Loại giao dịch
+        </th>
+        <th class="tg-0lax txt-alignCen font-weiBold w40" *ngIf="detectWidthLayout">
+            Nội dung
+        </th>
+      </tr>
+   
+      <!-- content  -->
+      <ng-container *ngIf="lstTransaction && lstTransaction.length !== 0">
+         <tr  *ngFor="let item of lstTransaction">
+           <th class="tg-0lax w15 ver-align-mid" [ngClass]="detectWidthLayout ? 'w15 txt-alignCen' : 'w100 txt-alignLeft'">
+            <div *ngIf="detectWidthLayout">
+               <div class="font-weiBold w100">
+                {{item.walletTransactionsCode}}
+               </div>
+               <div class="w100 corb2b2b2">
+                {{item.transactionsDate | date: 'hh:mm dd/MM/yyyy'}}
+               </div>
+            </div>
+
+            <div class="w100 dp-inBlock" *ngIf="!detectWidthLayout">
+               <div class="w45 content-inline ver-align-mid">
+                  <span>Mã giao dịch: </span>
+               </div>
+               <div class="w55 content-inline">
+                  <div class="font-weiBold w100">
+                   {{item.walletTransactionsCode}}
+                  </div>
+                  <div class="w100 corb2b2b2">
+                   {{item.transactionsDate | date: 'hh:mm dd/MM/yyyy'}}
+                  </div>
+               </div>
+            </div>
+
+            <div class="w100 dp-inBlock" *ngIf="!detectWidthLayout">
+               <div class="w45 content-inline ver-align-mid">
+                  <span>Số tiền: </span>
+               </div>
+               <div class="w55 content-inline">
+                  <span [innerHTML]="item.symbolsLocation === '2' ? item.symbolsDisplay : ''" ></span>
+                  <span>{{item.amount| currencyChina}}</span>
+                  <span [innerHTML]="item.symbolsLocation === '1' ? item.symbolsDisplay : ''" ></span>
+               </div>
+            </div>
+
+            <div class="w100 dp-inBlock corF44335" *ngIf="!detectWidthLayout">
+               <div class="w45 content-inline">
+                  <span>Số dư sau giao dịch: </span>
+               </div>
+               <div class="w55 content-inline">
+                  <span [innerHTML]="item.symbolsLocation === '2' ? item.symbolsDisplay : ''" ></span>
+                  <span>
+                     {{item.balance| currencyChina}}
+                  </span>
+                  <span [innerHTML]="item.symbolsLocation === '1' ? item.symbolsDisplay : ''" ></span>
+               </div>
+            </div>
+            <div class="w100 dp-inBlock" *ngIf="!detectWidthLayout">
+               <div class="w45 content-inline">
+                  <span>Nội dung: </span>
+               </div>
+               <div class="w55 content-inline">
+                  <span class="corb2b2b2">{{item.content}}</span>
+               </div>
+            </div>
+            <div class="w100 dp-inBlock" *ngIf="!detectWidthLayout">
+               <div class="w45 content-inline">
+                  <span>Loại giao dịch: </span>
+               </div>
+               <div class="w55 content-inline">
+                  <span class="bg3D89B6 corffffff bor1radius2 pad-left10 pad-right10 pad-t5 pad-b5">
+                     <span>{{item.walletTransactionsTypeName}}</span>
+                  </span>
+               </div>
+            </div>
+
+         </th>
+
+           <!-- responsive  -->
+           <th class="tg-0lax ver-align-mid w15 txt-alignCen" *ngIf="detectWidthLayout">
+               <!-- <div *ngIf="detectWidthLayout"> -->
+                  <span [innerHTML]="item.symbolsLocation === '2' ? item.symbolsDisplay : ''" ></span>
+                  <span>{{item.amount | currencyChina}}</span>
+                  <span [innerHTML]="item.symbolsLocation === '1' ? item.symbolsDisplay : ''" ></span>
+               <!-- </div> -->
+           </th>
+
+            <th class="tg-0lax txt-alignCen corF44335 ver-align-mid w15" *ngIf="detectWidthLayout">
+               <span [innerHTML]="item.symbolsLocation === '2' ? item.symbolsDisplay : ''" ></span>
+               <span>
+                  {{item.balance | currencyChina}}
+               </span>
+               <span [innerHTML]="item.symbolsLocation === '1' ? item.symbolsDisplay : ''" ></span>
+            </th>
+           <th class="tg-0lax txt-alignCen ver-align-mid w15" *ngIf="detectWidthLayout">
+            <span class="bg3D89B6 corffffff bor1radius2 pad-left10 pad-right10 pad-t5 pad-b5">
+               <span>{{item.walletTransactionsTypeName}}</span>
+            </span>
+           </th>
+           <th class="tg-0lax corb2b2b2 ver-align-mid w40" *ngIf="detectWidthLayout">
+            {{item.content}}
+           </th>
+         </tr>
+      </ng-container>
+      <ng-container *ngIf="!lstTransaction || (lstTransaction && lstTransaction.length === 0)">
+         <tr>
+            <td colspan="4" >Hiện không có giao dịch nào</td>
+         </tr>
+      </ng-container>
+    </table>
+    <mat-paginator showFirstLastButtons [length]="dataCount" [hidePageSize]="true" [pageSize]="15" (page)="pageEvent = getServerData($event)" [pageSizeOptions]="[pageSize]"></mat-paginator>
+</div>
+ <!-- panel search ví nguồn -->
+            <!-- vì overlaypanel không hoạt động đúng trên android nên nếu android sẽ sử dụng dialog thay overlayPanel -->
+            <p-overlayPanel #searchViNguon [dismissable]="true" [showCloseIcon]="true" [appendTo]="'body'">
+               <div>
+                  <div class="headerTimVi">
+                     <b>Tìm ví nguồn</b>  
+                     <button class="buttonTimvi" (click)="ClearWallet(1)">Xóa</button>
+                  </div>
+               <hr>
+               <div><input pInputText type="text" placeholder="Nhập mã ví" [(ngModel)]="nameWallet"
+                     (keyup)="keyUpFindHandle($event,1)" id="namewallet"></div>
+               <br>
+               <h6><b>DANH SÁCH</b></h6>
+               <p *ngIf="listWallet.length == 0?true:false"><i>{{msg1}}</i></p>
+               <div style="max-height:25vh; overflow-y:scroll;">
+                  <div *ngFor="let wallet of listWallet" class="listWallet" (click)="pickedWallet1=wallet;changeWallet(wallet);searchViNguon.hide()">
+                     <span>{{wallet.walletName}} - {{wallet.walletCode}}</span>
+                  </div>
+               </div>
+               </div>
+            </p-overlayPanel>
+
+            <p-dialog [(visible)]="showDialogVinguon" [modal]="true" [appendTo]="'body'">
+               <div>
+                  <div class="headerTimVi">
+                     <b>Tìm ví nguồn</b>  
+                     <button class="buttonTimvi" (click)="ClearWallet(1)">Xóa</button>
+                  </div>
+                  <hr>
+                  <div><input pInputText type="text" placeholder="Nhập mã ví" [(ngModel)]="nameWallet"
+                     (keyup)="keyUpFindHandle($event,1)" id="namewallet"></div>
+                  <br>
+                  <h6><b>DANH SÁCH</b></h6>
+                  <p *ngIf="listWallet.length == 0?true:false"><i>{{msg1}}</i></p>
+                  <div style="max-height:25vh; overflow-y:scroll;">
+                  <div *ngFor="let wallet of listWallet" class="listWallet" (click)="pickedWallet1=wallet;changeWallet(wallet);showDialogVinguon = false;">
+                     <span>{{wallet.walletName}} - {{wallet.walletCode}}</span>
+                  </div>
+                  </div>
+               </div>
+            </p-dialog>
+

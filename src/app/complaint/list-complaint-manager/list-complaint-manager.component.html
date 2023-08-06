@@ -1,0 +1,159 @@
+<p-toast></p-toast>
+<div *ngIf="mobileVersion == false">
+    <button class="search" pButton type="button" style="margin-left: 0;" (click)="cancelComplaint()"
+        label="Hủy khiếu nại"></button>
+    <button class="search" pButton type="button" (click)="toDetailSelectedComplaint()"
+        label="Chi tiết khiếu nại"></button>
+</div>
+
+<div class="page-header">
+    <h4 class="title">
+        Quản lý khiếu nại
+    </h4>
+
+    <div class="breadcrumb-custom">
+        <span routerLink="/ship-manager">
+            Trang chủ
+        </span>
+        <span routerLink="/ship-manager">
+            <i class="icon fa fa-chevron-right"></i> Quản lý nhập hàng
+        </span>
+        <span>
+            <i class="icon fa fa-chevron-right"></i> Quản lý khiếu nại
+        </span>
+    </div>
+</div>
+
+<div class="w100 tg">
+    <div class="filter">
+        <div class="p-grid no-margin">
+            <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
+                <input type="text" placeholder="Mã khiếu nại" pInputText [(ngModel)]="filterConditions.ComplainCode" />
+            </div>
+            <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
+                <input type="text" placeholder="Mã đợn hàng" pInputText [(ngModel)]="filterConditions.OrderCode" />
+            </div>
+            <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
+                <input type="text" placeholder="Mã sản phẩm" pInputText [(ngModel)]="filterConditions.ItemCode" />
+            </div>
+            <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
+                <div class="calendar">
+                    <p-calendar [yearNavigator]="true" yearRange="2000:2030"
+                        [style]="{'width':'100%', 'display': 'flex'}" [inputStyle]="{'width':'95%'}"
+                        placeholder="Từ ngày" dateFormat="dd/mm/yy" showButtonBar="true"
+                        [(ngModel)]="filterConditions.StartDate" [showIcon]="false" inputId="icon">
+                    </p-calendar>
+                </div>
+            </div>
+            <div class="p-col-12 p-md-4 p-lg-3 p-xl-2 filter-control">
+                <div class="calendar">
+                    <p-calendar dateFormat="dd/mm/yy" showButtonBar="true"
+                        [minDate]="filterConditions.StartDate ? filterConditions.StartDate: currentDate "
+                        [yearNavigator]="true" yearRange="2000:2030" [style]="{'width':'100%',  'display': 'flex'}"
+                        [inputStyle]="{'width':'95%'}" placeholder="Đến ngày" [(ngModel)]="filterConditions.EndDate"
+                        [showIcon]="false" inputId="icon">
+                    </p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="p-grid no-margin">
+            <button class="search" pButton type="button" (click)="getComplaints(1, pageSize, filterConditions)"
+                label="Tìm kiếm"></button>
+        </div>
+    </div>
+
+    <div class="table-data">
+        <p-table [value]="complaintList" scrollWidth="calc(100% - 200px)" [scrollable]="true"
+            *ngIf="mobileVersion == false">
+            <ng-template pTemplate="caption">
+                <div style="text-align: left;">
+                    Số khiếu nại :
+                    <span class="no-complaint"> {{complaintList.length}} </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 50px;">
+                        <p-checkbox  binary="true" inputId="binary" (onChange)="checkAllComplaints($event)"
+                            [(ngModel)]="checkedAll"></p-checkbox>
+                    </th>
+                    <th style="width: 150px;">Mã KN</th>
+                    <th style="width: 150px;">Mã đơn</th>
+                    <th style="width: 120px;">Mã sản phẩm</th>
+                    <th style="width: 150px;">Lý do</th>
+                    <th style="width: 150px;">Đề xuất</th>
+                    <th style="width: 100px;">Trạng thái</th>
+                    <th style="width: 150px;">Ngày tạo</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-complaint>
+                <tr>
+                    <td style="width: 50px;">
+                        <p-checkbox name="groupcomplainId" [value]="complaint.complainId"
+                            [(ngModel)]="complaintIdSelecteds"></p-checkbox>
+                    </td>
+                    <td style="width: 150px; cursor: pointer;">
+                        <a (mousedown)="toDetailComplaint(complaint.complainId)" target="_blank" href="{{returnDetailComplaint}}">
+                            {{complaint.complainCode}}
+                         </a>
+                    </td>
+                    <td style="width: 150px; cursor: pointer;">
+                        <a (mousedown)="goToOrder(complaint.orderId)" target="_blank" href="{{returnOrderUrl}}">
+                            {{complaint.orderCode}}
+                         </a>
+                    </td>
+                    <td style="width: 120px;">{{complaint.itemCode}}</td>
+                    <td style="width: 150px;">{{complaint.complainContent}}</td>
+                    <td style="width: 150px;">{{complaint.complainSettle}}</td>
+                    <td style="width: 100px;">
+                        <span
+                            [ngClass]="{'no-cancel': ['1','2','3'].includes(complaint.status) , 'cancel': complaint.status == 4}">{{complaint.statusDisplay}}</span>
+                    </td>
+                    <td style="width: 150px;">{{complaint.createdDate | date:'dd/MM/yyyy' }}</td>
+
+                </tr>
+            </ng-template>
+        </p-table>
+        <div *ngIf="mobileVersion == true" class="mobile-table">
+            <div class="num-complaint">
+                Số khiếu nại :
+                <span class="no-complaint"> {{complaintList.length}} </span>
+            </div>
+            <div *ngFor="let complaint of complaintList" class="complaint-item">
+                <p style="cursor: pointer;" (click)="toDetailComplaint(complaint.complainId)">
+                    <strong class="title"> Mã KN:</strong> <strong class="code"> {{complaint.complainCode}} </strong>
+                </p>
+                <p style="cursor: pointer;" (click)="toOrderDetail(complaint.orderId)"
+                    routerLink="ship-manager/detail-orders?orderId={{complaint.orderId}}">
+                    <strong class="title">Mã đơn: </strong> <strong class="code"> {{complaint.orderCode}} </strong>
+                </p>
+                <p><strong class="title">Mã SP: </strong> {{complaint.itemCode}}</p>
+                <p>
+                    <strong class="title">Lý do: </strong>
+                    <span class="detail">{{complaint.complainContent}}</span>
+                </p>
+                <p>
+                    <strong class="title">Đề xuất: </strong>
+                    <span class="detail">{{complaint.complainSettle}}</span>
+                </p>
+                <p><strong class="title">Trạng thái: </strong>
+                    <span
+                        [ngClass]="{'no-cancel': ['1','2','3'].includes(complaint.status) , 'cancel': complaint.status == 4}">{{complaint.statusDisplay}}</span>
+                </p>
+                <p><strong class="title">Ngày tạo:</strong> <span>{{complaint.createdDate | date:'dd/MM/yyyy' }}</span>
+                </p>
+            </div>
+        </div>
+        <div class="footer" *ngIf="complaintList.length && complaintList.length == 0">
+            <strong class="no-complaint">
+                Không tồn tại khiếu nại nào
+            </strong>
+        </div>
+        <div class="footer" *ngIf="msgs && msgs.length > 0">
+            <p-messages [(value)]="msgs" [closable]="false" [style]="{'width': '100% !important'}" (click)="clear()">
+            </p-messages>
+        </div>
+        <mat-paginator showFirstLastButtons [length]="dataCount" [hidePageSize]="true" [pageSize]="pageSize"
+            (page)="pageEvent=getComplaintsByPageIndex($event)"></mat-paginator>
+    </div>
+</div>

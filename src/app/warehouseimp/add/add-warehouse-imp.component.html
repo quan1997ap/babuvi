@@ -1,0 +1,263 @@
+<div autoscroll="true" class="ng-scope">
+    <div class="row">
+        <div class="col-left pr-2 pl-2 mb-3 mb-md-0">
+            <div class="block">
+                <div class="block-title text-uppercase p-2 font-weight-bold">Thông tin phiếu nhập hàng</div>
+                <div class="block-content p-3">
+                    <form #warehouseImpForm="ngForm" (keydown.enter)="$event.preventDefault()">
+                        <div class="form-group">
+                            <label for="warehouseExpCode">Mã phiếu xuất</label>
+                            <input type="text" class="form-control" id="warehouseExpCode" name="warehouseExpCode"
+                                #warehouseExpCd="ngModel" [readOnly]="isLoadByImpId"
+                                (keydown.enter)="loadWarehouseImpByExpCode(warehouseExpCd.value)" ngModel
+                                [(ngModel)]="warehouseExpCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="expWarehouseId">Kho xuất hàng</label>
+                            <select class="form-control" id="expWarehouseId" name="expWarehouseId" ngModel
+                                [(ngModel)]="warehouseImp.expWarehouseId">
+                                <option *ngFor="let warehouse of warehouseList" [value]="warehouse.warehouseId">
+                                    {{warehouse.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="warehouseImpCode">Mã phiếu nhập</label>
+                            <input type="text" class="form-control" id="warehouseImpCode" name="warehouseImpCode"
+                                ngModel [readonly]="true" [(ngModel)]="warehouseImp.warehouseImpCode">
+                        </div>
+                        <div class="form-group">
+                            <label for="warehouseId">Kho nhập hàng</label>
+                            <select class="form-control" id="warehouseId" name="warehouseId" ngModel
+                                [(ngModel)]="warehouseImp.warehouseId" #warehouseId
+                                (change)="loadListStorekeeperInWarehouse(warehouseId.value)">
+                                <option *ngFor="let warehouse of warehouseList" [value]="warehouse.warehouseId">
+                                    {{warehouse.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="impDate">Ngày nhập hàng</label>
+                            <input type="date" class="form-control" id="impDate" name="impDate" ngModel
+                                [(ngModel)]="warehouseImp.impDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="storekeeperId">Thủ kho</label>
+                            <!--                            TODO: need to set property of storekeeper by property of object-->
+                            <select class="form-control" id="storekeeperId" name="storekeeperId" ngModel
+                                [(ngModel)]="warehouseImp.storekeeperId">
+                                <option *ngFor="let keeper of storekeeperList" [value]="keeper.userId">
+                                    {{keeper.firstName + ' ' + keeper.lastName}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Trạng thái</label>
+                            <select class="form-control" id="status" name="status" ngModel
+                                [(ngModel)]="warehouseImp.status">
+                                <option *ngFor="let status of warehouseImpStatusList" [value]="status.value">
+                                    {{status.displayValue}}</option>
+                            </select>
+                        </div>
+                        <!-- <div class="row ml-0 mr-0">
+                            <button type="submit" (click)="saveWarehouseImp(warehouseImpForm)"
+                                class="btn btn-primary w-25 col">Lưu</button>
+                            <button type="button" (click)="completeWarehouseImp(warehouseImpForm)"
+                                class="btn btn-success w-25 col ml-3">Hoàn tất
+                            </button>
+                        </div> -->
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-right pr-2 pl-2">
+            <div class="warehouse-imp-list mb-3 block">
+                <div class="block-title text-uppercase p-2 font-weight-bold">Chi tiết phiếu nhập hàng</div>
+                <div class="block-content">
+                    <div class="add-warehouse-imp-detail p-3">
+                        <form #warehouseImpDetailForm="ngForm" (keydown.enter)="$event.preventDefault()">
+                            <div class="form-row">
+                                <label class="description" for="width">{{merchandiseCheckPartner.description}}</label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm">
+                                    <label for="merchandiseCode">Mã kiện hàng</label>
+                                    <!-- (focusout)="checkMerchandiseCode($event,merchandiseCode.value, 'focusout')" -->
+                                    <input type="text" class="form-control" id="merchandiseCode" name="merchandiseCode"
+                                        required #merchandiseCode="ngModel" ngModel
+                                        [(ngModel)]="warehouseImpDetail.merchandiseCode"
+                                        (keyup.enter)="checkMerchandiseCode($event,merchandiseCode.value, 'enter')"
+                                        (ngModelChange)="merchandiseCodeChange($event, merchandiseCode.value)"
+                                        (keydown.Tab)="checkNextControlMerchandiseCode($event, merchandiseCode.value)"
+                                        #inputToFocus tabindex="1">
+                                    <div *ngIf="merchandiseCode.invalid && ((merchandiseCode.dirty || merchandiseCode.touched) || warehouseImpDetailForm.submitted)"
+                                        class="alert-no-bg">
+                                        <small *ngIf="merchandiseCode.errors.required" role="alert">Trường "Mã kiện
+                                            hàng" không được để
+                                            trống</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group upload-img-section"
+                                    *ngIf="warehouseImpDetail.merchandiseCode && !checkEditExistingMerchandise()">
+                                    <label class="upload-img-padding" for="shelfPosition">&nbsp;</label>
+                                    <button tabindex="2"
+                                        *ngIf="!warehouseImpDetail.lsImage || !warehouseImpDetail.lsImage.length; else has_img"
+                                        class="capture" pButton pRipple (click)="checkMerchandiseCode(undefined,merchandiseCode.value)"
+                                        (keyup.enter)="checkMerchandiseCode(undefined, merchandiseCode.value)" type="button"
+                                        pTooltip="Thêm ảnh ( Bạn cần up tối thiểu 1 ảnh )">
+                                        <i class="pi pi-image" id="icon-upload-img"></i>
+                                    </button>
+                                    <ng-template #has_img>
+                                        <button pButton pRipple tabindex="2" class="btn-img-uploaded">
+                                            <img class="img-uploaded" pTooltip="Sửa ảnh" (click)="checkMerchandiseCode(undefined, merchandiseCode.value)"
+                                                [style.background-image]="'url(' + warehouseImpDetail.lsImage[0].attachLink + ')'"
+                                                [src]="warehouseImpDetail.lsImage[0].attachLink" style="margin-right: 0;">
+                                        </button>
+                                    </ng-template>
+                                </div>
+                                <div class="form-group col-sm">
+                                    <label for="shelfPosition">Mã vị trí</label>
+                                    <input type="text" class="form-control" id="shelfPosition" name="shelfPosition"
+                                        ngModel [(ngModel)]="warehouseImpDetail.shelfPosition" tabindex="8" >
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-sm">
+                                    <label for="netWeight">Cân nặng</label>
+                                    <input type="number" class="form-control" id="netWeight" name="netWeight" ngModel
+                                        (keydown.Tab)="checkNextControlNetWeight($event, warehouseImpDetail.netWeight, 'keydownTab')"
+                                        [(ngModel)]="warehouseImpDetail.netWeight" #inputToFocus tabindex="3"
+                                        (keyup.enter)="checkNextControlNetWeight($event, warehouseImpDetail.netWeight, 'keyupEnter')">
+                                    <label for="netWeight">{{merchandiseCheckPartner.netWeight}}kg - {{merchandiseCheckPartner.volume}}m3</label>
+                                </div>
+                                <div class="form-group col-sm">
+                                    <label for="length">Dài</label>
+                                    <input type="number" class="form-control" id="length" name="length" ngModel
+                                        [(ngModel)]="warehouseImpDetail.length" #inputToFocus tabindex="4"
+                                        (keyup.enter)="nextFocus($event)"
+                                        (keydown.Tab)="nextFocus($event)">
+                                    <label for="length">{{merchandiseCheckPartner.length}}</label>
+                                </div>
+                                <div class="form-group col-sm">
+                                    <label for="width">Rộng</label>
+                                    <input type="number" class="form-control" id="width" name="width" ngModel
+                                        [(ngModel)]="warehouseImpDetail.width" #inputToFocus tabindex="5"
+                                        (keyup.enter)="nextFocus($event)"
+                                        (keydown.Tab)="nextFocus($event)">
+                                    <label for="width">{{merchandiseCheckPartner.width}}</label>
+                                </div>
+                                <div class="form-group col-sm">
+                                    <label for="height">Cao</label>
+                                    <input type="number" class="form-control" id="height" name="height" ngModel
+                                        [(ngModel)]="warehouseImpDetail.height" #inputToFocus tabindex="6"
+                                        (keyup.enter)="nextFocus($event, 'height')"
+                                        (keydown.Tab)="nextFocus($event, 'height')"
+                                        (blur)="nextFocus($event, 'height')" >
+                                    <label for="height">{{merchandiseCheckPartner.height}}</label>
+                                </div>
+                                <!-- <div class="form-group col-sm align-bottom align-self-end">
+                                    <button class="btn btn-primary w-100" #inputToFocus tabindex="7"
+                                    id="add-btn"
+                                    (keyup.enter)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
+                                    (click)="saveWarehouseImpDetail(warehouseImpDetailForm, $event)"
+                                    [disabled]="!warehouseImpDetail.merchandiseCode || !isValidSize() || !warehouseImpDetail?.lsImage?.length || loading">{{isEditWarehouseImpDetails
+                                    ? 'Lưu' : 'Thêm'}}</button>
+                                </div> -->
+                            </div>
+                            <div *ngIf="!isValidSize()" class="alert-no-bg">
+                                <small role="alert">Vui lòng nhập đầy đủ kích thước Dài Rộng Cao</small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="warehouse-imp-detail">
+                        <div class="warehouse-imp-action d-flex" style="margin-left: 10px;">
+                            <div class="delete action" (click)="deleteAllWarehouseImpDetail()">Xóa tất cả</div>
+                        </div>
+                        <div class="table-statistic">
+                            Tổng kiện: {{warehouseImpDetailList.length}} | Tổng cân nặng {{sumWeight()}} kg
+                        </div>
+                        <ngx-datatable class="material" rowHeight="auto" [rows]="warehouseImpDetailList"
+                            [headerHeight]="0" [messages]="tableMessage" [columnMode]="columnMode.force"
+                            [headerHeight]="45" [footerHeight]="45" [limit]="5" [selected]="selected"
+                            [selectionType]="selectionType.checkbox" [selectAllRowsOnPage]="false"
+                            (select)="onSelect($event)">
+                            <ngx-datatable-column [minWidth]="120">
+                                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                    <img class="first-img-of-pack"
+                                        *ngIf="row.lsImage && row.lsImage[0] && row.lsImage[0].attachLink; else noImg"
+                                        [src]="row.lsImage[0]?.attachLink"
+                                        (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
+                                    <ng-template #noImg>
+                                        <img class="first-img-of-pack" src="assets/images/no-img.jpg"
+                                            (click)="editListImgOfMerchandise(row.lsImage, rowIndex)">
+                                    </ng-template>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [minWidth]="200">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div *ngIf="row.merchandiseCode" pTooltip={{row.merchandiseCode}}>
+                                        <strong>{{row.merchandiseCode}}</strong>
+                                        <!-- <span>{{row.warehouseImpDetailId}}</span> -->
+                                    </div>
+                                    <div *ngIf="row.shelfPosition" pTooltip={{row.shelfPosition}}>
+                                        Vị trí: <strong>{{row.shelfPosition}}</strong>
+                                    </div>
+                                    <div></div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [minWidth]="270">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div>Cân nặng: <span class="highlight-txt">{{row.netWeight}}</span></div>
+                                    <div>Thể tích:
+                                        <span class="highlight-txt" *ngIf="row.length && row.width && row.height">
+                                            {{row.length}} x
+                                            {{row.width}} x
+                                            {{row.height}}
+                                            ( {{row.length && row.width && row.height}} kg )
+                                        </span>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column [minWidth]="120">
+                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                                    <button class="btn remove-warehouseImp"
+                                        (click)="deleteOneWarehouseImpDetail(row, rowIndex)">
+                                        Xóa
+                                    </button>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-wrapper" [hidden]="!loading">
+    <div class="spinner-container">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+</div>
+
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" key="notificationPopup" appendTo="body">
+</p-confirmDialog>
+<p-toast key="notificationPopup"></p-toast>
+
+<p-confirmDialog #cd key="comfirmOrder" icon="pi pi-exclamation-triangle" appendTo="body">
+    <p-footer>
+        <div>
+            <label style="display: block; text-align: left;">Nhập mã đơn hàng để khai báo.</label>
+            <input type="text" autocomplete="off" class="form-control" id="orderCodeMapping" name="orderCodeMapping"
+                placeholder="Mã đơn hàng" ngModel [(ngModel)]="orderCodeMapping"
+                (keydown.enter)="confirmDialogEvent(cd, 1)"
+            >
+            <br><br>
+        </div>
+        <button type="button" pButton icon="pi pi-check" label="Khai báo"
+            (click)="confirmDialogEvent(cd, 1)"></button>
+        <button type="button" pButton icon="pi pi-check" label="Bỏ qua"
+            (click)="confirmDialogEvent(cd, 2)"></button>
+        <button type="button" pButton icon="pi pi-times" label="Hủy"
+            (click)="confirmDialogEvent(cd, 3)"></button>
+    </p-footer>
+</p-confirmDialog>

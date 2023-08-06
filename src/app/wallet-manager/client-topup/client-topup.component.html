@@ -1,0 +1,21 @@
+<p-toast></p-toast>
+<p>Thanh toán trực tuyến an toàn.</p>
+<p>Nạp tiền vào ví hoàn tất trong vài giây.</p>
+<p>Quý khách hàng chuyển khoản qua ngân hàng của Babuvi dưới đây</p> 
+<p >Số tài khoản: <span><strong>0550156785555</strong></span> - Chủ tài khoản:  <span><strong>TRANG THI HAI</strong></span> - Ngân hàng: <span><strong>MBbank</strong></span> chi nhánh Minh Khai <p>Nội dung chuyển khoản ghi rõ: <br>
+</p>
+<div>
+    <div class="alert alert-info">
+        <span class="text-black"> <strong>{{topupCode}}</strong> </span>
+  
+        <i class="pi pi-copy" pTooltip="Click để copy" tooltipPosition="top" ngxClipboard
+            [cbContent]="topupCode" (click)="copy()"></i>
+
+        <!-- <span matTooltip="Click để copy"
+        class="d-inline-block ml-1"
+        matTooltipPosition="above"
+        aria-label="Click để copy"> 
+        <mat-icon class="copy-icon" aria-hidden="false" aria-label="Example home icon" (click)="copyCode()">content_copy</mat-icon>
+        </span> -->
+    </div>
+</div>

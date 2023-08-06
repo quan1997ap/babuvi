@@ -1,0 +1,42 @@
+// .opt-menu {
+    .mat-menu-item {
+        line-height: unset !important;
+    }
+// }
+.shoplink-not-match{
+    color: #007bff;
+    font-size: 16px;    
+}
+a.shoplink{
+    text-decoration: none;
+    &:hover{
+        color: #fff;
+    }
+}
+.cartButton{
+    margin-left: 5px;
+}
+.text-overflex-ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    a{
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+// =================================================
+.row{
+    margin-right: unset !important;
+    margin-left: unset !important;
+}
+
+.w100 {
+    width: 100px;
+}
+.w40 {
+    width: 40%;
+}

@@ -1,0 +1,241 @@
+<div class="w100 order-consignment" *ngIf="configAddressFormVisible === false">
+
+    <div class="d-flex">
+        <div class="tab-title">Thông tin kí gửi
+        </div>
+        <div class="border-tab"></div>
+    </div>
+    <div class="form-container" *ngIf="!updateSuccess">
+        <div class="p-grid">
+            <div class="p-col-12 p-md-12 p-lg-5 ui-xl-6" style="padding: 15px 15px !important;">
+                <form [formGroup]="orderConsignmentForm" class="w-100">
+                    <div class="p-grid">
+                        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6">
+                            <div class="formcontrol dropdown-style">
+                                <div class="title">Kho kí gửi</div>
+                                <p-dropdown [style]="{'width': '100%'}" placeholder="Chọn"
+                                    [options]="consignmentWarehouseOptions" formControlName="warehouseStarted">
+                                </p-dropdown>
+                            </div>
+                            <div>
+                                <div class="title">Người nhận</div>
+                                <div class="control-array">
+                                    {{orderConsignmentForm.value.warehouseStarted.receiver}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="title">Khu vực</div>
+                                <div class="control-array">
+                                    {{orderConsignmentForm.value.warehouseStarted.addressInformation}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="title">Địa chỉ</div>
+                                <div class="control-array">
+                                    {{orderConsignmentForm.value.warehouseStarted.address}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="title">Mã bưu điện</div>
+                                <div class="control-array">
+                                    {{orderConsignmentForm.value.warehouseStarted.postCode}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="title">Số điện thoại</div>
+                                <div class="control-array">
+                                    {{orderConsignmentForm.value.warehouseStarted.phone}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-12 p-lg-12 p-xl-6">
+                            <div class="formcontrol dropdown-style">
+                                <div class="title">Kho nhận hàng</div>
+                                <p-dropdown [style]="{'width': '100%'}" placeholder="Chọn"
+                                    [options]="getWarehouseVNOptions" formControlName="warehouseEnd"></p-dropdown>
+                            </div>
+                            <div class="formcontrol">
+                                <div class="title d-flex">Địa chỉ nhận hàng <span
+                                    class="text-red">*</span>
+                                    <span (click)="openDeliveryAddressForm()" class="edit-delivery-address">
+                                        <i class="fa fa-edit"></i>
+                                    </span>
+                                </div>
+                                <div class="control-array" *ngIf="currentdeliveryAddress">
+                                    <p>
+                                        <strong *ngIf="currentdeliveryAddress.receiver">
+                                            {{currentdeliveryAddress.receiver}}
+                                        </strong>
+                                        <span *ngIf="currentdeliveryAddress.phone"> -
+                                            {{currentdeliveryAddress.phone}}</span>
+                                    </p>
+                                    <p>
+                                        <span *ngIf="currentdeliveryAddress.wardDisplay">
+                                            {{currentdeliveryAddress.address}} </span>
+                                        <span *ngIf="currentdeliveryAddress.wardDisplay"> -
+                                            {{currentdeliveryAddress.wardDisplay}}
+                                        </span>
+                                        <span *ngIf="currentdeliveryAddress.districtDisplay"> -
+                                            {{currentdeliveryAddress.districtDisplay}} </span>
+                                        <span *ngIf="currentdeliveryAddress.cityDisplay"> -
+                                            {{currentdeliveryAddress.cityDisplay}}
+                                        </span>
+                                        <span *ngIf="currentdeliveryAddress.countryDisplay"> -
+                                            {{currentdeliveryAddress.countryDisplay}} </span>
+                                    </p>
+                                </div>
+                                <ng-template *ngIf="deliveryAddressList.length == 0;">
+                                    <div class="control-array">
+                                        Bạn chưa cấu hình địa chỉ nào
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="formcontrol">
+                                <div class="title d-flex">Dịch vụ vận chuyển
+                                    <span (click)="viewAllShippingType()" class="edit-delivery-address">
+                                        <i class="fa fa-edit" *ngIf="displayAllShippingType == false"></i>
+                                        <i class="fa fa-plus" *ngIf="displayAllShippingType == true"></i>
+                                    </span>
+                                </div>
+                                <div  class="formcontrol dropdown-style" *ngIf="shippingTypeOptions && shippingTypeOptions.length > 0; else NoShippingType">
+                                    <p-dropdown (onChange)="shippingTypeChange($event)" placeholder="Chọn" [style]="{ 'width' : '100%'}" [options]="shippingTypeOptions" formControlName="shippingType" ></p-dropdown>
+                                </div>
+
+                                <ng-template #NoShippingType>
+                                    <div class="control-array">
+                                        Không có dịch vụ vận chuyển nào khả dụng
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="formcontrol">
+                                <div class="title d-flex">Dịch vụ
+                                    <span (click)="viewAllService()" class="edit-delivery-address">
+                                        <i class="fa fa-edit" *ngIf="displayAllService == false"></i>
+                                        <i class="fa fa-plus" *ngIf="displayAllService == true"></i>
+                                    </span>
+                                </div>
+                                <div class="control-array"
+                                    *ngIf="lsServiceOption && lsServiceOption.length > 0; else NoService">
+                                    <div *ngFor="let service of lsServiceOption"
+                                        [ngStyle]="{'display': displayAllService || orderConsignmentForm.value.lsService.includes(service.value) ? 'block': 'none'}">
+                                        {{service.name}}
+                                        <p-checkbox name="serviceList" value="service.value" [value]="service.value"
+                                            [label]="service.label" [inputId]="service.value"
+                                            [formControl]="orderConsignmentForm.controls['lsService']" ></p-checkbox>
+                                    </div>
+                                    <div
+                                        *ngIf="orderConsignmentForm.value.lsService.length == 0 && displayAllService == false">
+                                        Chưa chọn dịch vụ nào
+                                    </div>
+                                </div>
+                                <ng-template #NoService>
+                                    <div class="control-array">
+                                        Không có dịch vụ nào khả dụng
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="formcontrol">
+                                <div class="title d-flex">Khai báo
+                                    <span (click)="viewAllClassification()" class="edit-delivery-address">
+                                        <i class="fa fa-edit" *ngIf="displayAllClassification == false"></i>
+                                        <i class="fa fa-plus" *ngIf="displayAllClassification == true"></i>
+                                    </span>
+                                </div>
+                                <div class="control-array"
+                                    *ngIf="classificationOptions || classificationOptions.length > 0; else NoClassification">
+                                    <div *ngFor="let classification of classificationOptions;"
+                                        [ngStyle]="{'display': displayAllClassification || orderConsignmentForm.value.classifications.includes(classification.value) ? 'block': 'none'}">
+                                        <p-checkbox name="Classifications" value="classification.value"
+                                            [value]="classification.value" [inputId]="classification.value"
+                                            [label]="classification.label"
+                                            [formControl]="orderConsignmentForm.controls['classifications']">
+                                        </p-checkbox>
+                                    </div>
+                                    <div
+                                        *ngIf="orderConsignmentForm.value.classifications.length == 0 && displayAllClassification == false">
+                                        Chưa chọn khai báo nào
+                                    </div>
+                                </div>
+                                <ng-template class="control-array" #NoClassification>
+                                    Không có lựa chọn nào khả dụng
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-col-12 p-md-12 p-lg-7 ui-xl-6">
+                <div style="height: 40px;">
+                    <span class="reset-merchandises" (click)="resetLsMerchandise()"><i class="pi pi-times"></i>
+                        &nbsp;Xóa hết</span>
+                </div>
+                <p-table [value]="lsMerchandise">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="bk-header">Mã kiện hàng</th>
+                            <th class="bk-header">Giá kiện hàng</th>
+                            <th class="bk-header">Ghi chú</th>
+                            <th class="bk-header" style="width: 50px;"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-classification let-rowIndex="rowIndex">
+                        <tr>
+                            <td class="bk-table-col">
+                                <textarea pInputTextarea placeholder="Nhập mã kiện hàng"
+                                    style="width:100%; min-height: 36px;" [rows]="1"
+                                    [(ngModel)]="lsMerchandise[rowIndex].MerchandiseCode"></textarea>
+                            </td>
+                            <td class="bk-table-col">
+                                <input matInput type="text" style="width:100%" mvndrMatCurrencyFormat
+                                    [allowNegative]="false" [currencyCode]="' '"
+                                    [value]="lsMerchandise[rowIndex].PriceDeclared"
+                                    (blur)="updateUSAmount($event, rowIndex)" />
+                            </td>
+                            <td class="bk-table-col">
+                                <textarea pInputTextarea placeholder="Nhập ghi chú"
+                                    style="width:100%; min-height: 36px;" [rows]="1"
+                                    [(ngModel)]="lsMerchandise[rowIndex].Description"></textarea>
+                            </td>
+                            <td class="bk-table-col" style="width: 50px;padding-left: 8px;"> <button
+                                    (click)="deleteMerchandise(rowIndex)" *ngIf="rowIndex > 0" pButton pRipple
+                                    type="button" icon="pi pi-times"
+                                    class="p-button-raised delete-merchandise"></button></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="d-flex justify-content-end">
+                    <button (click)="addMerchandise()" pButton pRipple type="button" icon="pi pi-plus"
+                        class="p-button-raised add-merchandise" label="Thêm kiện hàng"></button>
+                </div>
+            </div>
+        </div>
+        <div class="row message-section">
+            <p-messages [(value)]="msgs" [closable]="false" [style]="{'width': '100% !important'}" (click)="clear()">
+            </p-messages>
+        </div>
+        <div class="w100 btn-save-section">
+            <div class="content-inline w20 bor txt-alignCen ml-per10 mr-per10 bor-ra3 pb5 pt5 cur-point bgF44335 corffffff saveBtn"
+                (click)="addOrderConsignment()">
+                Lưu
+            </div>
+        </div>
+        <div class="note-message">
+            <p>Lưu ý: Hàng pin, chất lỏng, loa, sản phẩm có từ trường sẽ được vận chuyển đường bộ.</p>
+            <p>Không nhận hàng cấm, dao kiếm, gậy 3 khúc, súng ống, ma túy đá...Khách hàng sẽ chịu trách nhiệm hoàn toàn
+                trước pháp luật nếu bị phát hiện</p>
+        </div>
+
+    </div>
+    <div class="update-success" *ngIf="updateSuccess === true">
+        <p class="content">
+            <i class="icon pi pi-check-circle" style="font-size: 2rem"></i>
+            <span class="success-message">Thêm thông tin kí gửi thành công</span>
+        </p>
+        <span (click)="clearSuccessMessage()" class="next"> Tiếp tục </span>
+    </div>
+</div>
+<div class="w100" *ngIf="configAddressFormVisible === true">
+    <app-config-delivery-address [selectedAddress]="currentdeliveryAddress" [lstAddress]="deliveryAddressList"
+        (closeForm)="closeDeliveryAddressForm($event)">
+    </app-config-delivery-address>
+</div>

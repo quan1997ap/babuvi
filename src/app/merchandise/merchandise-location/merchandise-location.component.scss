@@ -1,0 +1,52 @@
+.page-header{
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 4px solid #f15922;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+}
+
+.form{
+    min-width: 600px;
+    padding: 16px;
+    .row{
+        margin-bottom: 12px;
+    }
+}
+
+::ng-deep{
+    .form p-message > div{
+        width: calc(100vw - 100px);
+        max-width: 300px;
+    }
+    input{
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .block-only-mobile{
+        display: block;
+    }
+    .tr-only-mobile {
+        display: table-row;
+    }
+    .bl-hide-on-mobile, .tr-hide-on-mobile{
+        display: none;
+    }
+}
+  
+@media only screen and (min-width: 600px) {
+    .block-hide-on-mobile{
+        display: block;
+    }
+    .tr-hide-on-mobile {
+        display: table-row;
+    }
+    .bl-only-mobile, .tr-only-mobile{
+        display: none;
+    }
+}
+  

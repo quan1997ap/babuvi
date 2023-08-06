@@ -1,0 +1,52 @@
+<p-confirmDialog header="Xác nhận" icon="pi pi-exclamation-triangle" width="425" appendTo="body" #cdConfirm
+  [baseZIndex]="50000">
+  <p-footer>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" label="Hủy"
+      (click)="cdConfirm.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Đồng ý" (click)="cdConfirm.accept()"></button>
+  </p-footer>
+</p-confirmDialog>
+<p-toast></p-toast>
+<ngx-spinner type="line-spin-fade" [fullScreen]="true" size="default"></ngx-spinner>
+<div class="service-detail">
+  <div class="img-section">
+    <img class="img-service" *ngIf="!servicePack.image"
+      src="assets/service-provider-icon.jpg" />
+    <img class="img-service" *ngIf="servicePack.image" [src]="servicePack.image" />
+  </div>
+  <div class="service-detail-action">
+    <div class="name-section">
+      <strong class="service-pack-name">{{servicePack.servicePackTitle}}</strong>
+      <button pButton class="primary-btn register" type="button" label="Đăng kí"
+        (click)="paymentServicePack()"></button>
+    </div>
+    <div class="cost-infor">
+      <div class="title">
+        Giá gói
+      </div>
+      <div class="cost">
+        <i class="pi pi-tags icon"></i>
+        <span class="text">{{servicePack.price | currencyChina}} đ</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="detail">
+  <div class="infor bold"> <span class="title">Tên gói : </span> <span
+      class="bold highlight">{{servicePack.servicePackTitle}}</span> </div>
+
+  <div class="infor bold"> <span class="title">Mô tả : </span> <span
+      class="highlight">{{servicePack.servicePackSubTitle}} </span>
+  </div>
+
+  <!-- <div class="infor"><span class="bold title">Điều khoản sử dụng : </span> <span
+    class="bold highlight">{{servicePack.servicePackTerm}}</span> </div> -->
+  <div class="infor"><span class="bold title">Điều khoản sử dụng : </span> <span
+    class="bold highlight"><p style ="word-break: break-all;" [innerHTML] = "servicePack.servicePackTerm"></p></span> </div>
+
+  <div class="infor"><span class="bold title">Giá gói : </span> <span
+      class="bold highlight">{{servicePack.price | currencyChina}} đ</span> </div>
+
+  <div class="infor bold"> <span class="title">Hiệu lực : </span> <span
+      class="bold highlight">{{servicePack.startDate | date: 'dd/MM/yyyy hh:mm:ss'}} - {{servicePack.endDate | date: 'dd/MM/yyyy hh:mm:ss'}} </span> </div>
+</div>

@@ -1,0 +1,26 @@
+.alert-info {
+    //position: relative;
+    background-color: #eff9fd!important;
+    border-color: #cde5ee!important;
+    width: 250px;
+    
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #000000;
+}
+.copy-icon {
+    font-size: 20px;
+    padding-left: 10px;
+    color: blue;
+  }
+.pi-copy {
+    padding-left: 10px;
+    font-size: 24px !important;
+    cursor: pointer;
+    color: #007bff;
+    :hover {
+      transform: scale(1.2);
+    }
+  }

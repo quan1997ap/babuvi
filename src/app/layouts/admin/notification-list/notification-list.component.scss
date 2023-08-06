@@ -1,0 +1,123 @@
+:host{
+  height: 100%;
+  width: 100%;
+}
+.noti-wrap{
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  margin-bottom: 24px;
+  font-weight: bold;
+  border-bottom: 4px solid #f44335;
+  width: fit-content;
+  padding-bottom: 3px;
+  .title {
+    font-size: 20px;
+    color: #f44335;
+  }
+}
+
+.unread{
+  font-weight: bold;
+}
+@media (max-width: 600px) {
+  .notification{
+
+    .notification-item {
+      display: flex;
+      flex-direction: column;
+      span{
+        text-align: left;
+        margin-bottom: 4px;
+      }
+      .date{
+        text-align: left !important;
+      }
+    }
+    .checkbox{
+      justify-content: flex-start !important;
+    }
+  }
+}
+
+.notification {
+  max-height: calc( 90vh - 210px ) !important;
+  overflow: auto;
+  .notification-item {
+    display: flex;
+    margin-bottom: 8px;
+    &:not(:last-child){
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+    }
+    cursor: pointer;
+    &:hover{
+      background: #fcfcfc;
+    }
+    .type {
+      width: 108px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: red;
+    }
+    .title {
+      flex: 1;
+      padding-right: 12px;
+    }
+    .date {
+      width: 126px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+}
+
+.footer {
+  align-items: flex-end;
+  .checkbox {
+    display: flex;
+    justify-content: flex-end;
+    bottom: 100px;
+    padding: 16px 0;
+  }
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  border-top: 1px solid #ddd;
+  float: right;
+  min-width: 200px;
+}
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  .loading-content{
+      text-align: center;
+      i {
+        font-size: 50px !important;
+        color: gray;
+      }
+      div{
+          font-size: 20px;
+      }
+  }
+}
+
+.error{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    .error-content{
+        .try-again{
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}

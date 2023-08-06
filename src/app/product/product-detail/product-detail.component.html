@@ -1,0 +1,318 @@
+<div class="row product-general-infor">
+  <div class="col-sm-12 col-md-12 col-lg-4 left" style="margin-bottom: 20px;">
+    <p-galleria [autoPlay]="false" (onImageChange)="onImageChange($event)" [images]="images" panelWidth="'100%'" panelHeight="383" [showCaption]="false"></p-galleria>
+  </div>
+  <div class="col-sm-12 col-md-12 col-lg-8 right">
+    <form [formGroup]="orderForm" *ngIf="orderForm" class="form-pr-infor">
+      <div class="pr-name" pTooltip="{{ getFormVal('name', orderForm) }}">
+        <a href="{{ getFormVal('itemUrl', orderForm) }}" target="_blank" rel="noopener noreferrer">
+          {{ getFormVal("name", orderForm) }}
+        </a>
+      </div>
+      <div class="pr-infor" *ngIf="wholesales">
+        <table>
+          <tr>
+            <td class="label">Điều kiện</td>
+            <td  *ngFor="let sale of wholesales" style="padding: 0 12px;">
+              <span class="condition">
+                Mua <strong>{{sale.begin}} </strong> - <strong>{{sale.end}}</strong> SP 
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td class="label"  style="padding-top: 4px;">Giá</td>
+            <td *ngFor="let sale of wholesales" style="padding: 0 12px; padding-top: 4px; text-align: center;">
+              <strong >
+                {{sale.price | currencyChina}} ¥ 
+              </strong>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="pr-infor">
+        <div class="label" style="width: 100px">SP của shop:</div>
+        <div class="name">{{ getFormVal("shopName", orderForm) }}</div>
+      </div>
+      <div class="pr-infor">
+        <div class="label" style="width: 100px">Trên website:</div>
+        <div class="name">{{ getFormVal("website", orderForm) }}</div>
+      </div>
+      <div class="pr-infor" *ngIf="!this.wholesales">
+        <div class="label" style="width: 100px">Giá:</div>
+        <div class="name notice">
+          {{ getFormVal("sellPriceVND", orderForm) | currencyChina }}đ
+        </div>
+        <div class="name currency">
+          ( {{ getFormVal("sellPrice", orderForm) | currencyChina }} ¥ )
+        </div>
+      </div>
+      <ng-container *ngIf="!config.data.itemPropertys ||  !config.data.itemPropertys.length" >
+        <div class="pr-infor" style="overflow: unset;">
+          <div class="label" style="width: 100px">Số lượng:</div>
+          <div class="name">
+            <input 
+              (input)="onchangeQuantity($event.target.value, null)"
+              placeholder="Số lượng"
+              type="number" [min]="rangeValues[0]" [max]="config.data.stock ? config.data.stock : rangeValues[1]" pInputText 
+              formControlName="quantity" style="width:130px;"/>
+            <p-slider 
+              [step]="1" [min]="rangeValues[0]" [max]="config.data.stock != null ? config.data.stock : rangeValues[1]"
+              formControlName="quantity" (onChange)="onchangeQuantity($event.value, null)"
+              [style]="{ width: '130px' }">
+            </p-slider>
+          </div>
+        </div>
+        <div class="pr-infor" style="overflow: unset;">
+          <div class="label" style="width: 100px">Ghi chú :</div>
+          <div class="name">
+            <textarea style="width: 100%;" [rows]="1" [cols]="30"  
+              placeholder="Ghi chú"
+              formControlName="desc" pInputTextarea>
+            </textarea>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="config.data.itemPropertys && config.data.itemPropertys.length && config.data.itemPropertys.length > 1">
+        <div class="pr-infor" *ngFor="let property of config.data.itemPropertys.slice(0,1)">
+          <div class="label overflow-ellipsis" style="display: flex; flex-direction: column">
+            <span class="text-ellipsis">{{ property.name }}</span>
+            <span class="sub-label text-ellipsis" style="font-size: 12px">( {{ property.title }} )
+            </span>
+          </div>
+
+          <div class="name notice">
+            <p-selectButton class="properties" [options]="property.childPropertys"
+              [(ngModel)]="activePropertyVal" [ngModelOptions]="{standalone: true}" (onChange)="changeActivePropertyVal($event.value.properties)"
+              optionLabel="title">
+              <ng-template let-item>
+                <img src="{{ item.value.image }}" *ngIf="item.value.image" pTooltip="{{ item.value.title }}"/>
+                <span *ngIf="!item.value.image" style="padding: 8px; display: inline-block" pTooltip="{{ item.value.title }}">
+                  {{ item.value.title }}
+                </span>
+              </ng-template>
+            </p-selectButton>
+          </div>
+        </div>
+      </ng-container>
+
+    </form>
+
+    <div  style="max-width: calc( 100% - 24px );  margin: 20px auto;  width: 100%;" class="order-table" >
+      <p-table 
+      *ngIf="config.data.itemPropertys && config.data.itemPropertys.length"
+      [columns]="columns" [value]="listProductOrders" 
+       #orderTB class="order-table" [paginator]="true" rows="{{ showFullItem ? 99999 : 2 }}"
+      [scrollable]="true" scrollHeight="{{ isSmallScreen ? '450px' : '326px'  }}" 
+      [style]="{ 'border': '1px solid #c8c8c8;', width:'100%'}"
+      (onFilter)="handleFilter($event)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="footer-summary" >
+            <div>
+            </div>
+            <p style="color: red;" class="min-count-note">
+              <span  *ngIf="wholesales">Bạn phải thêm tối thiểu {{wholesales[0].begin}} sản phẩm</span>
+            </p>
+          </div>
+
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+          <tr class="tr-hide-on-mobile">
+            <th *ngFor="let col of hideDefaultColumn(columns)">{{ col.name }}</th>
+            <th colspan="4">
+              <p style="color: red;  text-align: right; ">
+                <span  *ngIf="wholesales">Bạn phải thêm tối thiểu {{wholesales[0].begin}} sản phẩm</span>
+              </p>
+            </th>
+          </tr>
+  
+  
+          <tr class="tr-only-mobile">
+            <th  style="width: 180px;" >Thông tin SP</th>
+            <th>Đặt hàng</th>
+          </tr>
+  
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-rowIndex let-columns="columns">
+          
+          <tr class="tr-hide-on-mobile" >
+            <td *ngFor="let col of  hideDefaultColumn(columns)" style="border-bottom: none;">
+              <div style="display: flex; align-items: center;">
+                <img *ngIf="rowData[col.field] && rowData[col.field]['image']" src="{{ rowData[col.field]['image'] }}" style="max-width: 40px; margin-right: 4px ;">
+                <strong *ngIf="rowData[col.field] && rowData[col.field]['title']" 
+                pTooltip="{{ rowData[col.field]['title'] }}" 
+                style="white-space: normal;
+                  display: inline-block;
+                  overflow: hidden;
+                  flex: 1;
+                  text-overflow: ellipsis;"> 
+                  {{ rowData[col.field]['title'] }}
+                </strong>
+              </div>
+            </td>
+
+            <td  [ngStyle]="{ 'width' : 
+                                  hideDefaultColumn(columns).length == 1 ? '120px' :
+                                  hideDefaultColumn(columns).length == 2 ? '100px' : '80px' }">
+              <p>{{ getProductCost(rowData['baseCost']) | currencyChina }} ¥</p>
+              <p  style="color: #f15922 !important;">{{ getVnCost( getProductCost(rowData['baseCost']) ) | number }} vnđ</p>
+            </td>
+            <td  [ngStyle]="{ 'width' : 
+                                  hideDefaultColumn(columns).length == 1 ? '120px' :
+                                  hideDefaultColumn(columns).length == 2 ? '100px' : '80px' }">
+              <span *ngIf="rowData['canBookCount']; else OutOfStock">Còn <strong>{{ rowData['canBookCount'] | number }}</strong></span>
+            </td>
+            <td style="width: 140px;">
+              <div *ngIf="wholesales || ( !wholesales && !rowData['disabled'] ); else OutOfStock">
+                <input 
+                  (keyup)="onchangeQuantity($event.target.value, rowData)"
+                  placeholder="Số lượng"
+                  type="number" [min]="rangeValues[0]" [max]="rowData.canBookCount ? rowData.canBookCount : rangeValues[1]" pInputText 
+                  [(ngModel)]="rowData['quantity']" style="width:130px;" />
+                <p-slider 
+                  [step]="1" [min]="rangeValues[0]" [max]="rowData.canBookCount ? rowData.canBookCount : rangeValues[1]"
+                  [(ngModel)]="rowData['quantity']" 
+                  [style]="{ width: '130px' }">
+                </p-slider>
+              </div>
+              <ng-template #OutOfStock>
+                <strong class="out-of-stock">
+                  Hết hàng
+                </strong>
+              </ng-template>
+            </td>
+            <td  [ngStyle]="{ 'width' : 
+                                  hideDefaultColumn(columns).length == 1 ? '200px' :
+                                  hideDefaultColumn(columns).length == 2 ? '150px' : '120px' }">
+              <textarea style="width: 100%;" [rows]="1" [cols]="30"  
+              placeholder="Ghi chú"
+              [(ngModel)]="rowData['desc']" pInputTextarea>
+              </textarea>
+            </td>
+          </tr>
+  
+          <tr class="tr-only-mobile">
+            <td  style="width: 180px;">
+              <div *ngFor="let col of hideDefaultColumn(columns)">
+                <img *ngIf="rowData[col.field] && rowData[col.field]['image']" src="{{ rowData[col.field]['image'] }}" style="max-width: 80px;margin-bottom: 8px;">
+                <div style="display: flex;">
+                <span style="white-space: nowrap;">{{col.name}} </span>
+                : &nbsp; 
+                <strong *ngIf="rowData[col.field] && rowData[col.field]['title'] "> {{ rowData[col.field]['title'] }} </strong></div>
+                <p >
+                  <strong> {{ getProductCost(rowData['baseCost']) | currencyChina }} ¥  </strong>
+                  <strong style="color: #f15922 !important;"> ( {{ getVnCost( getProductCost(rowData['baseCost']) ) | number }} vnđ ) </strong>
+                </p>
+                <p>
+                  <span *ngIf="rowData['canBookCount']; else OutOfStock">Còn <strong>{{ rowData['canBookCount'] | number }}</strong></span>
+                </p>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex">
+                <div *ngIf="wholesales || ( !wholesales && !rowData['disabled'] ); else OutOfStock">
+                  <p>Số lượng: &nbsp; &nbsp;</p>
+                  <input 
+                    (keyup)="onchangeQuantity($event.target.value, rowData)"
+                    placeholder="Số lượng"
+                    type="number" [min]="rangeValues[0]" [max]="rowData.canBookCount ? rowData.canBookCount : rangeValues[1]" pInputText 
+                    [(ngModel)]="rowData['quantity']" style="width:100px;"/>
+                  <p-slider 
+                    [step]="1" [min]="rangeValues[0]" [max]="rowData.canBookCount ? rowData.canBookCount : rangeValues[1]"
+                    [(ngModel)]="rowData['quantity']" 
+                    [style]="{ width: '100px' }">
+                  </p-slider>
+                </div>
+                <ng-template #OutOfStock>
+                  <strong class="out-of-stock">
+                    Hết hàng
+                  </strong>
+                </ng-template>
+              </div>
+              <br/>
+              <div>
+                <p>Ghi chú: </p>
+                <textarea style="max-width: 100%;" [rows]="3" [cols]="30" 
+                placeholder="Ghi chú" [(ngModel)]="rowData['desc']" pInputTextarea></textarea>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+  
+        <ng-template pTemplate="summary">
+          <div class="footer-summary" >
+            <div >
+              <button style="    
+              top: -8px;
+              border: 1px solid #ddd;
+              min-width: 254px;
+              border-top: none;
+              right: -14px;
+              " 
+              class="ui-button-secondary show-more" *ngIf="orderTB && filteredValue && filteredValue.length && filteredValue.length > minItemVisible" 
+              (click)="toggleShowFullItem()"
+              label="{{ 
+                !showFullItem ? 
+                ( 'Hiển thị thêm ' +  ( filteredValue.length - minItemVisible ) + ' sản phẩm' ) : 
+                'Thu gọn'
+              }}"
+              pButton type="button" icon="{{ 'pi ' + ( showFullItem ? 'pi-chevron-up': 'pi-chevron-down'  ) }}" iconPos="left"></button>
+            </div>
+          </div>
+        </ng-template>
+      </p-table>
+
+      <div style="padding: 8px 12px;
+      border: 1px solid #c1c1c1;
+      margin-top: 0px;
+      width: 100%;
+      ">
+        <span>Tổng {{countProductOrder()}} sản phẩm</span> 
+        <span *ngIf="countProductOrder()"> | {{ sumProductCost() | currencyChina }} ¥</span> 
+        <span style="color: #f15922 !important;" *ngIf="sumVNCost()"> | {{ sumVNCost()  | number }} đ</span> 
+      </div>
+    </div>
+
+  </div>
+
+
+  <div style="width: calc( 100% - 50px);
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 auto;">
+    <p-messages [style]="{ 'width': '100%'}" [closable]="false"></p-messages>
+  </div>
+  <div  style="display: flex; justify-content: flex-end; padding: 16px; width: 100%;">
+    <div class="pr-infor" style="display: flex; justify-content: space-between; width: 360px">
+      <button pButton 
+        [disabled]="
+        isLoading ||
+        countProductOrder() == 0 ||
+        ( wholesales && countProductOrder() < wholesales[0].begin)
+      "
+        label="Thêm vào giỏ hàng" icon="{{ 'pi ' + (!isLoading ? 'pi-shopping-cart' : 'pi-spin pi-spinner' ) }}" lang="" (click)="addToCart()"
+        class="ui-button-info"></button>
+      <button pButton label="Tới giỏ hàng" (click)="goToCart()" class="ui-button-success"></button>
+      <button pButton label="Đóng" type="button" (click)="close()" class="ui-button-secondary"></button>
+    </div>
+  </div>
+</div>
+<!-- Description -->
+<div style="padding-top: 20px; border-top: 1px solid #ddd; margin-top: 20px">
+  <p-tabView>
+    <p-tabPanel header="Mô tả chung">
+      <!-- <h6 class="desc-name">
+        <span style="color: #333"> Tên sản phẩm : </span>
+        <a href="{{ getFormVal('itemUrl', orderForm) }}" target="_blank" rel="noopener noreferrer">
+          {{ getFormVal("name", orderForm) }}
+        </a>
+      </h6>
+      <img style="max-width: 300px" src="{{ getFormVal('image', orderForm) }}" />
+      <div style="margin: 20px 0"></div> -->
+      <div innerHTML  = "{{ getFormVal('detailContentHtml', orderForm) }}"></div>
+      <div style="margin: 20px 0"></div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

@@ -1,0 +1,28 @@
+<!-- thêm script cho follow zalo -->
+<!--<script src="https://sp.zalo.me/plugins/sdk.js"></script>-->
+
+<div *ngFor="let message of messages" class="message alert {{message.messageClass}}"
+     role="alert">{{message.detail}}</div>
+<div [class]="notConectedZalo()">
+    <h3>Để nhận thông tin tình trạng đơn hàng, tài chính qua Zalo bạn làm theo các bước sau:</h3>
+    <!--<div class="zalo-follow-only-button" data-oaid="{{zaloOfficialId}}" data-callback="{{callback}}"></div>-->
+   <p>Bước 1: Truy cập vào link: <a href="https://chat.zalo.me/" target="_blank">chat.zalo.me</a></p>
+   <p>Bước 2: Đăng nhập tài khoản zalo bạn muốn nhận thông báo</p>
+   <p>Bước 3: Ấn vào nút quan tâm bên dưới nhé!</p>
+   <div class="zalo-follow-only-button" data-oaid="2872991500884904210" data-callback="userFollowZallo"></div>
+   <p>Bước 4:  Nhập số điện thoại zalo và bấm "Kết nối zalo"</p>
+   
+   <div class="no-padding form-container h100">
+       <div class="form-row">
+           <input type="text" placeholder="Số điện thoại zalo" pInputText [(ngModel)]="customerPhone" />
+       </div>
+       <div class="form-row">
+        <button class="btnAddZalo" (click)="addZalo()">Kết nối zalo</button>
+       </div>
+    </div>
+</div>
+<div [class]="conectedZalo()">
+    <h3>Tài khoản đã kết nối zalo thành công</h3>
+</div>
+
+
